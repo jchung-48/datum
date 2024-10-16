@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ref, uploadBytesResumable, getDownloadURL, listAll, deleteObject } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, listAll, deleteObject, StorageReference } from "firebase/storage";
 import { storage } from "../../firebase"; // Adjusted import path for firebase.js
 
 const UploadPage = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [directory, setDirectory] = useState<string>(""); // State for directory input
   const [fileList, setFileList] = useState<{ name: string; url: string; fullPath: string }[]>([]);
+
+  // Function to handle directory input change
+  const handleDirectoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDirectory(e.target.value);
+  };
 
   // Function to handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +28,9 @@ const UploadPage = () => {
       return;
     }
 
-    const storageRef = ref(storage, `/${file.name}`); // Store at root or any desired directory
+    const dir = directory ? `${directory}/` : ""; // Add a trailing slash if directory is specified
+    const storageRef = ref(storage, `${dir}${file.name}`); // Use directory and file name
+
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -45,18 +53,31 @@ const UploadPage = () => {
     );
   };
 
+  // Recursive function to list all files, including those in subdirectories
+  const listFilesRecursive = async (dirRef: StorageReference) => {
+    const res = await listAll(dirRef);
+    const allFiles = await Promise.all(
+      res.items.map(async (itemRef) => {
+        const downloadURL = await getDownloadURL(itemRef);
+        return { name: itemRef.name, url: downloadURL, fullPath: itemRef.fullPath };
+      })
+    );
+
+    // Recursively get files from subdirectories
+    for (const folderRef of res.prefixes) {
+      const folderFiles = await listFilesRecursive(folderRef); // Type for folderRef is still StorageReference
+      allFiles.push(...folderFiles); // Combine the results
+    }
+
+    return allFiles;
+  };
+
   // Function to list files from Firebase Storage
   const listFiles = async () => {
-    const listRef = ref(storage, "/"); // Assuming files are in the root
+    const listRef = ref(storage, "/"); // List all files from the root
 
     try {
-      const res = await listAll(listRef);
-      const files = await Promise.all(
-        res.items.map(async (itemRef) => {
-          const downloadURL = await getDownloadURL(itemRef);
-          return { name: itemRef.name, url: downloadURL, fullPath: itemRef.fullPath }; // Save full path
-        })
-      );
+      const files = await listFilesRecursive(listRef); // Recursively list all files, including those in subdirectories
       setFileList(files);
     } catch (error) {
       console.error("Error listing files", error);
@@ -77,9 +98,16 @@ const UploadPage = () => {
 
   return (
     <div>
-      <div id="upload-div">
+      <div id="upload-div" style={{ display: "flex", alignItems: "center" }}>
+        <input
+          type="text"
+          placeholder="Choose directory"
+          value={directory}
+          onChange={handleDirectoryChange}
+          style={{ marginRight: "10px" }}
+        />
         <input type="file" id="file-input" onChange={handleFileChange} />
-        <button id="uploadButton" onClick={handleUpload}>
+        <button id="uploadButton" onClick={handleUpload} style={{ marginLeft: "10px" }}>
           Upload
         </button>
       </div>
@@ -89,7 +117,7 @@ const UploadPage = () => {
           {fileList.map((file, index) => (
             <li key={index}>
               <a href={file.url} target="_blank" rel="noopener noreferrer">
-                {file.name} {/* Display only the file name */}
+                {file.fullPath} {/* Display full path with directory and file name */}
               </a>
               <button onClick={() => deleteFile(file.fullPath)}>Delete</button> {/* Delete by fullPath */}
             </li>
