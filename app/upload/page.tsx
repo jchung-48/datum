@@ -21,16 +21,54 @@ const UploadPage = () => {
     }
   };
 
-  // Function to handle file upload
-  const handleUpload = () => {
-    if (!file) {
-      alert("Please select a file first.");
-      return;
+// Function to handle file upload with replacement and warning
+// Function to handle file upload with replacement and warning
+const handleUpload = async () => {
+  if (!file) {
+    alert("Please select a file first.");
+    return;
+  }
+
+  const dir = directory ? `${directory}/` : ""; // Add a trailing slash if directory is specified
+  const storageRef = ref(storage, `${dir}${file.name}`); // Use directory and file name
+
+  try {
+    // Check if a file with the same name exists
+    const existingFileSnapshot = await getDownloadURL(storageRef)
+      .then((url) => {
+        return true; // File exists
+      })
+      .catch((error) => {
+        if (error.code === "storage/object-not-found") {
+          return false; // File doesn't exist
+        } else {
+          throw error; // Handle other errors
+        }
+      });
+
+    if (existingFileSnapshot) {
+      // Alert the user that the file already exists and ask for confirmation
+      const confirmReplace = window.confirm(
+        `A file named "${file.name}" already exists. Do you want to replace it?`
+      );
+
+      if (!confirmReplace) {
+        // If user cancels, stop the upload
+        alert("Upload canceled.");
+        return;
+      }
+
+      // If confirmed, delete the existing file
+      await deleteObject(storageRef);
+      console.log(`Deleted existing file: ${file.name}`);
+
+      // Remove the old file reference from the file list to avoid duplication
+      setFileList((prevList) =>
+        prevList.filter((file) => file.fullPath !== storageRef.fullPath)
+      );
     }
 
-    const dir = directory ? `${directory}/` : ""; // Add a trailing slash if directory is specified
-    const storageRef = ref(storage, `${dir}${file.name}`); // Use directory and file name
-
+    // Proceed with the upload
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -51,7 +89,13 @@ const UploadPage = () => {
         });
       }
     );
-  };
+  } catch (error) {
+    console.error("Error handling upload", error);
+  }
+};
+
+
+
 
   // Recursive function to list all files, including those in subdirectories
   const listFilesRecursive = async (dirRef: StorageReference) => {
