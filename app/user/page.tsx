@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createUser, signInUser } from "../authentication"; // Import the sign-in function
 
 const Page = () => {
@@ -9,8 +9,21 @@ const Page = () => {
   const [phone, setPhone] = useState("");
   const [departments, setDepartments] = useState("");
   const [role, setRole] = useState("");
-  const [companyName, setCompanyName] = useState(""); // Add companyName
-  const [isSignUp, setIsSignUp] = useState(true); // Track whether the user is signing up or signing in
+  const [companyName, setCompanyName] = useState("");
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(""); // Track error messages
+
+
+  // Automatically clear the error message after 3 seconds
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage(""); // Clear error message after 3 seconds
+      }, 3000);
+
+      return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
+    }
+  }, [errorMessage]);
 
   const handleSignUp = async () => {
     try {
@@ -19,27 +32,58 @@ const Page = () => {
         phone,
         departments,
         role,
-        companyName, // Include company name in additional data
+        companyName,
       };
-      await createUser(email, password, additionalData);
-      alert("User created successfully!");
+      const result = await createUser(email, password, additionalData);
+      if (result) {
+        // If there's an error code, set an appropriate message
+        if (result === "auth/email-already-in-use") {
+          setErrorMessage("This email is already in use. Please use a different email.");
+        } else if (result === "auth/weak-password") {
+          setErrorMessage("Password should be at least 6 characters long.");
+        } 
+        else if (result === "auth/invalid-email") {
+          setErrorMessage("Invalid email format.");
+        }else {
+          setErrorMessage("An error occurred during sign up. Please try again.");
+        }
+      } else {
+        alert("User created successfully!");
+      }
     } catch (error) {
-      alert("Error creating user: " );
+      setErrorMessage("Error creating user: ");
     }
   };
 
   const handleSignIn = async () => {
     try {
-      await signInUser(email, password, companyName); // Pass companyName for validation
+      const result = await signInUser(email, password, companyName);
+  
+      // If signInUser does not throw, it means the sign-in was successful
       alert("User signed in successfully!");
-    } catch (error) {
-      alert("Error signing in: " );
+    } catch (error: any) {
+      // Handle custom errors (company name mismatch, no user found, etc.)
+      if (error.message === "Company name does not match.") {
+        setErrorMessage("Company name does not match.");
+      } else if (error.message === "No user found for the given company.") {
+        setErrorMessage("No user found for the given company.");
+      } else {
+        // Handle any other errors that are thrown
+        setErrorMessage("Error signing in: " + error.message);
+      }
     }
+  
+    // Clear the error message after 3 seconds
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 3000);
   };
+  
 
   return (
     <div style={{ padding: "20px" }}>
       <h2>{isSignUp ? "Create New Employee" : "Sign In"}</h2>
+
       <div style={{ marginBottom: "10px" }}>
         <input
           type="email"
@@ -91,7 +135,6 @@ const Page = () => {
         </>
       )}
 
-      {/* Add company name input for both sign-up and sign-in */}
       <div style={{ marginBottom: "10px" }}>
         <input
           type="text"
@@ -104,6 +147,8 @@ const Page = () => {
       <button onClick={isSignUp ? handleSignUp : handleSignIn}>
         {isSignUp ? "Create Employee" : "Sign In"}
       </button>
+
+      {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>} {/* Display error message */}
 
       <div style={{ marginTop: "20px" }}>
         <button onClick={() => setIsSignUp(!isSignUp)}>
