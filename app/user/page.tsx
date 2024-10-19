@@ -9,6 +9,7 @@ const Page = () => {
   const [phone, setPhone] = useState("");
   const [departments, setDepartments] = useState("");
   const [role, setRole] = useState("");
+  const [companyName, setCompanyName] = useState(""); // Add companyName
   const [isSignUp, setIsSignUp] = useState(true); // Track whether the user is signing up or signing in
 
   const handleSignUp = async () => {
@@ -16,22 +17,23 @@ const Page = () => {
       const additionalData = {
         name,
         phone,
-        departments, // Changed to plural as required
+        departments,
         role,
+        companyName, // Include company name in additional data
       };
       await createUser(email, password, additionalData);
       alert("User created successfully!");
     } catch (error) {
-      alert("Error creating user: ");
+      alert("Error creating user: " );
     }
   };
 
   const handleSignIn = async () => {
     try {
-      await signInUser(email, password);
+      await signInUser(email, password, companyName); // Pass companyName for validation
       alert("User signed in successfully!");
     } catch (error) {
-      alert("Error signing in: ");
+      alert("Error signing in: " );
     }
   };
 
@@ -88,6 +90,16 @@ const Page = () => {
           </div>
         </>
       )}
+
+      {/* Add company name input for both sign-up and sign-in */}
+      <div style={{ marginBottom: "10px" }}>
+        <input
+          type="text"
+          placeholder="Company Name"
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+        />
+      </div>
 
       <button onClick={isSignUp ? handleSignUp : handleSignIn}>
         {isSignUp ? "Create Employee" : "Sign In"}
