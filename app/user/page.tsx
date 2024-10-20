@@ -1,18 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createUser, signInUser } from "../authentication"; // Import the sign-in function
+import { getDepartments } from "../authentication"; // Import your department fetching function
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [departments, setDepartments] = useState("");
+  const [departments, setDepartments] = useState<string[]>([]); // Departments list state
+  const [selectedDepartment, setSelectedDepartment] = useState(""); // Store selected department
   const [role, setRole] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [isSignUp, setIsSignUp] = useState(true);
   const [errorMessage, setErrorMessage] = useState(""); // Track error messages
-
 
   // Automatically clear the error message after 3 seconds
   useEffect(() => {
@@ -25,26 +26,45 @@ const Page = () => {
     }
   }, [errorMessage]);
 
+  // Fetch departments when the component mounts
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const departmentsList = await getDepartments();
+        console.log("Fetched departments:", departmentsList); // Debugging log
+        if (departmentsList.length > 0) {
+          setDepartments(departmentsList); // Store fetched departments in state
+          setSelectedDepartment(departmentsList[0]); // Set default selected department
+        } else {
+          setErrorMessage("No departments available.");
+        }
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+        setErrorMessage("Failed to fetch departments");
+      }
+    };
+
+    fetchDepartments();
+  }, []);
+
   const handleSignUp = async () => {
     try {
       const additionalData = {
         name,
         phone,
-        departments,
+        departments: selectedDepartment, // Use the selected department
         role,
         companyName,
       };
       const result = await createUser(email, password, additionalData);
       if (result) {
-        // If there's an error code, set an appropriate message
         if (result === "auth/email-already-in-use") {
           setErrorMessage("This email is already in use. Please use a different email.");
         } else if (result === "auth/weak-password") {
           setErrorMessage("Password should be at least 6 characters long.");
-        } 
-        else if (result === "auth/invalid-email") {
+        } else if (result === "auth/invalid-email") {
           setErrorMessage("Invalid email format.");
-        }else {
+        } else {
           setErrorMessage("An error occurred during sign up. Please try again.");
         }
       } else {
@@ -58,27 +78,21 @@ const Page = () => {
   const handleSignIn = async () => {
     try {
       const result = await signInUser(email, password, companyName);
-  
-      // If signInUser does not throw, it means the sign-in was successful
       alert("User signed in successfully!");
     } catch (error: any) {
-      // Handle custom errors (company name mismatch, no user found, etc.)
       if (error.message === "Company name does not match.") {
         setErrorMessage("Company name does not match.");
       } else if (error.message === "No user found for the given company.") {
         setErrorMessage("No user found for the given company.");
       } else {
-        // Handle any other errors that are thrown
         setErrorMessage("Error signing in: " + error.message);
       }
     }
-  
-    // Clear the error message after 3 seconds
+
     setTimeout(() => {
       setErrorMessage("");
     }, 3000);
   };
-  
 
   return (
     <div style={{ padding: "20px" }}>
@@ -118,13 +132,22 @@ const Page = () => {
             />
           </div>
           <div style={{ marginBottom: "10px" }}>
-            <input
-              type="text"
-              placeholder="Departments"
-              value={departments}
-              onChange={(e) => setDepartments(e.target.value)}
+            {/* Department Dropdown */}
+            <select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
               style={{ marginRight: "10px" }}
-            />
+            >
+              {departments.length > 0 ? (
+                departments.map((department) => (
+                  <option key={department} value={department}>
+                    {department}
+                  </option>
+                ))
+              ) : (
+                <option value="">No departments available</option>
+              )}
+            </select>
             <input
               type="text"
               placeholder="Role"
