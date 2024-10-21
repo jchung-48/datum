@@ -1,6 +1,6 @@
 "use client";
 
-import AddBuyer from './addBuyer';
+import AddBuyer from './crudBuyer';
 import Link from 'next/link';
 
 function App() {
