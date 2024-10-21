@@ -16,8 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
-
 // Export the storage object to be used elsewhere
 export const storage = getStorage(app);
-export { db };
+
+export const db = getFirestore(app);
