@@ -12,7 +12,7 @@ export default function Home() {
           <Link href="/upload">Go to Upload Page</Link>
         </li>
         <li>
-          <Link href="/crudBuyer">Add/Edit Buyers</Link>
+          <Link href="/editCompanyContacts">Add/Edit Company Contacts</Link>
         </li>
       </ul>
     </div>
