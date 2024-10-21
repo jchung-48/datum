@@ -14,6 +14,10 @@ export default function Home() {
         <li>
           <Link href="/crudBuyer">Add/Edit Buyers</Link>
         </li>
+        <li>
+          {/* Link to the route, not the file */}
+          <Link href="/user">Go to Create Users</Link>
+        </li>
       </ul>
     </div>
 
