@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
-
-// // Initialize Firestore (Ensure this is initialized in your app)
-// const db = getFirestore();
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { db } from '@/firebase';  // Import Firestore instance
 
 // Contact type definition with role
 type Contact = {
@@ -22,8 +19,15 @@ type Buyer = {
   phone: string;
 };
 
-const AddBuyerPage = () => {
-  const [companyId, setCompanyId] = useState(''); // To dynamically input the company ID
+// Company type definition
+type Company = {
+  id: string; // The Firestore document ID for the company
+  name: string; // The name field from the company document
+};
+
+const AddBuyer = () => {
+  const [companies, setCompanies] = useState<Company[]>([]); // List of companies
+  const [selectedCompanyId, setSelectedCompanyId] = useState(''); // Selected company ID
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [industry, setIndustry] = useState('');
@@ -35,6 +39,25 @@ const AddBuyerPage = () => {
   const [contactPhone, setContactPhone] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactRole, setContactRole] = useState('');
+
+  // Fetch companies from Firestore when the component mounts
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const companiesCollectionRef = collection(db, 'Company');
+        const companySnapshot = await getDocs(companiesCollectionRef);
+        const companyList: Company[] = companySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+        }));
+        setCompanies(companyList); // Set fetched companies in state
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
 
   // Handler for adding a new contact to the contacts array
   const addContact = () => {
@@ -48,6 +71,11 @@ const AddBuyerPage = () => {
 
   // Function to handle adding a new buyer document to Firestore
   const handleSubmit = async () => {
+    if (!selectedCompanyId) {
+      alert('Please select a company');
+      return;
+    }
+
     const buyer: Buyer = {
       contacts,
       email,
@@ -57,7 +85,7 @@ const AddBuyerPage = () => {
     };
 
     try {
-      const buyersCollectionRef = collection(db, `Company/${companyId}/Buyers`);
+      const buyersCollectionRef = collection(db, `Company/${selectedCompanyId}/Buyers`);
       await addDoc(buyersCollectionRef, buyer);
       alert('Buyer added successfully!');
       // Reset form
@@ -75,10 +103,18 @@ const AddBuyerPage = () => {
   return (
     <div>
       <h2>Add New Buyer</h2>
-      {/* Company ID */}
+
+      {/* Company Dropdown */}
       <div>
-        <label>Company ID:</label>
-        <input type="text" value={companyId} onChange={(e) => setCompanyId(e.target.value)} />
+        <label>Select Company:</label>
+        <select value={selectedCompanyId} onChange={(e) => setSelectedCompanyId(e.target.value)}>
+          <option value="">Select a company</option>
+          {companies.map((company) => (
+            <option key={company.id} value={company.id}>
+              {company.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Buyer Form Fields */}
@@ -137,4 +173,4 @@ const AddBuyerPage = () => {
   );
 };
 
-export default AddBuyerPage;
+export default AddBuyer;
