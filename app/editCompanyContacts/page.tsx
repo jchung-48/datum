@@ -9,12 +9,12 @@ export default function Home() {
       <ul>
         <li>
           {/* Link to the route, not the file */}
-          <Link href="./crudBuyer">
+          <Link href="/editCompanyContacts/crudBuyer">
             <button style={{ marginBottom: '20px' }}>Add/Edit Buyers</button>
           </Link>
         </li>
         <li>
-          <Link href="./crudManufacturer">
+          <Link href="/editCompanyContacts/crudManufacturer">
             <button style={{ marginBottom: '20px' }}>Add/Edit Manufacturers</button>
           </Link>
         </li>

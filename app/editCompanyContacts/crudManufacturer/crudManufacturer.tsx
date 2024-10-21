@@ -38,7 +38,7 @@ const AddOrEditManufacturer = () => {
   const [selectedCompanyId, setSelectedCompanyId] = useState(''); // Selected company ID
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]); // List of manufacturers for the selected company
   const [selectedManufacturerId, setSelectedManufacturerId] = useState(''); // Selected manufacturer ID (for editing)
-  const [isNewManufacturer, setIsNewManufacturer] = useState(false); // Flag to check if it's a new manufacturer
+  const [isNewManufacturer, setIsNewManufacturer] = useState(true); // Flag to check if it's a new manufacturer
   const [manufacturerData, setManufacturerData] = useState<Manufacturer>({ contacts: [], catalog: [], email: '', industry: '', name: '', phone: '' }); // Manufacturer data
   const [editingContactIndex, setEditingContactIndex] = useState<number | null>(null); // Index of contact being edited
   const [editingCatalogIndex, setEditingCatalogIndex] = useState<number | null>(null); // Index of catalog being edited
@@ -64,37 +64,38 @@ const AddOrEditManufacturer = () => {
           name: doc.data().name,
         }));
         setCompanies(companyList); // Set fetched companies in state
-  
-        // Autopopulate manufacturerData when "New Manufacturer" is selected initially
-        setManufacturerData({ contacts: [], catalog: [], email: '', industry: '', name: '', phone: '' });
-        
       } catch (error) {
         console.error('Error fetching companies:', error);
       }
     };
-  
+
     fetchCompanies();
   }, []);
 
-  // Fetch manufacturers once a company is selected
-  useEffect(() => {
-    if (selectedCompanyId && !isNewManufacturer) {
-      const fetchManufacturers = async () => {
-        try {
-          const manufacturersCollectionRef = collection(db, `Company/${selectedCompanyId}/Manufacturers`);
-          const manufacturersSnapshot = await getDocs(manufacturersCollectionRef);
-          const manufacturerList: Manufacturer[] = manufacturersSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Manufacturer[];
-          setManufacturers(manufacturerList);
-        } catch (error) {
-          console.error('Error fetching manufacturers:', error);
-        }
-      };
-      fetchManufacturers();
+  // Function to fetch manufacturers based on selected company
+  const fetchManufacturers = async (companyId: string) => {
+    if (!companyId) return;
+    
+    try {
+      const manufacturersCollectionRef = collection(db, `Company/${companyId}/Manufacturers`);
+      const manufacturersSnapshot = await getDocs(manufacturersCollectionRef);
+      const manufacturerList: Manufacturer[] = manufacturersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Manufacturer[];
+      setManufacturers(manufacturerList); // Set the fetched manufacturers into state
+    } catch (error) {
+      console.error('Error fetching manufacturers:', error);
     }
-  }, [selectedCompanyId, isNewManufacturer]);
+  };
+
+  // useEffect to fetch manufacturers when a company is selected
+  useEffect(() => {
+    if (selectedCompanyId) {
+      fetchManufacturers(selectedCompanyId); // Fetch manufacturers when a company is selected
+    }
+  }, [selectedCompanyId]);
+  
 
   // Handler for adding or editing a contact
   const handleAddOrEditContact = () => {
@@ -116,6 +117,11 @@ const AddOrEditManufacturer = () => {
     setContactRole('');
   };
 
+  const handleDeleteContact = (index: number) => {
+    const updatedContacts = manufacturerData.contacts.filter((_, contactIndex) => contactIndex !== index);
+    setManufacturerData({ ...manufacturerData, contacts: updatedContacts });
+  };  
+
   // Handler for adding or editing a catalog item
   const handleAddOrEditCatalog = () => {
     if (editingCatalogIndex !== null) {
@@ -134,6 +140,11 @@ const AddOrEditManufacturer = () => {
     setCatalogProductCode('');
   };
 
+  const handleDeleteCatalogItem = (index: number) => {
+    const updatedCatalog = manufacturerData.catalog.filter((_, catalogIndex) => catalogIndex !== index);
+    setManufacturerData({ ...manufacturerData, catalog: updatedCatalog });
+  };  
+
   // Handler for selecting a manufacturer from the list or choosing "New Manufacturer"
   const handleSelectManufacturer = (manufacturerId: string) => {
     if (manufacturerId === 'new') {
@@ -147,7 +158,7 @@ const AddOrEditManufacturer = () => {
         setSelectedManufacturerId(manufacturerId);
         setIsNewManufacturer(false); // Set to editing mode
       }
-    }
+    }    
   };
 
   // Handler for adding or updating a manufacturer in Firestore
@@ -168,6 +179,10 @@ const AddOrEditManufacturer = () => {
         setManufacturerData({ contacts: [], catalog: [], email: '', industry: '', name: '', phone: '' });
         setSelectedManufacturerId('new'); // Switch back to "New Manufacturer"
         setIsNewManufacturer(true); // Set to new manufacturer mode
+
+        // Refetch the manufacturers after adding
+        fetchManufacturers(selectedCompanyId);
+        
       } catch (error) {
         console.error('Error adding manufacturer:', error);
         alert('Error adding manufacturer');
@@ -183,12 +198,17 @@ const AddOrEditManufacturer = () => {
         setManufacturerData({ contacts: [], catalog: [], email: '', industry: '', name: '', phone: '' });
         setSelectedManufacturerId('new'); // Switch back to "New Manufacturer"
         setIsNewManufacturer(true); // Set to new manufacturer mode
+
+        // Refetch the manufacturers after updating
+        fetchManufacturers(selectedCompanyId);
+        
       } catch (error) {
         console.error('Error updating manufacturer:', error);
         alert('Error updating manufacturer');
       }
     }
   };
+
 
   // Handler for deleting a manufacturer
   const handleDeleteManufacturer = async () => {
@@ -238,69 +258,124 @@ const AddOrEditManufacturer = () => {
         </div>
       )}
 
-      {/* Manufacturer Form */}
-      <div>
-        <label>Name:</label>
-        <input value={manufacturerData.name} onChange={(e) => setManufacturerData({ ...manufacturerData, name: e.target.value })} />
-        <label>Phone:</label>
-        <input value={manufacturerData.phone} onChange={(e) => setManufacturerData({ ...manufacturerData, phone: e.target.value })} />
-        <label>Email:</label>
-        <input value={manufacturerData.email} onChange={(e) => setManufacturerData({ ...manufacturerData, email: e.target.value })} />
-        <label>Industry:</label>
-        <input value={manufacturerData.industry} onChange={(e) => setManufacturerData({ ...manufacturerData, industry: e.target.value })} />
-      </div>
+      {/* Manufacturer Form - Show only after selecting a company */}
+      {selectedCompanyId && (
+        <>
+          <div>
+            <label>Name:</label>
+            <input
+            value={manufacturerData.name}
+            onChange={(e) => setManufacturerData({ ...manufacturerData, name: e.target.value })}
+            placeholder = "Name"
+            />
+          </div>
 
-      {/* Contacts Section */}
-      <h3>Contacts</h3>
-      <ul>
-        {manufacturerData.contacts.map((contact, index) => (
-          <li key={index}>
-            {contact.name} ({contact.role}) - {contact.phone} - {contact.email}
-            <button onClick={() => { 
-                setEditingContactIndex(index); 
-                setContactName(contact.name); 
-                setContactPhone(contact.phone); 
-                setContactEmail(contact.email); 
-                setContactRole(contact.role);
-            }}>
-              Edit
+          <div>
+            <label>Phone:</label>
+            <input
+            value={manufacturerData.phone}
+            onChange={(e) => setManufacturerData({ ...manufacturerData, phone: e.target.value })}
+            placeholder = "Phone"
+            />
+          </div>
+
+          <div>
+            <label>Email:</label>
+            <input
+            value={manufacturerData.email}
+            onChange={(e) => setManufacturerData({ ...manufacturerData, email: e.target.value })}
+            placeholder = "Email"
+            />
+          </div>
+
+          <div>
+            <label>Industry:</label>
+            <input
+            value={manufacturerData.industry}
+            onChange={(e) => setManufacturerData({ ...manufacturerData, industry: e.target.value })}
+            placeholder = "Industry"
+            />
+          </div>
+
+          {/* Contacts Section */}
+          <h3>Contacts</h3>
+          <ul>
+            {manufacturerData.contacts.map((contact, index) => (
+              <li key={index}>
+                {contact.name} ({contact.role}) - {contact.phone} - {contact.email}
+                <button
+                  onClick={() => {
+                    setEditingContactIndex(index);
+                    setContactName(contact.name);
+                    setContactPhone(contact.phone);
+                    setContactEmail(contact.email);
+                    setContactRole(contact.role);
+                  }}
+                >
+                  Edit
+                </button>
+
+                {/* Delete Button */}
+                <button onClick={() => handleDeleteContact(index)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+          <div>
+            <div>
+              <input value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Name" />
+            </div>
+            <div>
+              <input value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="Phone" />
+            </div>
+            <div>
+              <input value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="Email" />
+            </div>
+            <div>
+              <input value={contactRole} onChange={(e) => setContactRole(e.target.value)} placeholder="Role" />
+            </div>
+            <button onClick={handleAddOrEditContact}>
+              {editingContactIndex !== null ? 'Update' : 'Add'} Contact
             </button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <input value={contactName} onChange={(e) => setContactName(e.target.value)} placeholder="Name" />
-        <input value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} placeholder="Phone" />
-        <input value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="Email" />
-        <input value={contactRole} onChange={(e) => setContactRole(e.target.value)} placeholder="Role" />
-        <button onClick={handleAddOrEditContact}>{editingContactIndex !== null ? 'Update' : 'Add'} Contact</button>
-      </div>
+          </div>
 
-      {/* Catalog Section */}
-      <h3>Catalog</h3>
-      <ul>
-        {manufacturerData.catalog.map((item, index) => (
-          <li key={index}>
-            {item.productName} - {item.productCode}
-            <button onClick={() => {
-              setEditingCatalogIndex(index);
-              setCatalogProductName(item.productName);
-              setCatalogProductCode(item.productCode);
-            }}>
-              Edit
+          {/* Catalog Section */}
+          <h3>Catalog</h3>
+          <ul>
+            {manufacturerData.catalog.map((item, index) => (
+              <li key={index}>
+                {item.productName} - {item.productCode}
+                <button
+                  onClick={() => {
+                    setEditingCatalogIndex(index);
+                    setCatalogProductName(item.productName);
+                    setCatalogProductCode(item.productCode);
+                  }}
+                >
+                  Edit
+                </button>
+
+                {/* Delete Button */}
+                <button onClick={() => handleDeleteCatalogItem(index)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+          <div>
+            <div>
+              <input value={catalogProductName} onChange={(e) => setCatalogProductName(e.target.value)} placeholder="Product Name" />
+            </div>
+            <div>
+              <input value={catalogProductCode} onChange={(e) => setCatalogProductCode(e.target.value)} placeholder="Product Code" />
+            </div>
+            <button onClick={handleAddOrEditCatalog}>
+              {editingCatalogIndex !== null ? 'Update' : 'Add'} Catalog Item
             </button>
-          </li>
-        ))}
-      </ul>
-      <div>
-        <input value={catalogProductName} onChange={(e) => setCatalogProductName(e.target.value)} placeholder="Product Name" />
-        <input value={catalogProductCode} onChange={(e) => setCatalogProductCode(e.target.value)} placeholder="Product Code" />
-        <button onClick={handleAddOrEditCatalog}>{editingCatalogIndex !== null ? 'Update' : 'Add'} Catalog Item</button>
-      </div>
+          </div>
 
-      {/* Submit or Delete Manufacturer */}
-      <button onClick={handleSubmit}>{isNewManufacturer ? 'Add Manufacturer' : 'Update Manufacturer'}</button>
-      {!isNewManufacturer && <button onClick={handleDeleteManufacturer}>Delete Manufacturer</button>}
+          {/* Submit or Delete Manufacturer */}
+          <button onClick={handleSubmit}>{isNewManufacturer ? 'Add Manufacturer' : 'Update Manufacturer'}</button>
+          {!isNewManufacturer && <button onClick={handleDeleteManufacturer}>Delete Manufacturer</button>}
+        </>
+      )}
     </div>
   );
 };

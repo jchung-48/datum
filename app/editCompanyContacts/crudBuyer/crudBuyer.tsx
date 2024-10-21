@@ -233,7 +233,7 @@ const AddOrEditBuyer = () => {
       {/* Buyer Dropdown */}
       {selectedCompanyId && (
         <div>
-          <label>Select Existing Buyer or New Buyer:</label>
+          <label>Select Buyer:</label>
           <select value={selectedBuyerId} onChange={(e) => handleSelectBuyer(e.target.value)}>
             <option value="new">New Buyer</option>
             {buyers.map((buyer) => (
@@ -282,8 +282,19 @@ const AddOrEditBuyer = () => {
             />
           </div>
 
-          {/* Contact Form Fields */}
+          
           <h3>Contacts</h3>
+          {/* Display Added Contacts */}
+          <ul>
+            {buyerData.contacts.map((contact, index) => (
+              <li key={index}>
+                {contact.name} - {contact.phone} - {contact.email} - {contact.role}
+                <button onClick={() => handleEditContact(index)}>Edit</button>
+                <button onClick={() => handleDeleteContact(index)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+          {/* Contact Form Fields */}
           <div>
             <label>Contact Name:</label>
             <input type="text" value={contactName} onChange={(e) => setContactName(e.target.value)} />
@@ -302,21 +313,11 @@ const AddOrEditBuyer = () => {
           </div>
 
           {/* Add/Edit Contact Button */}
-          <button onClick={handleAddOrEditContact}>
-            {editingContactIndex !== null ? 'Update Contact' : 'Add Contact'}
-          </button>
-
-          {/* Display Added Contacts */}
-          <h4>Current Contacts:</h4>
-          <ul>
-            {buyerData.contacts.map((contact, index) => (
-              <li key={index}>
-                {contact.name} - {contact.phone} - {contact.email} - {contact.role}
-                <button onClick={() => handleEditContact(index)}>Edit</button>
-                <button onClick={() => handleDeleteContact(index)}>Delete</button>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <button onClick={handleAddOrEditContact}>
+              {editingContactIndex !== null ? 'Update Contact' : 'Add Contact'}
+            </button>
+          </div>
 
           {/* Submit Button */}
           <button onClick={handleSubmit}>{isNewBuyer ? 'Add Buyer' : 'Update Buyer'}</button>
