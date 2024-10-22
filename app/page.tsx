@@ -9,10 +9,14 @@ export default function Home() {
       <ul>
         <li>
           {/* Link to the route, not the file */}
-          <Link href="/upload">Go to Upload Page</Link>
+          <Link href="/upload">
+            <button style={{ marginBottom: '20px' }}>Upload Documents</button>
+          </Link>
         </li>
         <li>
-          <Link href="/editCompanyContacts">Add/Edit Company Contacts</Link>
+        <Link href="/editCompanyContacts">
+          <button style={{ marginBottom: '20px' }}>Add/Edit Company Contacts</button>
+        </Link>
         </li>
       </ul>
     </div>

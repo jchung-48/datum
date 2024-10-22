@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { db } from '@/firebase'; // Import Firestore instance
 
 // Contact type definition with role
@@ -162,53 +162,73 @@ const AddOrEditManufacturer = () => {
   };
 
   // Handler for adding or updating a manufacturer in Firestore
+
   const handleSubmit = async () => {
     if (!selectedCompanyId) {
       alert('Please select a company');
       return;
     }
-
-    if (isNewManufacturer) {
-      // Add a new manufacturer
-      try {
+  
+    // Function to check for duplicate manufacturer
+    const checkForDuplicate = async () => {
+      const manufacturersCollectionRef = collection(db, `Company/${selectedCompanyId}/Manufacturers`);
+      
+      const manufacturersSnapshot = await getDocs(manufacturersCollectionRef);
+      const manufacturerList = manufacturersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Manufacturer[];
+  
+      // Check for duplicates in name, email, or phone (excluding the current manufacturer in case of update)
+      const nameExists = manufacturerList.some((manufacturer) => 
+        manufacturer.name === manufacturerData.name && manufacturer.id !== selectedManufacturerId
+      );
+      const emailExists = manufacturerList.some((manufacturer) => 
+        manufacturer.email === manufacturerData.email && manufacturer.id !== selectedManufacturerId
+      );
+      const phoneExists = manufacturerList.some((manufacturer) => 
+        manufacturer.phone === manufacturerData.phone && manufacturer.id !== selectedManufacturerId
+      );
+  
+      if (nameExists) {
+        throw new Error('A manufacturer with the same name already exists.');
+      }
+  
+      if (emailExists) {
+        throw new Error('A manufacturer with the same email already exists.');
+      }
+  
+      if (phoneExists) {
+        throw new Error('A manufacturer with the same phone number already exists.');
+      }
+    };
+  
+    try {
+      // Check for duplicates before adding or updating
+      await checkForDuplicate();
+  
+      if (isNewManufacturer) {
+        // Add a new manufacturer
         const manufacturersCollectionRef = collection(db, `Company/${selectedCompanyId}/Manufacturers`);
         await addDoc(manufacturersCollectionRef, manufacturerData);
         alert('Manufacturer added successfully!');
-        
-        // Reset form to prepare for adding a new manufacturer
-        setManufacturerData({ contacts: [], catalog: [], email: '', industry: '', name: '', phone: '' });
-        setSelectedManufacturerId('new'); // Switch back to "New Manufacturer"
-        setIsNewManufacturer(true); // Set to new manufacturer mode
-
-        // Refetch the manufacturers after adding
-        fetchManufacturers(selectedCompanyId);
-        
-      } catch (error) {
-        console.error('Error adding manufacturer:', error);
-        alert('Error adding manufacturer');
-      }
-    } else {
-      // Update existing manufacturer
-      try {
+      } else {
+        // Update existing manufacturer
         const manufacturerDocRef = doc(db, `Company/${selectedCompanyId}/Manufacturers/${selectedManufacturerId}`);
         await updateDoc(manufacturerDocRef, manufacturerData);
         alert('Manufacturer updated successfully!');
-        
-        // Reset form to prepare for adding a new manufacturer
-        setManufacturerData({ contacts: [], catalog: [], email: '', industry: '', name: '', phone: '' });
-        setSelectedManufacturerId('new'); // Switch back to "New Manufacturer"
-        setIsNewManufacturer(true); // Set to new manufacturer mode
-
-        // Refetch the manufacturers after updating
-        fetchManufacturers(selectedCompanyId);
-        
-      } catch (error) {
-        console.error('Error updating manufacturer:', error);
-        alert('Error updating manufacturer');
       }
+  
+      // Reset form and refetch manufacturers
+      setManufacturerData({ contacts: [], catalog: [], email: '', industry: '', name: '', phone: '' });
+      setSelectedManufacturerId('new');
+      setIsNewManufacturer(true);
+      fetchManufacturers(selectedCompanyId);
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error); // Show the error to the user
     }
-  };
-
+  };   
 
   // Handler for deleting a manufacturer
   const handleDeleteManufacturer = async () => {
@@ -262,16 +282,14 @@ const AddOrEditManufacturer = () => {
       {selectedCompanyId && (
         <>
           <div>
-            <label>Name:</label>
             <input
             value={manufacturerData.name}
             onChange={(e) => setManufacturerData({ ...manufacturerData, name: e.target.value })}
-            placeholder = "Name"
+            placeholder = "Manufacturer Name"
             />
           </div>
 
           <div>
-            <label>Phone:</label>
             <input
             value={manufacturerData.phone}
             onChange={(e) => setManufacturerData({ ...manufacturerData, phone: e.target.value })}
@@ -280,7 +298,6 @@ const AddOrEditManufacturer = () => {
           </div>
 
           <div>
-            <label>Email:</label>
             <input
             value={manufacturerData.email}
             onChange={(e) => setManufacturerData({ ...manufacturerData, email: e.target.value })}
@@ -289,7 +306,6 @@ const AddOrEditManufacturer = () => {
           </div>
 
           <div>
-            <label>Industry:</label>
             <input
             value={manufacturerData.industry}
             onChange={(e) => setManufacturerData({ ...manufacturerData, industry: e.target.value })}
