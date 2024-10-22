@@ -64,24 +64,27 @@ const AddOrEditBuyer = () => {
     fetchCompanies();
   }, []);
   
+  const fetchBuyers = async (companyId: string) => {
+    if (!companyId) return;
+
+    try {
+      const buyersCollectionRef = collection(db, `Company/${companyId}/Buyers`);
+      const buyersSnapshot = await getDocs(buyersCollectionRef);
+      const buyerList: Buyer[] = buyersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Buyer[];
+      setBuyers(buyerList);
+    } catch (error) {
+      console.error('Error fetching buyers:', error);
+    }
+  };
+
 
   // Fetch buyers once a company is selected
   useEffect(() => {
     if (selectedCompanyId && !isNewBuyer) {
-      const fetchBuyers = async () => {
-        try {
-          const buyersCollectionRef = collection(db, `Company/${selectedCompanyId}/Buyers`);
-          const buyersSnapshot = await getDocs(buyersCollectionRef);
-          const buyerList: Buyer[] = buyersSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          })) as Buyer[];
-          setBuyers(buyerList);
-        } catch (error) {
-          console.error('Error fetching buyers:', error);
-        }
-      };
-      fetchBuyers();
+      fetchBuyers(selectedCompanyId);
     }
   }, [selectedCompanyId, isNewBuyer]);
 
@@ -156,45 +159,127 @@ const AddOrEditBuyer = () => {
   };
 
 
-  // Handler for adding or updating a buyer in Firestore
   const handleSubmit = async () => {
     if (!selectedCompanyId) {
       alert('Please select a company');
       return;
     }
-
-    if (isNewBuyer) {
-      // Add a new buyer
-      try {
+  
+    // Function to check for duplicate manufacturer
+    const checkForDuplicate = async () => {
+      const buyersCollectionRef = collection(db, `Company/${selectedCompanyId}/Buyers`);
+      
+      const buyersSnapshot = await getDocs(buyersCollectionRef);
+      const buyerList = buyersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Buyer[];
+  
+      // Check for duplicates in name, email, or phone (excluding the current buyer in case of update)
+      const nameExists = buyerList.some((buyer) => 
+        buyer.name === buyerData.name && buyer.id !== selectedBuyerId
+      );
+      const emailExists = buyerList.some((buyer) => 
+        buyer.email === buyerData.email && buyer.id !== selectedBuyerId
+      );
+      const phoneExists = buyerList.some((buyer) => 
+        buyer.phone === buyerData.phone && buyer.id !== selectedBuyerId
+      );
+  
+      if (nameExists) {
+        throw new Error('A buyer with the same name already exists.');
+      }
+  
+      if (emailExists) {
+        throw new Error('A buyer with the same email already exists.');
+      }
+  
+      if (phoneExists) {
+        throw new Error('A buyer with the same phone number already exists.');
+      }
+    };
+  
+    try {
+      // Check for duplicates before adding or updating
+      await checkForDuplicate();
+  
+      if (isNewBuyer) {
+        // Add a new manufacturer
         const buyersCollectionRef = collection(db, `Company/${selectedCompanyId}/Buyers`);
         await addDoc(buyersCollectionRef, buyerData);
-        alert('Buyer added successfully!');
-        
-        // Reset form to prepare for adding a new buyer
-        setBuyerData({ contacts: [], email: '', industry: '', name: '', phone: '' });
-        setSelectedBuyerId('new'); // Switch back to "New Buyer"
-        setIsNewBuyer(true); // Set to new buyer mode
-      } catch (error) {
-        console.error('Error adding buyer:', error);
-        alert('Error adding buyer');
+        alert('Manufacturer added successfully!');
+      } else {
+        // Update existing manufacturer
+        const manufacturerDocRef = doc(db, `Company/${selectedCompanyId}/Buyers/${selectedBuyerId}`);
+        await updateDoc(manufacturerDocRef, buyerData);
+        alert('Manufacturer updated successfully!');
       }
-    } else {
-      // Update existing buyer
-      try {
-        const buyerDocRef = doc(db, `Company/${selectedCompanyId}/Buyers/${selectedBuyerId}`);
-        await updateDoc(buyerDocRef, buyerData);
-        alert('Buyer updated successfully!');
-        
-        // Reset form to prepare for adding a new buyer
-        setBuyerData({ contacts: [], email: '', industry: '', name: '', phone: '' });
-        setSelectedBuyerId('new'); // Switch back to "New Buyer"
-        setIsNewBuyer(true); // Set to new buyer mode
-      } catch (error) {
-        console.error('Error updating buyer:', error);
-        alert('Error updating buyer');
-      }
+  
+      // Reset form and refetch buyers
+      setBuyerData({ contacts: [], email: '', industry: '', name: '', phone: '' });
+      setSelectedBuyerId('new');
+      setIsNewBuyer(true);
+      fetchBuyers(selectedCompanyId);
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error); // Show the error to the user
     }
   };
+  
+
+  // Handler for adding or updating a buyer in Firestore with duplicate check
+  // const handleSubmit = async () => {
+  //   if (!selectedCompanyId) {
+  //     alert('Please select a company');
+  //     return;
+  //   }
+
+  //   try {
+  //     // Fetch existing buyers to check for duplicates
+  //     const buyersCollectionRef = collection(db, `Company/${selectedCompanyId}/Buyers`);
+  //     const buyersSnapshot = await getDocs(buyersCollectionRef);
+  //     const existingBuyers = buyersSnapshot.docs.map((doc) => doc.data()) as Buyer[];
+
+  //     // Check for duplicate name, email, or phone number
+  //     const duplicateBuyer = existingBuyers.find(
+  //       (buyer) =>
+  //         buyer.name.toLowerCase() === buyerData.name.toLowerCase() ||
+  //         buyer.email.toLowerCase() === buyerData.email.toLowerCase() ||
+  //         buyer.phone === buyerData.phone
+  //     );
+
+  //     if (duplicateBuyer) {
+  //       // Prevent submission if a duplicate is found
+  //       alert(
+  //         `A buyer with the same ${duplicateBuyer.name === buyerData.name ? 'name' : 
+  //             duplicateBuyer.email === buyerData.email ? 'email' : 'phone number'} already exists.`
+  //       );
+  //       return;
+  //     }
+
+  //     // Proceed with adding or updating the buyer
+  //     if (isNewBuyer) {
+  //       // Add a new buyer
+  //       await addDoc(buyersCollectionRef, buyerData);
+  //       alert('Buyer added successfully!');
+  //     } else {
+  //       // Update existing buyer
+  //       const buyerDocRef = doc(db, `Company/${selectedCompanyId}/Buyers/${selectedBuyerId}`);
+  //       await updateDoc(buyerDocRef, buyerData);
+  //       alert('Buyer updated successfully!');
+  //     }
+
+  //     // Reset form to prepare for adding a new buyer
+  //     setBuyerData({ contacts: [], email: '', industry: '', name: '', phone: '' });
+  //     setSelectedBuyerId('new'); // Switch back to "New Buyer"
+  //     setIsNewBuyer(true); // Set to new buyer mode
+
+  //   } catch (error) {
+  //     console.error('Error adding or updating buyer:', error);
+  //     alert('Error adding or updating buyer');
+  //   }
+  // };
+
 
   // Handler for deleting a buyer
   const handleDeleteBuyer = async () => {
@@ -233,7 +318,7 @@ const AddOrEditBuyer = () => {
       {/* Buyer Dropdown */}
       {selectedCompanyId && (
         <div>
-          <label>Select Existing Buyer or New Buyer:</label>
+          <label>Select Buyer:</label>
           <select value={selectedBuyerId} onChange={(e) => handleSelectBuyer(e.target.value)}>
             <option value="new">New Buyer</option>
             {buyers.map((buyer) => (
@@ -250,73 +335,90 @@ const AddOrEditBuyer = () => {
       {(isNewBuyer || selectedBuyerId) && (
         <>
           <div>
-            <label>Buyer Name:</label>
             <input
               type="text"
               value={buyerData.name}
               onChange={(e) => setBuyerData({ ...buyerData, name: e.target.value })}
+              placeholder = "Buyer Name"
             />
           </div>
           <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              value={buyerData.email}
-              onChange={(e) => setBuyerData({ ...buyerData, email: e.target.value })}
-            />
-          </div>
-          <div>
-            <label>Industry:</label>
-            <input
-              type="text"
-              value={buyerData.industry}
-              onChange={(e) => setBuyerData({ ...buyerData, industry: e.target.value })}
-            />
-          </div>
-          <div>
-            <label>Phone:</label>
             <input
               type="tel"
               value={buyerData.phone}
               onChange={(e) => setBuyerData({ ...buyerData, phone: e.target.value })}
+              placeholder = "Phone"
             />
           </div>
+          <div>
+            <input
+              type="email"
+              value={buyerData.email}
+              onChange={(e) => setBuyerData({ ...buyerData, email: e.target.value })}
+              placeholder = "Email"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              value={buyerData.industry}
+              onChange={(e) => setBuyerData({ ...buyerData, industry: e.target.value })}
+              placeholder = "Industry"
+            />
+          </div>
+          
 
-          {/* Contact Form Fields */}
+          
           <h3>Contacts</h3>
-          <div>
-            <label>Contact Name:</label>
-            <input type="text" value={contactName} onChange={(e) => setContactName(e.target.value)} />
-          </div>
-          <div>
-            <label>Contact Phone:</label>
-            <input type="tel" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} />
-          </div>
-          <div>
-            <label>Contact Email:</label>
-            <input type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
-          </div>
-          <div>
-            <label>Contact Role:</label>
-            <input type="text" value={contactRole} onChange={(e) => setContactRole(e.target.value)} />
-          </div>
-
-          {/* Add/Edit Contact Button */}
-          <button onClick={handleAddOrEditContact}>
-            {editingContactIndex !== null ? 'Update Contact' : 'Add Contact'}
-          </button>
-
           {/* Display Added Contacts */}
-          <h4>Current Contacts:</h4>
           <ul>
             {buyerData.contacts.map((contact, index) => (
               <li key={index}>
-                {contact.name} - {contact.phone} - {contact.email} - {contact.role}
+                {contact.name} ({contact.role}) - {contact.phone} - {contact.email}
                 <button onClick={() => handleEditContact(index)}>Edit</button>
                 <button onClick={() => handleDeleteContact(index)}>Delete</button>
               </li>
             ))}
           </ul>
+          {/* Contact Form Fields */}
+          <div>
+            <input
+            type="text"
+            value={contactName}
+            onChange={(e) => setContactName(e.target.value)}
+            placeholder = "Name"
+            />
+          </div>
+          <div>
+            <input type="tel"
+            value={contactPhone}
+            onChange={(e) => setContactPhone(e.target.value)}
+            placeholder = "Phone"
+            />
+          </div>
+          <div>
+            <input
+            type="email"
+            value={contactEmail}
+            onChange={(e) => setContactEmail(e.target.value)}
+            placeholder = "Email"
+            />
+          </div>
+          <div>
+            <input
+            type="text"
+            value={contactRole}
+            onChange={(e) => setContactRole(e.target.value)}
+            placeholder = "Role"
+            />
+          </div>
+
+          {/* Add/Edit Contact Button */}
+          <div>
+            <button onClick={handleAddOrEditContact}>
+              {editingContactIndex !== null ? 'Update Contact' : 'Add Contact'}
+            </button>
+          </div>
 
           {/* Submit Button */}
           <button onClick={handleSubmit}>{isNewBuyer ? 'Add Buyer' : 'Update Buyer'}</button>
