@@ -1,6 +1,6 @@
 "use client";
 
-import AddBuyer from './crudBuyer';
+import AddOrEditBuyer from './crudBuyer';
 import Link from 'next/link';
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
         <button style={{ marginBottom: '20px' }}>Home</button>
       </Link>
 
-      <AddBuyer />
+      <AddOrEditBuyer />
     </div>
   );
 }

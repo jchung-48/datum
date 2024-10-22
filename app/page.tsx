@@ -14,13 +14,15 @@ export default function Home() {
           </Link>
         </li>
         <li>
-        <Link href="/editCompanyContacts">
-          <button style={{ marginBottom: '20px' }}>Add/Edit Company Contacts</button>
-        </Link>
+          <Link href="/editCompanyContacts">
+            <button style={{ marginBottom: '20px' }}>Add/Edit Company Contacts</button>
+          </Link>
         </li>
         <li>
           {/* Link to the route, not the file */}
-          <Link href="/user">Go to Create Users</Link>
+          <Link href="/user">
+            <button style={{ marginBottom: '20px' }}>Log In/Sign up</button>
+          </Link>
         </li>
       </ul>
     </div>
