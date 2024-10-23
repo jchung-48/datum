@@ -2,8 +2,10 @@
 import { useState, useEffect } from "react";
 import { createUser, signInUser } from "../authentication"; // Import the sign-in function
 import { getDepartments } from "../authentication"; // Import your department fetching function
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+  const router = useRouter(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -79,6 +81,9 @@ const Page = () => {
     try {
       const result = await signInUser(email, password, companyName);
       alert("User signed in successfully!");
+      // Navigate to department1 page after successful sign-in
+      let path = "./" + selectedDepartment
+      router.push(path); // Navigates to department1 page
     } catch (error: any) {
       if (error.message === "Company name does not match.") {
         setErrorMessage("Company name does not match.");
