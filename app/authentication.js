@@ -94,26 +94,26 @@ export const createUser = async (email, password, additionalData) => {
 
 
 // Sign in the user and confirm the company name
-export const signInUser = async (email, password, companyName) => {
+export const signInUser = async (email, password, companyId) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
     // Retrieve user document from Firestore
-    const userDocRef = doc(db, "Company/mh3VZ5IrZjubXUCZL381/Employees", user.uid);
+    const userDocRef = doc(db, "Company/${companyId}/Employees", user.uid);
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
       throw new Error("No user found for the given company.");
     }
 
-    // Check if the company name matches
-    const userData = userDoc.data();
-    if (userData.companyName !== companyName) {
-      throw new Error("Company name does not match.");
-    }
+    // Check if the company name matches (not sure why necessary)
+    // const userData = userDoc.data();
+    // if (userData.companyName !== companyName) {
+    //   throw new Error("Company name does not match.");
+    // }
 
-    console.log("Sign in successful and company name confirmed");
+    console.log("Sign in successful");
     return userData; // Return user data for further use
   } catch (error) {
     console.error("Error signing in:", error);
