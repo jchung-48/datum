@@ -24,6 +24,26 @@ export default function Home() {
             <button style={{ marginBottom: '20px' }}>Log In/Sign up</button>
           </Link>
         </li>
+        <li>
+          <Link href="/qaDepartment">
+            <button style={{ marginBottom: '20px' }}>Quality Assurance</button>
+          </Link>
+        </li>
+        <li>
+          <Link href="/hrDepartment">
+            <button style={{ marginBottom: '20px' }}>Human Resources</button>
+          </Link>
+        </li>
+        <li>
+          <Link href="/logisticsDepartment">
+            <button style={{ marginBottom: '20px' }}>Logistics</button>
+          </Link>
+        </li>
+        <li>
+          <Link href="/merchandisingDepartment">
+            <button style={{ marginBottom: '20px' }}>Merchandising</button>
+          </Link>
+        </li>
       </ul>
     </div>
 
