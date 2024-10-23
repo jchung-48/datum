@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { createUser, signInUser } from "../authentication"; // Import the sign-in function
+import { createUser, getCompanies, signInUser } from "../authentication"; // Import the sign-in function
 import { getDepartments } from "../authentication"; // Import your department fetching function
 
 const Page = () => {
@@ -45,6 +45,20 @@ const Page = () => {
     };
 
     fetchDepartments();
+  }, []);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const companiesList = await getCompanies();
+        console.log("Fetched companies:", companiesList);
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+        setErrorMessage("Failed to fetch companies");
+      }
+    };
+
+    fetchCompanies();
   }, []);
 
   const handleSignUp = async () => {

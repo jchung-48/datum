@@ -1,6 +1,6 @@
 // authentication.js
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection, getDocs, updateDoc } from "firebase/firestore";
+import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection, listCollections, getDocs, updateDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.js'; // Import initialized Firebase instances
 
 // Fetch departments from Firestore
@@ -18,7 +18,20 @@ export const getDepartments = async () => {
   }
 };
 
-
+// Fetch companies from Firestore
+export const getCompanies = async () => {
+  try {
+    const companiesRef = collection(db, "Company/");
+    const companiesSnapshot = await getDocs(companiesRef);
+    
+    const companies = companiesSnapshot.docs.map(doc => doc.data().name); // Extract company names
+    
+    return companies; // List of company names
+  } catch (error) {
+    console.error("Error fetching companies:", error);
+    throw error; // Throw the error for further handling
+  }
+}
 
 
 // Create a new user with email and password
