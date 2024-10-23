@@ -4,9 +4,9 @@ import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection
 import { auth, db } from '../firebase.js'; // Import initialized Firebase instances
 
 // Fetch departments from Firestore
-export const getDepartments = async () => {
+export const getDepartments = async (companyID) => {
   try {
-    const departmentsRef = collection(db, "Company/mh3VZ5IrZjubXUCZL381/Departments");
+    const departmentsRef = collection(db, "Company/${companyId}/Departments");
     const departmentsSnapshot = await getDocs(departmentsRef);
     
     const departments = departmentsSnapshot.docs.map(doc => doc.data().name); // Extract department names
@@ -24,7 +24,10 @@ export const getCompanies = async () => {
     const companiesRef = collection(db, "Company/");
     const companiesSnapshot = await getDocs(companiesRef);
     
-    const companies = companiesSnapshot.docs.map(doc => doc.data().name); // Extract company names
+    const companies = companiesSnapshot.docs.map(doc => ({
+      id: doc.id,           // Get the document ID
+      name: doc.data().name // Get the "name" field from the document
+    }));
     
     return companies; // List of company names
   } catch (error) {
