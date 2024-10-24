@@ -15,7 +15,7 @@ export const handleFileUpload = async (
   }
 ): Promise<void> => {
   if (!file) throw new Error("No file provided.");
-
+  console.log("upload storage path", storagePath);
   const storageRef = ref(storage, storagePath);
 
   // Check if a file with the same name exists
@@ -45,7 +45,7 @@ export const handleFileUpload = async (
       (error) => reject(error),
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        await updateFirestore(firestorePath, downloadURL, file.name);
+        await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
         resolve();
       }
     );
@@ -62,14 +62,15 @@ const updateFirestore = async (
     quoteId?: string;
   },
   downloadURL: string,
-  fileName: string
+  fileName: string,
+  storagePath: string
 ) => {
   const { collectionType, companyId, departmentId, buyerId, quoteId } = firestorePath;
 
   if (collectionType === "Departments" && departmentId) {
     // Add file information to the "files" sub-collection under Departments
     const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, "files", fileName);
-    await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: `gs://datum-115a.appspot.com/Company/Departments/HR${fileName}` });
+    await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: storagePath });
   } else if (collectionType === "Buyers" && buyerId && quoteId) {
     // Add file information to the PDFs array under the specific Quote in Buyers
     const quoteDocRef = doc(db, "Company", companyId, "Buyers", buyerId, "Quotes", quoteId);

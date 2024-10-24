@@ -21,7 +21,7 @@ const hrDepartment = () => {
     }
   };
 
-  // Handle file upload
+  // Handle file upload 
   const handleUpload = async () => {
     if (!file) {
       alert("Please select a file before uploading.");
