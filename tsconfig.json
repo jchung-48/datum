@@ -1,11 +1,33 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
+    "lib": ["DOM"], // Add "DOM" here if it’s missing
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "rootDir": ".",
-    "outDir": "build"
+    "outDir": "build",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
   },
   "include": [
+    "app/**/*.tsx",
     "src/**/*.ts",
-    "test/**/*.ts"
+    "test/**/*.ts",
+    ".next/types/**/*.ts",
+    "firebase.js"
   ]
 }
