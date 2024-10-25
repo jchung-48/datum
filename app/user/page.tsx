@@ -32,7 +32,7 @@ const Page = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const departmentsList = await getDepartments();
+        const departmentsList = await getDepartments("mh3VZ5IrZjubXUCZL381");
         console.log("Fetched departments:", departmentsList); // Debugging log
         if (departmentsList.length > 0) {
           setDepartments(departmentsList); // Store fetched departments in state
