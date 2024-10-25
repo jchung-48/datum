@@ -4,9 +4,9 @@ import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection
 import { auth, db } from '../firebase.js'; // Import initialized Firebase instances
 
 // Fetch departments from Firestore
-export const getDepartments = async (companyID) => {
+export const getDepartments = async (companyId) => {
   try {
-    const departmentsRef = collection(db, "Company/${companyId}/Departments");
+    const departmentsRef = collection(db, `Company/${companyId}/Departments`);
     const departmentsSnapshot = await getDocs(departmentsRef);
     
     const departments = departmentsSnapshot.docs.map(doc => doc.data().name); // Extract department names
@@ -100,7 +100,7 @@ export const signInUser = async (email, password, companyId) => {
     const user = userCredential.user;
 
     // Retrieve user document from Firestore
-    const userDocRef = doc(db, "Company/${companyId}/Employees", user.uid);
+    const userDocRef = doc(db, `Company/${companyId}/Employees`, user.uid);
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
@@ -108,7 +108,7 @@ export const signInUser = async (email, password, companyId) => {
     }
 
     // Check if the company name matches (not sure why necessary)
-    // const userData = userDoc.data();
+    const userData = userDoc.data();
     // if (userData.companyName !== companyName) {
     //   throw new Error("Company name does not match.");
     // }

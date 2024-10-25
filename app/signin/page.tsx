@@ -30,7 +30,7 @@ const Page = () => {
 
   const handleSignIn = async () => {
     try {
-      const result = await signInUser(email, password, workplaceId);
+      await signInUser(email, password, workplaceId);
       alert("User signed in successfully!");
     } catch (error: any) {
       if (error.message === "Company name does not match.") {
@@ -48,6 +48,23 @@ const Page = () => {
   };
 
   return (
-    
-  )
-}
+    <div>
+      <h1>Sign In</h1>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleSignIn}>Sign In</button>
+    </div>
+  );
+};
+
+export default Page;

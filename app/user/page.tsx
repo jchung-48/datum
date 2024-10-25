@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createUser, signInUser } from "../authentication"; // Import the sign-in function
-import { getDepartments, getCompanies } from "../authentication"; // Import your department fetching function
+import { getDepartments } from "../authentication"; // Import your department fetching function
 
 const Page = () => {
   const [email, setEmail] = useState("");
@@ -30,7 +30,7 @@ const Page = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const departmentsList = await getDepartments();
+        const departmentsList = await getDepartments("mh3VZ5IrZjubXUCZL381");
         console.log("Fetched departments:", departmentsList); // Debugging log
         if (departmentsList.length > 0) {
           setDepartments(departmentsList); // Store fetched departments in state
