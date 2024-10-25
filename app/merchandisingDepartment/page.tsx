@@ -1,4 +1,6 @@
 import Link from "next/link";
+import React from 'react';
+
 const merchandisingDepartment = () => {
     return (
       <div>

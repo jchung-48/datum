@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { getCompanies } from "../authentication";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import React from 'react';
 
 interface Company {
   id: string;
