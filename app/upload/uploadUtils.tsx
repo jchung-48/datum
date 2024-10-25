@@ -12,10 +12,11 @@ export const handleFileUpload = async (
     departmentId?: string;
     buyerId?: string;
     quoteId?: string;
+    customCollectionName?: string; // Add custom collection name
   }
 ): Promise<void> => {
   if (!file) throw new Error("No file provided.");
-
+  console.log("upload storage path", storagePath);
   const storageRef = ref(storage, storagePath);
 
   // Check if a file with the same name exists
@@ -45,7 +46,7 @@ export const handleFileUpload = async (
       (error) => reject(error),
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        await updateFirestore(firestorePath, downloadURL, file.name);
+        await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
         resolve();
       }
     );
@@ -58,18 +59,21 @@ const updateFirestore = async (
     collectionType: "Departments" | "Buyers";
     companyId: string;
     departmentId?: string;
+    customCollectionName?: string; // Add custom collection name
     buyerId?: string;
     quoteId?: string;
   },
   downloadURL: string,
-  fileName: string
+  fileName: string,
+  storagePath: string
 ) => {
-  const { collectionType, companyId, departmentId, buyerId, quoteId } = firestorePath;
+  const { collectionType, companyId, departmentId, customCollectionName, buyerId, quoteId } = firestorePath;
 
   if (collectionType === "Departments" && departmentId) {
-    // Add file information to the "files" sub-collection under Departments
-    const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, "files", fileName);
-    await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: `gs://datum-115a.appspot.com/Company/Departments/HR${fileName}` });
+    // Use custom collection name if provided, otherwise default to "files"
+    const collectionName = customCollectionName || "files";
+    const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, collectionName, fileName);
+    await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: storagePath });
   } else if (collectionType === "Buyers" && buyerId && quoteId) {
     // Add file information to the PDFs array under the specific Quote in Buyers
     const quoteDocRef = doc(db, "Company", companyId, "Buyers", buyerId, "Quotes", quoteId);
@@ -85,62 +89,62 @@ const updateFirestore = async (
 
 // Function to delete a file from Firebase Storage and Firestore
 export const handleFileDelete = async (
-    fileFullPath: string,
-    firestorePath: {
-      collectionType: "Departments" | "Buyers";
-      companyId: string;
-      departmentId?: string;
-      buyerId?: string;
-      quoteId?: string;
+  fileFullPath: string,
+  firestorePath: {
+    collectionType: "Departments" | "Buyers";
+    companyId: string;
+    departmentId?: string;
+    buyerId?: string;
+    quoteId?: string;
+  }
+): Promise<void> => {
+  try {
+    // Delete from Firebase Storage
+    const fileRef = ref(storage, fileFullPath);
+    await deleteObject(fileRef);
+    console.log(`File deleted from Firebase Storage: ${fileFullPath}`);
+
+    // Extract file name from the full path
+    const fileName = fileFullPath.split("/").pop();
+    const { collectionType, companyId, departmentId, buyerId, quoteId } = firestorePath;
+
+    if (collectionType === "Departments" && departmentId) {
+      // Delete from the "files" sub-collection under Departments
+      const filesDocRef = doc(
+        db,
+        "Company",
+        companyId,
+        "Departments",
+        departmentId,
+        "files",
+        fileName!
+      );
+      await deleteDoc(filesDocRef);
+      console.log(`File document deleted from Firestore: ${fileName}`);
+    } else if (collectionType === "Buyers" && buyerId && quoteId) {
+      // Remove the file URL from the "PDFS" array in the specific Quote document
+      const quoteDocRef = doc(
+        db,
+        "Company",
+        companyId,
+        "Buyers",
+        buyerId,
+        "Quotes",
+        quoteId
+      );
+
+      // Construct the full path URL for comparison
+      const filePath = `gs://datum-115a.appspot.com/${fileFullPath}`;
+
+      await updateDoc(quoteDocRef, {
+        PDFS: arrayRemove(filePath),
+      });
+      console.log(`File path removed from PDFs array in Firestore: ${filePath}`);
+    } else {
+      throw new Error("Invalid Firestore path provided for deletion.");
     }
-  ): Promise<void> => {
-    try {
-      // Delete from Firebase Storage
-      const fileRef = ref(storage, fileFullPath);
-      await deleteObject(fileRef);
-      console.log(`File deleted from Firebase Storage: ${fileFullPath}`);
-  
-      // Extract file name from the full path
-      const fileName = fileFullPath.split("/").pop();
-      const { collectionType, companyId, departmentId, buyerId, quoteId } = firestorePath;
-  
-      if (collectionType === "Departments" && departmentId) {
-        // Delete from the "files" sub-collection under Departments
-        const filesDocRef = doc(
-          db,
-          "Company",
-          companyId,
-          "Departments",
-          departmentId,
-          "files",
-          fileName!
-        );
-        await deleteDoc(filesDocRef);
-        console.log(`File document deleted from Firestore: ${fileName}`);
-      } else if (collectionType === "Buyers" && buyerId && quoteId) {
-        // Remove the file URL from the "PDFS" array in the specific Quote document
-        const quoteDocRef = doc(
-          db,
-          "Company",
-          companyId,
-          "Buyers",
-          buyerId,
-          "Quotes",
-          quoteId
-        );
-  
-        // Construct the full path URL for comparison
-        const filePath = `gs://datum-115a.appspot.com/${fileFullPath}`;
-  
-        await updateDoc(quoteDocRef, {
-          PDFS: arrayRemove(filePath),
-        });
-        console.log(`File path removed from PDFs array in Firestore: ${filePath}`);
-      } else {
-        throw new Error("Invalid Firestore path provided for deletion.");
-      }
-    } catch (error) {
-      console.error("Error deleting file:", error);
-      throw error; // Re-throw error for handling in the calling component
-    }
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw error; // Re-throw error for handling in the calling component
+  }
 };
