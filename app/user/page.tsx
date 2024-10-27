@@ -27,6 +27,7 @@ const Page = () => {
 
       return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
     }
+    return undefined;
   }, [errorMessage]);
 
   // Fetch departments when the component mounts
