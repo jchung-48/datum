@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
 import { signInUser } from "../authentication";
+import { useRouter } from "next/navigation";
 
 interface Company {
   id: string;
@@ -14,10 +15,19 @@ interface Company {
 const Page = () => {
   const searchParams = useSearchParams(); // Get access to the search parameters (query parameters)
   const workplaceId = searchParams.get("workplaceId"); // Get the companyId from query parameters
+  const firestoreIdPattern = /^[a-zA-Z0-9]{20}$/; // regex pattern for firestore IDs
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Track error messages
+
+  useEffect(() => {
+    // Validate the workplaceId format before allowing access
+    if (!workplaceId || !firestoreIdPattern.test(workplaceId)) {
+      router.push("/workplaces"); // Redirect to an error page if validation fails
+    }
+  }, [workplaceId, router]);
 
   useEffect(() => {
     if (errorMessage) {
@@ -65,6 +75,7 @@ const Page = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleSignIn}>Sign In</button>
+      {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>} {/* Display error message */}
     </div>
   );
 };
