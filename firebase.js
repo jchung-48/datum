@@ -1,5 +1,7 @@
 // firebase.js (keep it at the root of your project)
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -15,5 +17,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export the storage object to be used elsewhere
-export const storage = getStorage(app);
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
+
+// Initialize Firestore and get a reference to the service
+const db = getFirestore(app);
+
+// Initialize Firebase Storage and get a reference to the service
+const storage = getStorage(app);
+
+// Export the initialized instances
+export { app, auth, db, storage };
