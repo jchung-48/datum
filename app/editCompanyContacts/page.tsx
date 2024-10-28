@@ -1,5 +1,6 @@
 // Example in index.tsx or layout.tsx
 import Link from 'next/link';
+import React from 'react';
 
 export default function Home() {
   return (

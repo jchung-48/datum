@@ -1,6 +1,7 @@
 "use client"; // Mark as a Client Component
 
 import { useState } from "react";
+import React from 'react';
 import Link from "next/link";
 import { handleFileUpload } from "../upload/uploadUtils"; // Import the utility function
 

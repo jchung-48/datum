@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { createUser, signInUser } from "../authentication"; // Import the sign-in function
 import { getDepartments } from "../authentication"; // Import your department fetching function
 import { useRouter } from "next/navigation";
+import React from 'react';
 
 const Page = () => {
   const router = useRouter(); 
@@ -26,13 +27,14 @@ const Page = () => {
 
       return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
     }
+    return undefined;
   }, [errorMessage]);
 
   // Fetch departments when the component mounts
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const departmentsList = await getDepartments();
+        const departmentsList = await getDepartments("mh3VZ5IrZjubXUCZL381");
         console.log("Fetched departments:", departmentsList); // Debugging log
         if (departmentsList.length > 0) {
           setDepartments(departmentsList); // Store fetched departments in state

@@ -1,11 +1,11 @@
 // Example in index.tsx or layout.tsx
 import Link from 'next/link';
+import React from 'react';
 
 export default function Home() {
   return (
     <div>
       <h1>Welcome to the Home Page</h1>
-      
       <ul>
         <li>
           {/* Link to the route, not the file */}
@@ -46,6 +46,5 @@ export default function Home() {
         </li>
       </ul>
     </div>
-
   );
 }

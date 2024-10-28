@@ -1,12 +1,12 @@
 // authentication.js
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection, getDocs, updateDoc } from "firebase/firestore";
+import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection, listCollections, getDocs, updateDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.js'; // Import initialized Firebase instances
 
 // Fetch departments from Firestore
-export const getDepartments = async () => {
+export const getDepartments = async (companyId) => {
   try {
-    const departmentsRef = collection(db, "Company/mh3VZ5IrZjubXUCZL381/Departments");
+    const departmentsRef = collection(db, `Company/${companyId}/Departments`);
     const departmentsSnapshot = await getDocs(departmentsRef);
     
     const departments = departmentsSnapshot.docs.map(doc => doc.data().name); // Extract department names
@@ -18,7 +18,23 @@ export const getDepartments = async () => {
   }
 };
 
-
+// Fetch companies from Firestore
+export const getCompanies = async () => {
+  try {
+    const companiesRef = collection(db, "Company/");
+    const companiesSnapshot = await getDocs(companiesRef);
+    
+    const companies = companiesSnapshot.docs.map(doc => ({
+      id: doc.id,           // Get the document ID
+      name: doc.data().name // Get the "name" field from the document
+    }));
+    
+    return companies; // List of company names
+  } catch (error) {
+    console.error("Error fetching companies:", error);
+    throw error; // Throw the error for further handling
+  }
+}
 
 
 // Create a new user with email and password
@@ -78,26 +94,26 @@ export const createUser = async (email, password, additionalData) => {
 
 
 // Sign in the user and confirm the company name
-export const signInUser = async (email, password, companyName) => {
+export const signInUser = async (email, password, companyId) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
     // Retrieve user document from Firestore
-    const userDocRef = doc(db, "Company/mh3VZ5IrZjubXUCZL381/Employees", user.uid);
+    const userDocRef = doc(db, `Company/${companyId}/Employees`, user.uid);
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
       throw new Error("No user found for the given company.");
     }
 
-    // Check if the company name matches
+    // Check if the company name matches (not sure why necessary)
     const userData = userDoc.data();
-    if (userData.companyName !== companyName) {
-      throw new Error("Company name does not match.");
-    }
+    // if (userData.companyName !== companyName) {
+    //   throw new Error("Company name does not match.");
+    // }
 
-    console.log("Sign in successful and company name confirmed");
+    console.log("Sign in successful");
     return userData; // Return user data for further use
   } catch (error) {
     console.error("Error signing in:", error);

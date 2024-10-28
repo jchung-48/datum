@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import AddOrEditManufactuter from './crudManufacturer';
 import Link from 'next/link';
 

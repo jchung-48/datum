@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Department1 = () => {
     return (
       <div>
