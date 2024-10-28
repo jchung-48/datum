@@ -1,37 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebase'; // Import Firestore instance
-
-// Contact type definition with role
-type Contact = {
-  name: string;
-  phone: string;
-  email: string;
-  role: string;
-};
-
-// Catalog item type definition
-type CatalogItem = {
-  productName: string;
-  productCode: string;
-};
-
-// Manufacturer type definition
-type Manufacturer = {
-  id?: string; // Firestore document ID, optional for new manufacturers
-  contacts: Contact[];
-  catalog: CatalogItem[];
-  email: string;
-  industry: string;
-  name: string;
-  phone: string;
-};
-
-// Company type definition (shared with buyers)
-type Company = {
-  id: string; // The Firestore document ID for the company
-  name: string; // The name field from the company document
-};
+import { Company, Manufacturer } from '@/app/types';
 
 const AddOrEditManufacturer = () => {
   const [companies, setCompanies] = useState<Company[]>([]); // List of companies
