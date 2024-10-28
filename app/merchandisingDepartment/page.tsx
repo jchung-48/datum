@@ -1,41 +1,49 @@
-"use client"; // Mark as a Client Component
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import './styles.css';
-import { FileList } from './merchandising'; // Adjust the path accordingly
-import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils'; // Import the utility functions
+import { FileList } from '../upload/listFiles';
+import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import { fetchContacts } from '../editCompanyContacts/editContactUtils';
+import { Buyer, Manufacturer } from '../types';
 
-const qaDepartment = () => {
-  // Constants for the companyId and departmentId used for Firestore
+const merchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
-  const DEPARTMENTID = 'ti7yNByDOzarVXoujOog'; // merchandising department ID
+  const DEPARTMENTID = 'ti7yNByDOzarVXoujOog';
 
-  // States for uploading files
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-  const [selectedCollections, setSelectedCollections] = useState<string[]>(['files']); // State for selected collections
+  const [selectedCollections, setSelectedCollections] = useState<string[]>(['files']);
+  const [buyers, setBuyers] = useState<Buyer[]>([]);
+  const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
+  const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
+  const [selectedContactType, setSelectedContactType] = useState<'Buyer' | 'Manufacturer' | null>(null);
+  const [contactFile, setContactFile] = useState<File | null>(null);
+  const [contactUploadStatus, setContactUploadStatus] = useState<string | null>(null);
 
-  // Handle file selection
+  // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
   };
 
-  // Handle checkbox changes
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSelectedCollections(prevSelected => {
-      if (e.target.checked) {
-        return [...prevSelected, value];
-      } else {
-        return prevSelected.filter(item => item !== value);
-      }
-    });
+  // Handle file selection for contact files
+  const handleContactFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setContactFile(e.target.files[0]);
+    }
   };
 
-  // Handle file upload
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSelectedCollections(prevSelected =>
+      e.target.checked ? [...prevSelected, value] : prevSelected.filter(item => item !== value)
+    );
+  };
+
+  // Upload for department files
   const handleUpload = async () => {
     if (!file) {
       alert('Please select a file before uploading.');
@@ -45,18 +53,12 @@ const qaDepartment = () => {
       alert('Please select at least one collection to upload the file.');
       return;
     }
-    
 
     try {
-      // Define the storage path
       const storagePath = `Company/Departments/Merchandising/${file.name}`;
-
-      // Upload the file to Firebase Storage once and get the download URL
       const downloadURL = await uploadFileToStorage(file, storagePath);
 
-      // Loop over selected collections to update Firestore
       for (const collectionName of selectedCollections) {
-        // Define Firestore path for each collection
         const firestorePath = {
           collectionType: 'Departments' as const,
           companyId: COMPANYID,
@@ -64,20 +66,33 @@ const qaDepartment = () => {
           customCollectionName: collectionName,
         };
 
-        // Call the utility function to update Firestore
         await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
       }
 
       setUploadStatus('File uploaded successfully to all selected collections!');
-      setFile(null); // Reset the file input
-      setSelectedCollections([]); // Reset selected collections if desired
+      setFile(null);
+      setSelectedCollections([]);
     } catch (error) {
       console.error('Error uploading file:', error);
       setUploadStatus('Failed to upload file.');
     }
   };
 
-  // Paths for the FileList components
+  useEffect(() => {
+    const loadBuyersAndManufacturers = async () => {
+      try {
+        const buyersList = await fetchContacts(COMPANYID, 'Buyer');
+        const manufacturersList = await fetchContacts(COMPANYID, 'Manufacturer');
+        setBuyers(buyersList as Buyer[]);
+        setManufacturers(manufacturersList as Manufacturer[]);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    };
+
+    loadBuyersAndManufacturers();
+  }, []);
+
   const deptFilesPath = [
     'Company',
     COMPANYID,
@@ -85,6 +100,46 @@ const qaDepartment = () => {
     DEPARTMENTID,
     'files',
   ] as [string, ...string[]];
+
+  const selectedContactFilesPath =
+    selectedContactType && selectedContactId
+      ? [
+          'Company',
+          COMPANYID,
+          selectedContactType === 'Buyer' ? 'Buyers' : 'Manufacturers',
+          selectedContactId,
+          selectedContactType === 'Buyer' ? 'Quotes' : 'Products',
+        ]
+      : null;
+
+  // Handle contact-specific file upload
+  const handleContactFileUpload = async () => {
+    if (!contactFile || !selectedContactId || !selectedContactType) {
+      alert("Please select a file and a contact before uploading.");
+      return;
+    }
+
+    try {
+      const storagePath = `Company/${selectedContactType === 'Buyer' ? 'Buyers' : 'Manufacturers'}/${selectedContactId}/${contactFile.name}`;
+      const downloadURL = await uploadFileToStorage(contactFile, storagePath);
+
+      const firestorePath = {
+        collectionType: selectedContactType === 'Buyer' ? 'Buyers' : 'Departments',
+        companyId: COMPANYID,
+        buyerId: selectedContactType === 'Buyer' ? selectedContactId : undefined,
+        quoteId: selectedContactType === 'Buyer' ? 'Quotes' : undefined,
+        departmentId: selectedContactType === 'Manufacturer' ? DEPARTMENTID : undefined,
+      };
+
+      await updateFirestore(firestorePath, downloadURL, contactFile.name, storagePath);
+
+      setContactUploadStatus('File uploaded successfully to contact!');
+      setContactFile(null);
+    } catch (error) {
+      console.error('Error uploading contact file:', error);
+      setContactUploadStatus('Failed to upload file to contact.');
+    }
+  };
 
   return (
     <div>
@@ -96,11 +151,9 @@ const qaDepartment = () => {
         <h1>Welcome to Merchandising!</h1>
         <p>These are the Merchandising files.</p>
 
-        {/* File upload section */}
         <div style={{ marginTop: '20px' }}>
           <input type="file" onChange={handleFileChange} />
 
-          {/* Replace the dropdown with checkboxes */}
           <div>
             <label>
               <input
@@ -111,7 +164,6 @@ const qaDepartment = () => {
               />
               Department Files
             </label>
-            {/* Add more options as needed */}
           </div>
 
           <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
@@ -124,8 +176,75 @@ const qaDepartment = () => {
       <div className="files">
         <FileList collectionPath={deptFilesPath} title="Department Files" />
       </div>
+
+      {/* Buyers List */}
+      <div className="contact-list">
+        <h2>Buyers</h2>
+        {buyers.length === 0 ? (
+          <p>No buyers found.</p>
+        ) : (
+          <ul>
+            {buyers.map((buyer) =>
+              buyer.id ? (
+                <li
+                  key={buyer.id}
+                  onClick={() => {
+                    setSelectedContactId(buyer.id);
+                    setSelectedContactType('Buyer');
+                  }}
+                  style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                >
+                  {buyer.name} - {buyer.email} - {buyer.phone}
+                </li>
+              ) : null
+            )}
+          </ul>
+        )}
+      </div>
+
+      {/* Manufacturers List */}
+      <div className="contact-list">
+        <h2>Manufacturers</h2>
+        {manufacturers.length === 0 ? (
+          <p>No manufacturers found.</p>
+        ) : (
+          <ul>
+            {manufacturers.map((manufacturer) =>
+              manufacturer.id ? (
+                <li
+                  key={manufacturer.id}
+                  onClick={() => {
+                    setSelectedContactId(manufacturer.id);
+                    setSelectedContactType('Manufacturer');
+                  }}
+                  style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
+                >
+                  {manufacturer.name} - {manufacturer.email} - {manufacturer.phone}
+                </li>
+              ) : null
+            )}
+          </ul>
+        )}
+      </div>
+
+      {/* Files for Selected Contact */}
+      {selectedContactFilesPath && (
+        <div className="files">
+          <FileList
+            collectionPath={selectedContactFilesPath as [string, ...string[]]}
+            title={`${selectedContactType} Files`}
+          />
+
+          {/* File upload for selected contact */}
+          <div style={{ marginTop: '20px' }}>
+            <input type="file" onChange={handleContactFileChange} />
+            <button onClick={handleContactFileUpload}>Upload File to {selectedContactType}</button>
+            {contactUploadStatus && <p>{contactUploadStatus}</p>}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default qaDepartment;
+export default merchandisingDepartment;

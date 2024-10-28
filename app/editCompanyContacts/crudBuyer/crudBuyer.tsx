@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
-import { fetchCompanies, fetchContacts, checkForDuplicate, handleAddOrEditContact, handleDeleteContact } from '../editContactUtils';
-import { Buyer, Company, Contact } from '../../types';
+import { 
+  fetchCompanies,
+  fetchContacts,
+  checkForDuplicate,
+  handleAddOrEditContact,
+  handleDeleteContact
+} from '../editContactUtils';
+import { Buyer, Company } from '../../types';
 
 const AddOrEditBuyer = () => {
   const [companies, setCompanies] = useState<Company[]>([]);

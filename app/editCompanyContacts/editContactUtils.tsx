@@ -1,5 +1,5 @@
 // editContactUtils.ts
-import { collection, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase';
 import { Company, Contact, Manufacturer, Buyer } from '@/app/types';
 
