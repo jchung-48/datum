@@ -5,18 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, QuerySnapshot, DocumentData } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { db, storage } from '../../firebase';
-
-type FileData = {
-  id: string;
-  fileName: string;
-  download: string;
-  filePath: string;
-};
-
-type FileListProps = {
-  collectionPath: [string, ...string[]]; // Modified type
-  title: string;
-};
+import { FileData, FileListProps } from '../types';
 
 export const FileList: React.FC<FileListProps> = ({ collectionPath, title }) => {
   const [files, setFiles] = useState<FileData[]>([]);
