@@ -9,7 +9,8 @@ import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils'; //
 const qaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
-  const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; // Update to the QA department ID
+  const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; 
+  const INBOXDEPTID = 'ti7yNByDOzarVXoujOog'
 
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
@@ -90,8 +91,8 @@ const qaDepartment = () => {
     'Company',
     COMPANYID,
     'Departments',
-    DEPARTMENTID,
-    'inbox',
+    INBOXDEPTID,
+    'records',
   ] as [string, ...string[]];
 
   return (
