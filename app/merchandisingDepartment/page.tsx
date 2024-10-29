@@ -108,9 +108,10 @@ const merchandisingDepartment = () => {
           COMPANYID,
           selectedContactType === 'Buyer' ? 'Buyers' : 'Manufacturers',
           selectedContactId,
-          selectedContactType === 'Buyer' ? 'Quotes' : 'Products',
+          (selectedContactType === 'Buyer' ? 'Quotes' : 'Products'),
         ]
       : null;
+
 
   // Handle contact-specific file upload
   const handleContactFileUpload = async () => {
@@ -124,11 +125,10 @@ const merchandisingDepartment = () => {
       const downloadURL = await uploadFileToStorage(contactFile, storagePath);
 
       const firestorePath = {
-        collectionType: selectedContactType === 'Buyer' ? 'Buyers' : 'Departments',
+        collectionType: selectedContactType === 'Buyer' ? 'Buyers' as const : selectedContactType === 'Manufacturer' ? 'Manufacturers' as const : 'Departments' as const,
         companyId: COMPANYID,
         buyerId: selectedContactType === 'Buyer' ? selectedContactId : undefined,
-        quoteId: selectedContactType === 'Buyer' ? 'Quotes' : undefined,
-        departmentId: selectedContactType === 'Manufacturer' ? DEPARTMENTID : undefined,
+        manufacturerId: selectedContactType === 'Manufacturer' ? selectedContactId : undefined,
       };
 
       await updateFirestore(firestorePath, downloadURL, contactFile.name, storagePath);
@@ -189,7 +189,7 @@ const merchandisingDepartment = () => {
                 <li
                   key={buyer.id}
                   onClick={() => {
-                    setSelectedContactId(buyer.id);
+                    setSelectedContactId(buyer.id ? buyer.id : null);
                     setSelectedContactType('Buyer');
                   }}
                   style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
@@ -214,7 +214,7 @@ const merchandisingDepartment = () => {
                 <li
                   key={manufacturer.id}
                   onClick={() => {
-                    setSelectedContactId(manufacturer.id);
+                    setSelectedContactId(manufacturer.id ? manufacturer.id : null);
                     setSelectedContactType('Manufacturer');
                   }}
                   style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}

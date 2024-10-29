@@ -47,30 +47,32 @@ export const uploadFileToStorage = async (
 // Function to update Firestore based on the uploaded file
 export const updateFirestore = async (
   firestorePath: {
-    collectionType: "Departments" | "Buyers";
+    collectionType: "Departments" | "Buyers" | "Manufacturers";
     companyId: string;
     departmentId?: string;
     customCollectionName?: string; // Custom collection name
     buyerId?: string;
-    quoteId?: string;
+    manufacturerId?: string;
   },
   downloadURL: string,
   fileName: string,
   storagePath: string
 ) => {
-  const { collectionType, companyId, departmentId, customCollectionName, buyerId, quoteId } = firestorePath;
+  const { collectionType, companyId, departmentId, customCollectionName, buyerId, manufacturerId } = firestorePath;
 
   if (collectionType === "Departments" && departmentId) {
     // Use custom collection name if provided, otherwise default to "files"
     const collectionName = customCollectionName || "files";
     const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, collectionName, fileName);
     await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: storagePath });
-  } else if (collectionType === "Buyers" && buyerId && quoteId) {
+  } else if (collectionType === "Buyers" && buyerId ) {
     // Add file information to the PDFs array under the specific Quote in Buyers
-    const quoteDocRef = doc(db, "Company", companyId, "Buyers", buyerId, "Quotes", quoteId);
-    await updateDoc(quoteDocRef, {
-      PDFS: arrayUnion(downloadURL),
-    });
+    const quoteDocRef = doc(db, "Company", companyId, "Buyers", buyerId, "Quotes", fileName);
+    await setDoc(quoteDocRef, { fileName, download: downloadURL, filePath: storagePath });
+  } else if (collectionType === "Manufacturers" && manufacturerId ) {
+    // Add file information to the PDFs array under the specific Quote in Buyers
+    const productDocRef = doc(db, "Company", companyId, "Manufacturers", manufacturerId, "Products", fileName);
+    await setDoc(productDocRef, { fileName, download: downloadURL, filePath: storagePath });
   } else {
     throw new Error("Invalid Firestore path provided.");
   }
