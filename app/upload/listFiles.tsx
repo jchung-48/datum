@@ -1,8 +1,8 @@
-// qualityassurance.tsx
+// listFiles.tsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, QuerySnapshot, DocumentData } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 import { FileData, FileListProps } from '../types';

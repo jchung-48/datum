@@ -1,7 +1,7 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "lib": ["DOM"], // Add "DOM" here if it’s missing
+    "lib": ["DOM"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
@@ -17,18 +17,21 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "types": ["jest", "@testing-library/jest-dom"],
     "plugins": [
       {
         "name": "next"
       }
-    ],
+    ]
   },
   "include": [
     "app/**/*.tsx",
+    "app/**/*.ts",
     "app/*.js",
     "src/**/*.ts",
     "test/**/*.ts",
     ".next/types/**/*.ts",
-    "firebase.js"
+    "firebase.js",
+    "jest.setup.ts"
   ]
 }

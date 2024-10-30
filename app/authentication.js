@@ -1,7 +1,21 @@
 // authentication.js
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import Cookies from "js-cookie";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection, listCollections, getDocs, updateDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.js'; // Import initialized Firebase instances
+
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Set a cookie with the user's ID token to remember the session
+    user.getIdToken().then((token) => {
+      Cookies.set("authToken", token, { expires: 7 }); // Expires in 7 days
+    });
+  } else {
+    // Remove the authToken cookie if the user signs out
+    Cookies.remove("authToken");
+  }
+});
 
 // Fetch departments from Firestore
 export const getDepartments = async (companyId) => {
@@ -137,3 +151,12 @@ export const signInUser = async (email, password, companyId) => {
   }
 };
 
+export const logoutUser = async () => {
+  try {
+    await signOut(auth);
+    Cookies.remove("authToken"); // Remove the cookie on sign out
+    console.log("User signed out successfully.");
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+};

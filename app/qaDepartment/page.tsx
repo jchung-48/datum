@@ -2,19 +2,22 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import './styles.css';
-import { FileList } from './qualityAssurance'; // Adjust the path accordingly
-import { handleFileUpload } from '../upload/uploadUtils'; // Import the utility function
 
-const qaDepartment = () => {
+import './styles.css';
+import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
+import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+
+
+const QaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
-  const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; // Update to the QA department ID
+  const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; 
+  const INBOXDEPTID = 'ti7yNByDOzarVXoujOog'
 
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-  const [selectedCollection, setSelectedCollection] = useState('files'); // State for selected collection
+  const [selectedCollections, setSelectedCollections] = useState<string[]>(['files']); // State for selected collections
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,27 +26,54 @@ const qaDepartment = () => {
     }
   };
 
+  // Handle checkbox changes
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSelectedCollections(prevSelected => {
+      if (e.target.checked) {
+        return [...prevSelected, value];
+      } else {
+        return prevSelected.filter(item => item !== value);
+      }
+    });
+  };
+
   // Handle file upload
   const handleUpload = async () => {
     if (!file) {
       alert('Please select a file before uploading.');
       return;
     }
-
-    // Define the storage path and Firestore path
-    const storagePath = `Company/Departments/QualityAssurance/${file.name}`;
-    const firestorePath = {
-      collectionType: 'Departments' as const,
-      companyId: COMPANYID,
-      departmentId: DEPARTMENTID,
-      customCollectionName: selectedCollection, // Use the selected collection name
-    };
+    if (selectedCollections.length === 0) {
+      alert('Please select at least one collection to upload the file.');
+      return;
+    }
+    
 
     try {
-      // Call the utility function to upload the file and update Firestore
-      await handleFileUpload(file, storagePath, firestorePath);
-      setUploadStatus('File uploaded successfully!');
+      // Define the storage path
+      const storagePath = `Company/Departments/QualityAssurance/${file.name}`;
+
+      // Upload the file to Firebase Storage once and get the download URL
+      const downloadURL = await uploadFileToStorage(file, storagePath);
+
+      // Loop over selected collections to update Firestore
+      for (const collectionName of selectedCollections) {
+        // Define Firestore path for each collection
+        const firestorePath = {
+          collectionType: 'Departments' as const,
+          companyId: COMPANYID,
+          departmentId: DEPARTMENTID,
+          customCollectionName: collectionName,
+        };
+
+        // Call the utility function to update Firestore
+        await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
+      }
+
+      setUploadStatus('File uploaded successfully to all selected collections!');
       setFile(null); // Reset the file input
+      setSelectedCollections([]); // Reset selected collections if desired
     } catch (error) {
       console.error('Error uploading file:', error);
       setUploadStatus('Failed to upload file.');
@@ -63,8 +93,8 @@ const qaDepartment = () => {
     'Company',
     COMPANYID,
     'Departments',
-    DEPARTMENTID,
-    'inbox',
+    INBOXDEPTID,
+    'records',
   ] as [string, ...string[]];
 
   return (
@@ -80,11 +110,30 @@ const qaDepartment = () => {
         {/* File upload section */}
         <div style={{ marginTop: '20px' }}>
           <input type="file" onChange={handleFileChange} />
-          <select value={selectedCollection} onChange={(e) => setSelectedCollection(e.target.value)}>
-            <option value="files">Department Files</option>
-            <option value="inbox">Inbox</option>
+
+          {/* Replace the dropdown with checkboxes */}
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                value="files"
+                checked={selectedCollections.includes('files')}
+                onChange={handleCheckboxChange}
+              />
+              Department Files
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                value="inbox"
+                checked={selectedCollections.includes('inbox')}
+                onChange={handleCheckboxChange}
+              />
+              Inbox
+            </label>
             {/* Add more options as needed */}
-          </select>
+          </div>
+
           <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
             Upload to QA Department
           </button>
@@ -100,4 +149,4 @@ const qaDepartment = () => {
   );
 };
 
-export default qaDepartment;
+export default QaDepartment;
