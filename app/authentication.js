@@ -18,6 +18,22 @@ export const getDepartments = async (companyId) => {
   }
 };
 
+export const getUserDepartments = async (userData) => {
+  try {
+    // const userRef = doc(db, `Company/${companyId}/Employees`, userId);
+    // const userSnap = await getDoc(userRef);
+    // const userData = userSnap.data();
+    const departmentRefs = userData.departments;// get list of departments from references
+    const firstDepartmentRef = departmentRefs[0]; // get first department
+    const departmentSnap = await getDoc(firstDepartmentRef);
+    const departmentData = departmentSnap.data();
+    return departmentData;
+  } catch (error) {
+    console.error("Error fetching departments for user:", error);
+    throw error;
+  }
+}
+
 // Fetch companies from Firestore
 export const getCompanies = async () => {
   try {
