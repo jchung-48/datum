@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import './styles.css';
+//import './styles.css';
 import { FileList } from './qualityAssurance'; // Adjust the path accordingly
 import { handleFileUpload } from '../upload/uploadUtils'; // Import the utility function
 

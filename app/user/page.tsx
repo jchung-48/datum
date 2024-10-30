@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { createUser, signInUser } from "../authentication"; // Import the sign-in function
-import { getDepartments } from "../authentication"; // Import your department fetching function
+import { getDepartments, createUser, signInUser } from "../authentication"; // Import your department fetching function
 import { useRouter } from "next/navigation";
 import React from 'react';
 
