@@ -1,13 +1,24 @@
 "use client";
-import { useSearchParams, useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+
+import React from "react";
+import { useState, useEffect } from "react";
 import { signInUser, logoutUser } from "../authentication";
+import { useRouter , useSearchParams} from "next/navigation";
 import Cookies from "js-cookie";
+        
+        
+interface Company {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
 
 const Page = () => {
+  const searchParams = useSearchParams(); // Get access to the search parameters (query parameters)
+  const workplaceId = searchParams.get("workplaceId"); // Get the companyId from query parameters
+  const firestoreIdPattern = /^[a-zA-Z0-9]{20}$/; // regex pattern for firestore IDs
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const workplaceId = searchParams.get("workplaceId");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,12 +36,20 @@ const Page = () => {
   }, [router]);
 
   useEffect(() => {
+    // Validate the workplaceId format before allowing access
+    if (!workplaceId || !firestoreIdPattern.test(workplaceId)) {
+      router.push("/workplaces"); // Redirect to an error page if validation fails
+    }
+  }, [workplaceId, router]);
+
+  useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
         setErrorMessage("");
       }, 3000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [errorMessage]);
 
   const handleSignIn = async () => {
@@ -61,6 +80,7 @@ const Page = () => {
 
   return (
     <div>
+
       
       {!isSignedIn ? (
         <>
@@ -82,6 +102,7 @@ const Page = () => {
       ) : (
         <button onClick={handleSignOut}>Sign Out</button>
       )}
+
     </div>
   );
 };
