@@ -5,10 +5,10 @@ import Link from 'next/link';
 
 import './styles.css';
 import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
-import { uploadFileToStorage, updateFirestore, handleFileUpload } from '../upload/uploadUtils'; // Import the utility functions
+import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 
 
-const qaDepartment = () => {
+const QaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; 
@@ -149,4 +149,4 @@ const qaDepartment = () => {
   );
 };
 
-export default qaDepartment;
+export default QaDepartment;
