@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+
 import './styles.css';
 import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
-import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils'; // Import the utility functions
+import { uploadFileToStorage, updateFirestore, handleFileUpload } from '../upload/uploadUtils'; // Import the utility functions
+
 
 const qaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore

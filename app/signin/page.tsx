@@ -1,10 +1,12 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+
 import React from "react";
 import { useState, useEffect } from "react";
-import { signInUser } from "../authentication";
-import { useRouter } from "next/navigation";
-
+import { signInUser, logoutUser } from "../authentication";
+import { useRouter , useSearchParams} from "next/navigation";
+import Cookies from "js-cookie";
+        
+        
 interface Company {
   id: string;
   name: string;
@@ -20,7 +22,18 @@ const Page = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Track error messages
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    // Check if the user is already signed in by looking for the authToken cookie
+    const token = Cookies.get("authToken");
+    if (token) {
+      setIsSignedIn(true); // User is already signed in
+      alert("User is already signed in.");
+      //router.push("./"); // Navigates to a dashboard or home page
+    }
+  }, [router]);
 
   useEffect(() => {
     // Validate the workplaceId format before allowing access
@@ -32,10 +45,9 @@ const Page = () => {
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
-        setErrorMessage(""); // Clear error message after 3 seconds
+        setErrorMessage("");
       }, 3000);
-
-      return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
+      return () => clearTimeout(timer);
     }
     return undefined;
   }, [errorMessage]);
@@ -43,6 +55,7 @@ const Page = () => {
   const handleSignIn = async () => {
     try {
       await signInUser(email, password, workplaceId);
+      setIsSignedIn(true); // Update state to show user is signed in
       alert("User signed in successfully!");
     } catch (error: any) {
       if (error.message === "Company name does not match.") {
@@ -53,29 +66,43 @@ const Page = () => {
         setErrorMessage("Error signing in: " + error.message);
       }
     }
+  };
 
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 3000);
+  const handleSignOut = async () => {
+    try {
+      await logoutUser(); // Sign the user out
+      setIsSignedIn(false); // Update state to show user is signed out
+      router.push("./"); // Redirect to the sign-in page or a different route
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   return (
     <div>
-      <h1>Sign In</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleSignIn}>Sign In</button>
-      {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>} {/* Display error message */}
+
+      
+      {!isSignedIn ? (
+        <>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button onClick={handleSignIn}>Sign In</button>
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+        </>
+      ) : (
+        <button onClick={handleSignOut}>Sign Out</button>
+      )}
+
     </div>
   );
 };
