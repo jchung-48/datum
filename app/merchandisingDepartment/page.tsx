@@ -200,6 +200,9 @@ const merchandisingDepartment = () => {
             )}
           </ul>
         )}
+        <Link href="/editCompanyContacts/crudBuyer">
+            <button style={{ marginBottom: '20px' }}>Add/Edit Buyers</button>
+        </Link>
       </div>
 
       {/* Manufacturers List */}
@@ -225,6 +228,9 @@ const merchandisingDepartment = () => {
             )}
           </ul>
         )}
+        <Link href="/editCompanyContacts/crudManufacturer">
+          <button style={{ marginBottom: '20px' }}>Add/Edit Manufacturers</button>
+        </Link>
       </div>
 
       {/* Files for Selected Contact */}
