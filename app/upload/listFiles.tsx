@@ -9,7 +9,7 @@ import { FileData, FileListProps } from '../types';
 
 export const FileList: React.FC<FileListProps> = ({ collectionPath, title, onSearch }) => {
   const [files, setFiles] = useState<FileData[]>([]);
-  const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]); // Holds filtered files
+  const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>(''); // State for search query
@@ -45,14 +45,14 @@ export const FileList: React.FC<FileListProps> = ({ collectionPath, title, onSea
       const fileData = doc.data();
       const fileName = fileData.fileName;
       const filePath = fileData.filePath;
-        
+
       console.log("file:", fileData);
       console.log('Processing file:', fileName);
       console.log('File path:', filePath);
-  
+
       const fileRef = ref(storage, filePath);
       const downloadURL = await getDownloadURL(fileRef);
-  
+
       return {
         id: doc.id,
         fileName: fileName,
@@ -60,10 +60,9 @@ export const FileList: React.FC<FileListProps> = ({ collectionPath, title, onSea
         filePath: filePath,
       };
     });
-  
+
     return await Promise.all(filesPromises);
   };
-  
 
   if (loading) {
     return <div>Loading {title.toLowerCase()}...</div>;
@@ -87,26 +86,19 @@ export const FileList: React.FC<FileListProps> = ({ collectionPath, title, onSea
         />
       )}
 
-      {loading ? (
-        <div>Loading {title.toLowerCase()}...</div>
-      ) : error ? (
-        <div>{error}</div>
-      ) : (
-        <ul>
-          {filteredFiles.length === 0 ? (
-            <p>No files available.</p>
-          ) : (
-            filteredFiles.map((file) => (
-              <li key={file.id}>
-                <a href={file.download} target="_blank" rel="noopener noreferrer">
-                  {file.fileName}
-                </a>
-              </li>
-            ))
-          )}
-        </ul>
-      )}
+      <div className="file-items">
+        {filteredFiles.length === 0 ? (
+          <p>No files available.</p>
+        ) : (
+          filteredFiles.map((file) => (
+            <div key={file.id} className="file-item">
+              <a href={file.download} target="_blank" rel="noopener noreferrer">
+                {file.fileName}
+              </a>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };
-

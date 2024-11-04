@@ -2,17 +2,18 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-
 import './styles.css';
+import "@fontsource/darker-grotesque";
 import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
-
+import { LuCloudLightning } from "react-icons/lu";
+import { FaUserCircle } from "react-icons/fa";
 
 const QaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; 
-  const INBOXDEPTID = 'ti7yNByDOzarVXoujOog'
+  const INBOXDEPTID = 'ti7yNByDOzarVXoujOog';
 
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
@@ -48,7 +49,6 @@ const QaDepartment = () => {
       alert('Please select at least one collection to upload the file.');
       return;
     }
-    
 
     try {
       // Define the storage path
@@ -98,31 +98,31 @@ const QaDepartment = () => {
   ] as [string, ...string[]];
 
   return (
-    <div>
+    <div className="body">
       <div className="header">
         <Link href="/">
-          <button style={{ marginBottom: '20px' }}>Home</button>
+          <div className="home">
+            DATUM
+          </div>
         </Link>
-
-        <h1>Welcome to Quality Assurance!</h1>
-        <p>These are the QA files.</p>
-
+        <FaUserCircle className="profile" />
+      </div>
+      <div>
+        <div className="department">Quality Assurance</div>
         {/* File upload section */}
-        <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
-
-          {/* Replace the dropdown with checkboxes */}
+        <div className="upload" style={{ marginTop: '20px' }}>
+          <input className="file_upload" type="file" onChange={handleFileChange} />
           <div>
-            <label>
+            <label className="checkbox">
               <input
                 type="checkbox"
                 value="files"
                 checked={selectedCollections.includes('files')}
                 onChange={handleCheckboxChange}
               />
-              Department Files
+              Department
             </label>
-            <label>
+            <label className="checkbox">
               <input
                 type="checkbox"
                 value="inbox"
@@ -131,19 +131,28 @@ const QaDepartment = () => {
               />
               Inbox
             </label>
-            {/* Add more options as needed */}
           </div>
 
-          <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload to QA Department
+          <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
+            Upload
           </button>
           {uploadStatus && <p>{uploadStatus}</p>}
         </div>
       </div>
 
       <div className="files">
-        <FileList collectionPath={deptFilesPath} title="Department Files" />
-        <FileList collectionPath={inboxFilesPath} title="Inbox Files" />
+        <div className="file-section">
+          <div className="file-title">Department</div>
+          <div className="file-box">
+            <FileList collectionPath={deptFilesPath} title='' />
+          </div>
+        </div>
+        <div className="file-section">
+          <div className="file-title">Inbox</div>
+          <div className="file-box">
+            <FileList collectionPath={inboxFilesPath} title='' />
+          </div>
+        </div>
       </div>
     </div>
   );
