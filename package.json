@@ -1,11 +1,10 @@
 {
-  "name": "datum",
-  "version": "0.1.0",
-  "private": true,
+  "main": "lib/index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
     "start": "next start",
+    "build": "next build",
+    "build:watch": "tsc --watch",
+    "dev": "next dev",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
@@ -15,15 +14,26 @@
     "posttest": "npm run lint",
     "test": "jest"
   },
+  "name": "datum",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@genkit-ai/ai": "^0.5.17",
+    "@genkit-ai/core": "^0.5.17",
+    "@genkit-ai/dotprompt": "^0.5.17",
+    "@genkit-ai/flow": "^0.5.17",
     "@mui/material": "^6.1.4",
+    "express": "^4.21.1",
     "firebase": "^10.14.1",
+    "genkitx-ollama": "^0.5.17",
     "js-cookie": "^3.0.5",
     "next": "^14.2.15",
+    "pdf-parse": "^1.1.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.2",
@@ -32,6 +42,7 @@
     "@types/jest": "^29.5.14",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.7.5",
+    "@types/pdf-parse": "^1.1.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/testing-library__jest-dom": "^5.14.9",
