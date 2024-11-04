@@ -2,28 +2,15 @@
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 export default function Home() {
   const router = useRouter();
 
-  useEffect(() => {
-    const authToken = Cookies.get('authToken'); // Use 'authToken' to match the cookie name
-    console.log("Cookie authToken:", authToken);
-    if (authToken) {
-      // Redirect to Quality Assurance if user is authenticated
-      router.push('/qaDepartment');
-    } else {
-      // Redirect to Workplaces selection if not signed in
-      router.push('/workplaces');
-    }
-  }, [router]);
 
   return (
     <div>
-      <h1>Validating User..</h1>
-      
-      {/* <ul>
+      <h1>Welcome to the Home Page real</h1>
+      <ul>
         <li>
           <Link href="/upload">
             <button style={{ marginBottom: '20px' }}>Upload Documents</button>
@@ -59,7 +46,7 @@ export default function Home() {
             <button style={{ marginBottom: '20px' }}>Merchandising</button>
           </Link>
         </li>
-      </ul> */}
+      </ul>
     </div>
   );
 }

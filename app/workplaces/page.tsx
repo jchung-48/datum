@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { getCompanies } from "../authentication";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
 import React from 'react';
-
+import Cookies from "js-cookie";
 interface Company {
   id: string;
   name: string;
@@ -16,6 +16,14 @@ const Page = () => {
   const router = useRouter(); 
 
   useEffect(() => {
+
+    const authToken = Cookies.get('authToken'); // Use 'authToken' to match the cookie name
+    console.log("Cookie authToken:", authToken);
+    if (authToken) {
+      // Redirect to Quality Assurance if user is authenticated
+      router.push('/qaDepartment'); //ryan please change this to their actual deparment
+
+    }
     const fetchCompanies = async () => {
       try {
         const companiesList = await getCompanies();
