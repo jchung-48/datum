@@ -174,7 +174,7 @@ const MerchandisingDepartment = () => {
       </div>
 
       <div className="files">
-        <FileList collectionPath={deptFilesPath} title="Department Files" />
+        <FileList collectionPath={deptFilesPath} title="Department Files" onSearch={() => {}}/>
       </div>
 
       {/* Buyers List */}
@@ -239,6 +239,7 @@ const MerchandisingDepartment = () => {
           <FileList
             collectionPath={selectedContactFilesPath as [string, ...string[]]}
             title={`${selectedContactType} Files`}
+            onSearch={() => {}}
           />
 
           {/* File upload for selected contact */}

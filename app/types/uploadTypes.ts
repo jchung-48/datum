@@ -8,5 +8,6 @@ export type FileData = {
 export type FileListProps = {
     collectionPath: [string, ...string[]];
     title: string;
+    onSearch?: (query: string) => void;
 };
 
