@@ -1,12 +1,10 @@
 "use client";
-
+import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
-import { signInUser, logoutUser } from "../authentication";
-import { useRouter , useSearchParams} from "next/navigation";
+import { signInUser, logoutUser, getUserDepartments } from "../authentication";
 import Cookies from "js-cookie";
-        
-        
+  
 interface Company {
   id: string;
   name: string;
@@ -54,9 +52,10 @@ const Page = () => {
 
   const handleSignIn = async () => {
     try {
-      await signInUser(email, password, workplaceId);
-      setIsSignedIn(true); // Update state to show user is signed in
-      alert("User signed in successfully!");
+      const userData = await signInUser(email, password, workplaceId);
+      // alert("User signed in successfully!");
+      const department = await getUserDepartments(userData);
+      router.push(`/${department.URL}`);
     } catch (error: any) {
       if (error.message === "Company name does not match.") {
         setErrorMessage("Company name does not match.");

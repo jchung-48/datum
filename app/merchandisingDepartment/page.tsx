@@ -8,7 +8,7 @@ import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 import { fetchContacts } from '../editCompanyContacts/editContactUtils';
 import { Buyer, Manufacturer } from '../types';
 
-const merchandisingDepartment = () => {
+const MerchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'ti7yNByDOzarVXoujOog';
 
@@ -253,4 +253,4 @@ const merchandisingDepartment = () => {
   );
 };
 
-export default merchandisingDepartment;
+export default MerchandisingDepartment;
