@@ -1,6 +1,6 @@
 // authentication.js
 import Cookies from "js-cookie";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection, listCollections, getDocs, updateDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.js'; // Import initialized Firebase instances
 
@@ -17,21 +17,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Fetch departments from Firestore
-export const getDepartments = async (companyId) => {
-  try {
-    const departmentsRef = collection(db, `Company/${companyId}/Departments`);
-    const departmentsSnapshot = await getDocs(departmentsRef);
-    
-    const departments = departmentsSnapshot.docs.map(doc => doc.data().name); // Extract department names
-    
-    return departments; // List of department names
-  } catch (error) {
-    console.error("Error fetching departments:", error);
-    throw error; // Throw the error for further handling
-  }
-};
-
 export const getUserDepartments = async (userData) => {
   try {
     // const userRef = doc(db, `Company/${companyId}/Employees`, userId);
@@ -47,6 +32,20 @@ export const getUserDepartments = async (userData) => {
     throw error;
   }
 }
+// Fetch departments from Firestore
+export const getDepartments = async (companyId) => {
+  try {
+    const departmentsRef = collection(db, `Company/${companyId}/Departments`);
+    const departmentsSnapshot = await getDocs(departmentsRef);
+    
+    const departments = departmentsSnapshot.docs.map(doc => doc.data().name); // Extract department names
+    
+    return departments; // List of department names
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    throw error; // Throw the error for further handling
+  }
+};
 
 // Fetch companies from Firestore
 export const getCompanies = async () => {
