@@ -55,39 +55,26 @@ const menuSuggestionFlow = defineFlow(
   }
 );
 
+// Define a summarization flow
 const summarizeFlow = defineFlow(
   {
-    name: 'summarizeFlow',
-    inputSchema: z.string(),
-    outputSchema: z.string(),
+      name: 'summarizeFlow',
+      inputSchema: z.string(),
+      outputSchema: z.string(),
   },
-  async (subject) => {
-    const pdfBuffer = Buffer.from(subject, 'base64');
-
-    const data = await pdf(pdfBuffer);
-    const textContent = data.text;
-
-    const llmResponse = await generate({
-      prompt: `Summarize the following text:\n\n${textContent}`,
-      model: 'ollama/llama3.2',
-      config: {
-        temperature: 1,
-      }
-    });
-
-    return llmResponse.text();
+  async (text: string) => {
+      const response = await generate({
+          model: 'ollama/llama3.2',
+          prompt: `Summarize the following text:\n\n${text}`,
+          config: { temperature: 0.7 },
+      });
+      return response.text();
   }
 );
 
-interface FlowResponse {
-  text: string;
+export async function callSummarizeFlow(text: string): Promise<string> {
+  return await runFlow(summarizeFlow, text);
 }
-
-export async function callSummarizeFlow(base64Pdf: string): Promise<string> {
-  const flowResponse = await runFlow(summarizeFlow, base64Pdf as string) as string;
-  return flowResponse; // This should now be recognized as a string
-}
-
 
 
 
