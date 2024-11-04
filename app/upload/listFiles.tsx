@@ -7,19 +7,28 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 import { FileData, FileListProps } from '../types';
 
-export const FileList: React.FC<FileListProps> = ({ collectionPath, title }) => {
+export const FileList: React.FC<FileListProps> = ({ collectionPath, title, onSearch }) => {
   const [files, setFiles] = useState<FileData[]>([]);
+  const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]); // Holds filtered files
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>(''); // State for search query
+
+  useEffect(() => {
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    const filtered = files.filter(file => file.fileName.toLowerCase().includes(lowerCaseQuery));
+    setFilteredFiles(filtered);
+  }, [searchQuery, files]);
 
   useEffect(() => {
     const fetchFiles = async () => {
       try {
         const filesCollectionRef = collection(db, ...collectionPath);
-
         const querySnapshot = await getDocs(filesCollectionRef);
         const filesData = await processFiles(querySnapshot);
+        
         setFiles(filesData);
+        setFilteredFiles(filesData); // Set filtered files to display all initially
         setLoading(false);
       } catch (error) {
         console.error(`Error fetching files for ${title}:`, error);
@@ -67,19 +76,37 @@ export const FileList: React.FC<FileListProps> = ({ collectionPath, title }) => 
   return (
     <div className="file-list">
       <h2>{title}</h2>
-      {files.length === 0 ? (
-        <p>No files available.</p>
+      
+      {onSearch && (
+        <input
+          type="text"
+          placeholder="Search files by name"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ marginBottom: '10px' }}
+        />
+      )}
+
+      {loading ? (
+        <div>Loading {title.toLowerCase()}...</div>
+      ) : error ? (
+        <div>{error}</div>
       ) : (
         <ul>
-          {files.map((file) => (
-            <li key={file.id}>
-              <a href={file.download} target="_blank" rel="noopener noreferrer">
-                {file.fileName}
-              </a>
-            </li>
-          ))}
+          {filteredFiles.length === 0 ? (
+            <p>No files available.</p>
+          ) : (
+            filteredFiles.map((file) => (
+              <li key={file.id}>
+                <a href={file.download} target="_blank" rel="noopener noreferrer">
+                  {file.fileName}
+                </a>
+              </li>
+            ))
+          )}
         </ul>
       )}
     </div>
   );
 };
+
