@@ -5,9 +5,11 @@ import { callSummarizeFlow } from '../genkit';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 import * as pdfjsLib from 'pdfjs-dist';
+import Link from 'next/link';
 
-// Set the worker source to use the file from the public directory
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
+
+import styles from './PdfSummaryPage.module.css';
 
 export default function PdfSummaryPage() {
     const [fileUrls, setFileUrls] = useState<string[]>([]);
@@ -62,21 +64,26 @@ export default function PdfSummaryPage() {
     };
 
     return (
-        <div>
+        <div className={styles.container}>
+            <Link href="/">
+                <button style={{ marginBottom: '20px' }}>Home</button>
+            </Link>
             <h1>PDF Summary Generator</h1>
-            <select onChange={handleFileSelect} disabled={loading}>
-                <option value="">Select a PDF file</option>
-                {fileUrls.map((url, index) => (
-                    <option key={index} value={url}>
-                        {decodeURIComponent(url.split('/').pop() || `File ${index + 1}`)}
-                    </option>
-                ))}
-            </select>
-            {loading && <p>Loading...</p>}
+            <div className={styles.selectWrapper}>
+                <select onChange={handleFileSelect} disabled={loading}>
+                    <option value="">Select a PDF file</option>
+                    {fileUrls.map((url, index) => (
+                        <option key={index} value={url}>
+                            {decodeURIComponent((url.split('/').pop())?.split('?alt=')[0] || `File ${index + 1}`)}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            {loading && <p className={styles.loading}>Loading...</p>}
             {summary && (
-                <div>
-                    <h3>Summary:</h3>
-                    <p>{summary}</p>
+                <div className={styles.summaryContainer}>
+                    <h3 className={styles.summaryTitle}>Summary:</h3>
+                    <p className={styles.summaryText}>{summary}</p>
                 </div>
             )}
         </div>
