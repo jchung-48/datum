@@ -102,6 +102,7 @@ const QaDepartment = () => {
       <div className="header">
         <Link href="/">
           <div className="home">
+            <LuCloudLightning className="cloud-icon"/>
             DATUM
           </div>
         </Link>
