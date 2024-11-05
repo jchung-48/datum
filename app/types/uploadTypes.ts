@@ -9,5 +9,6 @@ export type FileListProps = {
     collectionPath: [string, ...string[]];
     title: string;
     onSearch?: (query: string) => void;
+    onFileSelect?: (fileId: string) => void;
 };
 

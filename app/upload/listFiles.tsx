@@ -7,7 +7,7 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 import { FileData, FileListProps } from '../types';
 
-export const FileList: React.FC<FileListProps> = ({ collectionPath, title, onSearch }) => {
+export const FileList: React.FC<FileListProps> = ({ collectionPath, title, onSearch, onFileSelect }) => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]); // Holds filtered files
   const [loading, setLoading] = useState(true);
@@ -98,6 +98,12 @@ export const FileList: React.FC<FileListProps> = ({ collectionPath, title, onSea
           ) : (
             filteredFiles.map((file) => (
               <li key={file.id}>
+                {onFileSelect && ( // Added condition to render checkbox only if onFileSelect is provided
+                  <input
+                    type="checkbox"
+                    onChange={() => onFileSelect(file.id)} // Calls onFileSelect with the file ID
+                  />
+                )}
                 <a href={file.download} target="_blank" rel="noopener noreferrer">
                   {file.fileName}
                 </a>

@@ -53,7 +53,15 @@ const Page = () => {
   const handleSignIn = async () => {
     try {
       const userData = await signInUser(email, password, workplaceId);
-      // alert("User signed in successfully!");
+  
+      // Set the authToken cookie for the session, e.g., a token or user ID from `userData`
+      if (userData && userData.authToken) {
+        Cookies.set("authToken", userData.authToken, { expires: 1 }); // Expires in 1 day
+        setIsSignedIn(true); // Update sign-in status
+        console.log("authToken cookie set:", userData.authToken); // Confirm cookie in console
+      }
+  
+      // Navigate to the user's department
       const department = await getUserDepartments(userData);
       router.push(`/${department.URL}`);
     } catch (error: any) {

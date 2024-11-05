@@ -21,6 +21,7 @@ const MerchandisingDepartment = () => {
   const [selectedContactType, setSelectedContactType] = useState<'Buyer' | 'Manufacturer' | null>(null);
   const [contactFile, setContactFile] = useState<File | null>(null);
   const [contactUploadStatus, setContactUploadStatus] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 
   // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +43,41 @@ const MerchandisingDepartment = () => {
       e.target.checked ? [...prevSelected, value] : prevSelected.filter(item => item !== value)
     );
   };
+
+  const handleFileSelect = (fileId: string) => {
+    setSelectedFiles((prevSelected) => 
+      prevSelected.includes(fileId) 
+        ? prevSelected.filter(id => id !== fileId) 
+        : [...prevSelected, fileId]
+    );
+  };
+  
+  const handleMoveToRecords = async () => {
+    try {
+      // Loop over each file in selectedFiles
+      for (const fileId of selectedFiles) {
+        const storagePath = `Company/Departments/Merchandising/${fileId}`;
+  
+        // Move file data to 'records' collection
+        await updateFirestore(
+          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, customCollectionName: 'records' },
+          '', fileId, storagePath
+        );
+  
+        // Remove file from 'files' collection
+        await updateFirestore(
+          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, customCollectionName: 'files' },
+          '', fileId, storagePath
+        );
+      }
+  
+      alert("Selected files moved to records successfully!");
+      setSelectedFiles([]); // Clear selected files
+    } catch (error) {
+      console.error("Error moving files to records:", error);
+      alert("Failed to move files.");
+    }
+  };  
 
   // Upload for department files
   const handleUpload = async () => {
@@ -101,6 +137,14 @@ const MerchandisingDepartment = () => {
     'files',
   ] as [string, ...string[]];
 
+  const deptRecordsPath = [
+    'Company',
+    COMPANYID,
+    'Departments',
+    DEPARTMENTID,
+    'record',
+  ] as [string, ...string[]];
+
   const selectedContactFilesPath =
     selectedContactType && selectedContactId
       ? [
@@ -144,7 +188,7 @@ const MerchandisingDepartment = () => {
   return (
     <div>
       <div className="header">
-        <Link href="/">
+        <Link href="/home">
           <button style={{ marginBottom: '20px' }}>Home</button>
         </Link>
 
@@ -174,7 +218,22 @@ const MerchandisingDepartment = () => {
       </div>
 
       <div className="files">
-        <FileList collectionPath={deptFilesPath} title="Department Files" onSearch={() => {}}/>
+        <FileList 
+          collectionPath={deptFilesPath}
+          title="Department Files"
+          onSearch={() => {}}
+          onFileSelect={handleFileSelect}
+        />
+        {selectedFiles.length > 0 && (
+          <button onClick={handleMoveToRecords} style={{ marginTop: '10px' }}>
+            Move Selected Files to Records
+          </button>
+        )}
+        <FileList 
+          collectionPath={deptRecordsPath}
+          title="Records"
+          onSearch={() => {}}
+        />
       </div>
 
       {/* Buyers List */}

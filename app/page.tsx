@@ -1,14 +1,30 @@
-// Example in index.tsx or layout.tsx
+"use client";
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const authToken = Cookies.get('authToken'); // Use 'authToken' to match the cookie name
+    console.log("Cookie authToken:", authToken);
+    if (authToken) {
+      // Redirect to Quality Assurance if user is authenticated
+      router.push('/qaDepartment');
+    } else {
+      // Redirect to Workplaces selection if not signed in
+      router.push('/workplaces');
+    }
+  }, [router]);
+
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
-      <ul>
+      <h1>Validating User..</h1>
+      
+      {/* <ul>
         <li>
-          {/* Link to the route, not the file */}
           <Link href="/upload">
             <button style={{ marginBottom: '20px' }}>Upload Documents</button>
           </Link>
@@ -19,7 +35,6 @@ export default function Home() {
           </Link>
         </li>
         <li>
-          {/* Link to the route, not the file */}
           <Link href="/user">
             <button style={{ marginBottom: '20px' }}>Log In/Sign up</button>
           </Link>
