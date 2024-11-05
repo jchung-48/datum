@@ -1,16 +1,6 @@
 {
+  "extends": "./node_modules/gts/tsconfig-google.json",
   "compileOnSave": true,
-  "include": [
-    "app/**/*.tsx",
-    "app/**/*.ts",
-    "app/*.js",
-    "src/**/*.ts",
-    "test/**/*.ts",
-    ".next/types/**/*.ts",
-    "lib/*.ts",
-    "lib/*.js",
-    "jest.setup.ts"
-  ],
   "compilerOptions": {
     "module": "commonjs",
     "noImplicitReturns": true,
@@ -44,5 +34,15 @@
       }
     ]
   },
-  "extends": "./node_modules/gts/tsconfig-google.json"
+  "include": [
+    "app/**/*.tsx",
+    "app/**/*.ts",
+    "app/*.js",
+    "src/**/*.ts",
+    "test/**/*.ts",
+    ".next/types/**/*.ts",
+    "lib/*.ts",
+    "lib/*.js",
+    "jest.setup.ts"
+  ]
 }
