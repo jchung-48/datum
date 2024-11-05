@@ -2,22 +2,9 @@
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 export default function Home() {
   const router = useRouter();
-
-  useEffect(() => {
-    const authToken = Cookies.get('authToken'); // Use 'authToken' to match the cookie name
-    console.log("Cookie authToken:", authToken);
-    if (authToken) {
-      // Redirect to Quality Assurance if user is authenticated
-      router.push('/qaDepartment');
-    } else {
-      // Redirect to Workplaces selection if not signed in
-      router.push('/workplaces');
-    }
-  }, [router]);
 
   return (
     <div>

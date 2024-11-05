@@ -2,29 +2,11 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import { logoutUser } from "../authentication"; // Import the logout function
 
 export default function Home() {
   const router = useRouter();
   const [isSignedIn, setIsSignedIn] = useState(false);
 
-  useEffect(() => {
-    // Check if the user is already signed in by looking for the authToken cookie
-    const token = Cookies.get("authToken");
-    setIsSignedIn(!!token); // Set sign-in status based on the presence of the token
-  }, []);
-
-  const handleSignOut = async () => {
-    try {
-      await logoutUser(); // Sign the user out
-      Cookies.remove("authToken"); // Remove the authToken cookie
-      setIsSignedIn(false); // Update sign-in status
-      router.push("/signin"); // Redirect to the sign-in page
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
 
   return (
     <div>
@@ -57,12 +39,6 @@ export default function Home() {
           </Link>
         </li>
       </ul>
-
-      {isSignedIn && (
-        <button onClick={handleSignOut} style={{ marginTop: '20px' }}>
-          Sign Out
-        </button>
-      )}
     </div>
   );
 }
