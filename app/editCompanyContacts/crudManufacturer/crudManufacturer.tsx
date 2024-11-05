@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '@/firebase'; // Import Firestore instance
+import { db } from '@/lib/firebaseClient'; // Import Firestore instance
 
 // Contact type definition with role
 type Contact = {

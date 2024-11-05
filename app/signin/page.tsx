@@ -2,7 +2,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
-import { signInUser, getDepartments, getUserDepartments } from "../authentication";
+import { signInUser, getUserDepartments } from "../authentication";
 
 interface Company {
   id: string;

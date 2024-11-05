@@ -30,7 +30,7 @@
     "src/**/*.ts",
     "test/**/*.ts",
     ".next/types/**/*.ts",
-    "firebase.js",
+    "lib/firebaseClient.js",
     "lib/*.ts",
     "lib/*.js"
   ]

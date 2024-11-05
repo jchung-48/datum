@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { getIdToken } from "firebase/auth";
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebaseClient";
 import { getDepartments } from "../authentication";
 
 interface Department {
