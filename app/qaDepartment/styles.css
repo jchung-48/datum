@@ -56,14 +56,23 @@ body {
 
 .upload {
     display: flex;
-    align-items: center;
     font-family: "Darker Grotesque";
-    color: black
+    color: black;
 }
 
 .upload-button {
+    display: flex;
+    justify-content: center;
+    font-family: "Darker Grotesque";
+    font-weight: 800;
     background-color: #4FFF81;
-    
+    height: 25px;
+    width: 75px;
+    color: #ffffff;
+}
+
+.upload-button:hover {
+    background-color: #4faa69;
 }
 
 .checkbox {

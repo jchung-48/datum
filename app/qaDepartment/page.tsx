@@ -133,9 +133,9 @@ const QaDepartment = () => {
             </label>
           </div>
 
-          <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
+          <div className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
             Upload
-          </button>
+          </div>
           {uploadStatus && <p>{uploadStatus}</p>}
         </div>
       </div>
