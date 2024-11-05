@@ -59,7 +59,12 @@ export default function Home() {
             <button style={{ marginBottom: '20px' }}>Merchandising</button>
           </Link>
         </li>
-      </ul> */}
+        <li>
+          <Link href="/pdfSummary">
+            <button style={{ marginBottom: '20px' }}>PDF Summary Generator</button>
+          </Link>
+        </li>
+      </ul>
     </div>
   );
 }
