@@ -1,7 +1,18 @@
 // authentication.js
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection, listCollections, getDocs, updateDoc } from "firebase/firestore";
 import { auth, db } from '../firebase.js'; // Import initialized Firebase instances
+
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // Set a cookie with the user's ID token to remember the session
+    console.log(user); // Expires in 7 days
+  } else {
+    // Remove the authToken cookie if the user signs out
+    console.log('no user');
+  }
+});
 
 // Fetch departments from Firestore
 export const getDepartments = async (companyId) => {
@@ -9,7 +20,10 @@ export const getDepartments = async (companyId) => {
     const departmentsRef = collection(db, `Company/${companyId}/Departments`);
     const departmentsSnapshot = await getDocs(departmentsRef);
     
-    const departments = departmentsSnapshot.docs.map(doc => doc.data().name); // Extract department names
+    const departments = departmentsSnapshot.docs.map(doc => ({
+      id: doc.id,           // Get the document ID
+      name: doc.data().name // Get the "name" field from the document
+    })); // Extract department names
     
     return departments; // List of department names
   } catch (error) {

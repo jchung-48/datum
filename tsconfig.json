@@ -4,7 +4,8 @@
     "lib": ["DOM"], // Add "DOM" here if it’s missing
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/lib/*": ["./lib/*"]
     },
     "rootDir": ".",
     "outDir": "build",
@@ -29,6 +30,8 @@
     "src/**/*.ts",
     "test/**/*.ts",
     ".next/types/**/*.ts",
-    "firebase.js"
+    "firebase.js",
+    "lib/*.ts",
+    "lib/*.js"
   ]
 }
