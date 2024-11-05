@@ -67,7 +67,7 @@ const updateFirestore = async (
 
   if (collectionType === "Departments" && departmentId) {
     // Add file information to the specified collection in Departments
-    const filesDocRef = doc(db, `Company/${companyId}/Departments/${departmentId}/${collectionName}`, fileName);
+    const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, (collectionName as string), fileName);
     await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: storagePath });
     console.log(`File added to Firestore: ${fileName}`);
   } else {

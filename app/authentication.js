@@ -1,13 +1,13 @@
 // authentication.js
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc, collection, getDoc } from "firebase/firestore";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { auth, db } from '../lib/firebaseClient.js'; // Import initialized Firebase instances
 
 // Fetch departments from Firestore
 export const getDepartments = async (companyId) => {
   try {
     const departmentsRef = collection(db, `Company/${companyId}/Departments`);
-    const departmentsSnapshot = await getDocs(departmentsRef);
+    const departmentsSnapshot = await getDoc(departmentsRef);
     
     const departments = departmentsSnapshot.docs.map(doc => ({
       id: doc.id,           // Get the document ID
@@ -76,5 +76,14 @@ export const signInUser = async (email, password, companyId) => {
   } catch (error) {
     console.error("Error signing in:", error);
     throw error; // Throw the error to be handled in the UI
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    await signOut(auth);
+    console.log("User signed out successfully");
+  } catch (error) {
+    console.error("Error signing out: ", error);
   }
 };

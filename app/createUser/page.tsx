@@ -35,7 +35,7 @@ const Page = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        auth.onAuthStateChanged(async (user) => {
+        auth.onAuthStateChanged(async user => {
           if (user) {
             const user = auth.currentUser;
             if (user) {
