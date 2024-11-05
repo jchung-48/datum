@@ -6,6 +6,7 @@ import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 import * as pdfjsLib from 'pdfjs-dist';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
 
@@ -13,6 +14,7 @@ import styles from './PdfSummaryPage.module.css';
 
 export default function PdfSummaryPage() {
     const [fileUrls, setFileUrls] = useState<string[]>([]);
+    const [selectedFileUrl, setSelectedFileUrl] = useState<string>('');
     const [summary, setSummary] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -44,13 +46,16 @@ export default function PdfSummaryPage() {
         return textContent;
     };
 
-    const handleFileSelect = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const url = event.target.value;
-        if (!url) return;
+    const handleFileSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedFileUrl(event.target.value);
+    };
+
+    const handleGenerateSummary = async () => {
+        if (!selectedFileUrl) return;
 
         setLoading(true);
         try {
-            const response = await fetch(url);
+            const response = await fetch(selectedFileUrl);
             const arrayBuffer = await response.arrayBuffer();
             const textContent = await extractTextFromPdf(arrayBuffer);
             const summaryResponse = await callSummarizeFlow(textContent);
@@ -79,11 +84,13 @@ export default function PdfSummaryPage() {
                     ))}
                 </select>
             </div>
+            <button onClick={handleGenerateSummary} disabled={loading || !selectedFileUrl}>
+                Generate Summary
+            </button>
             {loading && <p className={styles.loading}>Loading...</p>}
             {summary && (
                 <div className={styles.summaryContainer}>
-                    <h3 className={styles.summaryTitle}>Summary:</h3>
-                    <p className={styles.summaryText}>{summary}</p>
+                    <ReactMarkdown className={styles.summaryText}>{summary}</ReactMarkdown>
                 </div>
             )}
         </div>

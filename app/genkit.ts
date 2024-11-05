@@ -65,7 +65,9 @@ const summarizeFlow = defineFlow(
   async (text: string) => {
       const response = await generate({
           model: 'ollama/llama3.2',
-          prompt: `Summarize the following text:\n\n${text}`,
+          prompt: `Summarize the following text. Provide a brief summary 
+          followed by a bulleted list of the main points of the text. 
+          Finally, list the key takeaways. Be clear, concise, and write in markdown format:\n\n${text}`,
           config: { temperature: 0.7 },
       });
       return response.text();
