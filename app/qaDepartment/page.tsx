@@ -70,7 +70,7 @@ const qaDepartment = () => {
   return (
     <div>
       <div className="header">
-        <Link href="/">
+        <Link href="/home">
           <button style={{ marginBottom: '20px' }}>Home</button>
         </Link>
 

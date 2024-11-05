@@ -35,7 +35,7 @@ export const getUserDepartments = async (userData) => {
     console.error("Error fetching departments for user:", error);
     throw error;
   }
-}
+};
 
 // Fetch companies from Firestore
 export const getCompanies = async () => {
@@ -78,4 +78,3 @@ export const signInUser = async (email, password, companyId) => {
     throw error; // Throw the error to be handled in the UI
   }
 };
-

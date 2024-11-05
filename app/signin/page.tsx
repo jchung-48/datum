@@ -4,13 +4,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { signInUser, getUserDepartments } from "../authentication";
 
-interface Company {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-}
-
 const Page = () => {
   const searchParams = useSearchParams(); // Get access to the search parameters (query parameters)
   const workplaceId = searchParams.get("workplaceId"); // Get the companyId from query parameters
@@ -42,7 +35,7 @@ const Page = () => {
   const handleSignIn = async () => {
     try {
       const userData = await signInUser(email, password, workplaceId);
-      // alert("User signed in successfully!");
+
       const department = await getUserDepartments(userData);
       router.push(`/${department.URL}`);
     } catch (error: any) {

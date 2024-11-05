@@ -1,37 +1,48 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compileOnSave": true,
+  "include": [
+    "app/**/*.tsx",
+    "app/**/*.ts",
+    "app/*.js",
+    "src/**/*.ts",
+    "test/**/*.ts",
+    ".next/types/**/*.ts",
+    "lib/*.ts",
+    "lib/*.js",
+    "jest.setup.ts"
+  ],
   "compilerOptions": {
-    "lib": ["DOM"], // Add "DOM" here if it’s missing
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "outDir": "build",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "lib": ["DOM"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
       "@/lib/*": ["./lib/*"]
     },
     "rootDir": ".",
-    "outDir": "build",
     "allowJs": true,
-    "skipLibCheck": true,
     "noEmit": true,
     "incremental": true,
-    "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "types": [
+      "jest",
+      "@testing-library/jest-dom"
+    ],
     "plugins": [
       {
         "name": "next"
       }
-    ],
+    ]
   },
-  "include": [
-    "app/**/*.tsx",
-    "app/*.js",
-    "src/**/*.ts",
-    "test/**/*.ts",
-    ".next/types/**/*.ts",
-    "lib/firebaseClient.js",
-    "lib/*.ts",
-    "lib/*.js"
-  ]
+  "extends": "./node_modules/gts/tsconfig-google.json"
 }
