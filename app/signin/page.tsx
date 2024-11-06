@@ -2,7 +2,9 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
+import { auth, db } from '@/lib/firebaseClient'; 
 import { signInUser, getUserDepartments } from "../authentication";
+import { doc, getDoc } from "firebase/firestore";
 
 const Page = () => {
   const searchParams = useSearchParams(); // Get access to the search parameters (query parameters)
@@ -15,10 +17,25 @@ const Page = () => {
   const [errorMessage, setErrorMessage] = useState(""); // Track error messages
 
   useEffect(() => {
-    // Validate the workplaceId format before allowing access
-    if (!workplaceId || !firestoreIdPattern.test(workplaceId)) {
-      router.push("/workplaces"); // Redirect to an error page if validation fails
-    }
+    const unsubscribe = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const companyId = (await user.getIdTokenResult()).claims.companyId as string;
+        const employeeRef = doc(db, "Company", companyId, "Employees", user.uid);
+        const emSnap = await getDoc(employeeRef);
+        if (emSnap.exists()) {
+          const depRef = emSnap.get("departments")[0];
+          const depSnap = await getDoc(depRef);
+          if (depSnap.exists()) {
+            const url = depSnap.get("URL");
+            router.push(`/${url}`);
+          }
+        }
+      } else if (!workplaceId || !firestoreIdPattern.test(workplaceId)) {
+        router.push("/workplaces"); // Redirect to an error page if validation fails
+      }
+    });
+
+    return () => unsubscribe();
   }, [workplaceId, router]);
 
   useEffect(() => {
