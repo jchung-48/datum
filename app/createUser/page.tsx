@@ -42,10 +42,12 @@ const Page = () => {
         } else {
           setErrorMessage("No departments available.");
         }
+      } else {
+        router.push("/workplaces");
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleAccountCreation = async () => {
     try {

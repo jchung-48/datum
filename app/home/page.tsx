@@ -27,7 +27,7 @@ export default function Home() {
       <ul>
         
         <li>
-          <Link href="/user">
+          <Link href="/createUser">
             <button style={{ marginBottom: '20px' }}>Create Employee</button>
           </Link>
         </li>
