@@ -5,6 +5,7 @@
     "app/**/*.ts",
     "app/*.js",
     "src/**/*.ts",
+    "src",
     "test/**/*.ts",
     ".next/types/**/*.ts",
     "firebase.js",
@@ -26,7 +27,8 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "*": ["pdfjsWorker.d.ts"]
     },
     "rootDir": ".",
     "allowJs": true,
