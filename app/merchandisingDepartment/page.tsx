@@ -142,7 +142,7 @@ const MerchandisingDepartment = () => {
     COMPANYID,
     'Departments',
     DEPARTMENTID,
-    'record',
+    'records',
   ] as [string, ...string[]];
 
   const selectedContactFilesPath =

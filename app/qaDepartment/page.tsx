@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import './styles.css';
-import { FileList } from './qualityAssurance'; // Adjust the path accordingly
-import { handleFileUpload } from '../upload/uploadUtils'; // Import the utility function
+import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
+import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils'; // Import the utility function
 
 const qaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
@@ -32,6 +32,7 @@ const qaDepartment = () => {
 
     // Define the storage path and Firestore path
     const storagePath = `Company/Departments/QualityAssurance/${file.name}`;
+    const downloadURL = await uploadFileToStorage(file, storagePath);
     const firestorePath = {
       collectionType: 'Departments' as const,
       companyId: COMPANYID,
@@ -41,7 +42,7 @@ const qaDepartment = () => {
 
     try {
       // Call the utility function to upload the file and update Firestore
-      await handleFileUpload(file, storagePath, firestorePath);
+      await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
       setUploadStatus('File uploaded successfully!');
       setFile(null); // Reset the file input
     } catch (error) {

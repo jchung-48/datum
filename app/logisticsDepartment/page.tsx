@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FileList } from './logistics'; // Adjust the path accordingly
-import { handleFileUpload } from '../upload/uploadLogistics'; // Import the utility function
+import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 
 const LogisticsDepartment: React.FC = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -34,15 +34,16 @@ const LogisticsDepartment: React.FC = () => {
     }
 
     const storagePath = `Company/Departments/Logistics/${file.name}`;
+    const downloadURL = await uploadFileToStorage(file, storagePath);
     const firestorePath = {
       collectionType: 'Departments' as const,
       companyId: COMPANYID,
       departmentId: DEPARTMENTID,
-      collectionName: selectedCollection,
+      customCollectionName: selectedCollection,
     };
 
     try {
-      await handleFileUpload(file, storagePath, firestorePath);
+      await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
       setUploadStatus('File uploaded successfully!');
       setFile(null); // Reset the file input
     } catch (error) {
