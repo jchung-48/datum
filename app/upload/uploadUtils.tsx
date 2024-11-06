@@ -62,7 +62,7 @@ export const updateFirestore = async (
 
   if (collectionType === "Departments" && departmentId) {
     // Use custom collection name if provided, otherwise default to "files"
-    const collectionName = customCollectionName || "files";
+    const collectionName = customCollectionName ? customCollectionName : "files";
     const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, collectionName, fileName);
     await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: storagePath });
   } else if (collectionType === "Buyers" && buyerId ) {
