@@ -223,6 +223,7 @@ const MerchandisingDepartment = () => {
           title="Department Files"
           onSearch={() => {}}
           onFileSelect={handleFileSelect}
+          horizontal
         />
         {selectedFiles.length > 0 && (
           <button onClick={handleMoveToRecords} style={{ marginTop: '10px' }}>
