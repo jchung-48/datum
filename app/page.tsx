@@ -15,7 +15,7 @@ export default function Home() {
         const emSnap = await getDoc(employeeRef);
         const depRef = emSnap.get("departments")[0];
         const depSnap = await getDoc(depRef);
-        const url = depSnap.get("URL")
+        const url = depSnap.get("URL");
         router.push(`/${url}`);
       } else {
         router.push('/workplaces');
