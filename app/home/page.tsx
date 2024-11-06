@@ -1,12 +1,25 @@
 "use client";
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import { auth, db } from '@/lib/firebaseClient'; 
 import { useRouter } from 'next/navigation';
+import { logoutUser } from '../authentication';
 
 export default function Home() {
   const router = useRouter();
   const [isSignedIn, setIsSignedIn] = useState(false);
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async user => {
+      setIsSignedIn(Boolean(user));
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await logoutUser();
+    router.push("/workplaces");
+  }
 
   return (
     <div>
@@ -39,6 +52,12 @@ export default function Home() {
           </Link>
         </li>
       </ul>
+
+      {isSignedIn && (
+        <button onClick={handleSignOut} style={{ marginTop: '20px' }}>
+          Sign Out
+        </button>
+      )}
     </div>
   );
 }

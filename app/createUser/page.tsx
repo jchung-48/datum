@@ -33,28 +33,18 @@ const Page = () => {
   }, [errorMessage]);
 
   useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        auth.onAuthStateChanged(async user => {
-          if (user) {
-            const user = auth.currentUser;
-            if (user) {
-              const companyId = (await user.getIdTokenResult()).claims.companyId;
-              const departmentList = await getDepartments(companyId);
-              if (departmentList.length > 0) {
-                setDepartments(departmentList); // Store fetched departments in state
-              } else {
-                setErrorMessage("No departments available.");
-              }
-            }
-          }
-        });
-      } catch (error) {
-        console.error("Error fetching departments:", error);
-        setErrorMessage("Failed to fetch departments");
+    const unsubscribe = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const companyId = (await user.getIdTokenResult()).claims.companyId;
+        const departmentList = await getDepartments(companyId);
+        if (departmentList.length > 0) {
+          setDepartments(departmentList); // Store fetched departments in state
+        } else {
+          setErrorMessage("No departments available.");
+        }
       }
-    };
-    fetchDepartments();
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleAccountCreation = async () => {
