@@ -1,7 +1,7 @@
 // pages/faq.tsx
 "use client"
 import React, { useState } from "react";
-import { db } from "@/firebase";
+import { db } from "@/lib/firebaseClient";
 import { collection, query, where, getDocs, DocumentData } from "firebase/firestore";
 import Link from "next/link";
 
