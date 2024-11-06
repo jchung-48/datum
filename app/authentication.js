@@ -7,7 +7,7 @@ import { auth, db } from '../lib/firebaseClient.js'; // Import initialized Fireb
 export const getDepartments = async (companyId) => {
   try {
     const departmentsRef = collection(db, `Company/${companyId}/Departments`);
-    const departmentsSnapshot = await getDoc(departmentsRef);
+    const departmentsSnapshot = await getDocs(departmentsRef);
     
     const departments = departmentsSnapshot.docs.map(doc => ({
       id: doc.id,           // Get the document ID
