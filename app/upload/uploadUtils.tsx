@@ -1,6 +1,6 @@
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import { doc, setDoc, updateDoc, arrayUnion, deleteDoc, arrayRemove } from "firebase/firestore";
-import { storage, db } from "../../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { storage, db } from "@/lib/firebaseClient";
 
 // Function to upload file to Firebase Storage and return the download URL
 export const uploadFileToStorage = async (

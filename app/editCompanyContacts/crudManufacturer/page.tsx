@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/lib/firebaseClient';
 import { 
   fetchCompanies,
   fetchContacts,

@@ -2,15 +2,9 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
-import { signInUser, logoutUser, getUserDepartments } from "../authentication";
-import Cookies from "js-cookie";
-  
-interface Company {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-}
+import { auth, db } from '@/lib/firebaseClient'; 
+import { signInUser, getUserDepartments } from "../authentication";
+import { doc, getDoc } from "firebase/firestore";
 
 const Page = () => {
   const searchParams = useSearchParams(); // Get access to the search parameters (query parameters)
@@ -20,32 +14,37 @@ const Page = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // Track error messages
 
   useEffect(() => {
-    // Check if the user is already signed in by looking for the authToken cookie
-    const token = Cookies.get("authToken");
-    if (token) {
-      setIsSignedIn(true); // User is already signed in
-      alert("User is already signed in.");
-      //router.push("./"); // Navigates to a dashboard or home page
-    }
-  }, [router]);
+    const unsubscribe = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const companyId = (await user.getIdTokenResult()).claims.companyId as string;
+        const employeeRef = doc(db, "Company", companyId, "Employees", user.uid);
+        const emSnap = await getDoc(employeeRef);
+        if (emSnap.exists()) {
+          const depRef = emSnap.get("departments")[0];
+          const depSnap = await getDoc(depRef);
+          if (depSnap.exists()) {
+            const url = depSnap.get("URL");
+            router.push(`/${url}`);
+          }
+        }
+      } else if (!workplaceId || !firestoreIdPattern.test(workplaceId)) {
+        router.push("/workplaces"); // Redirect to an error page if validation fails
+      }
+    });
 
-  useEffect(() => {
-    // Validate the workplaceId format before allowing access
-    if (!workplaceId || !firestoreIdPattern.test(workplaceId)) {
-      router.push("/workplaces"); // Redirect to an error page if validation fails
-    }
+    return () => unsubscribe();
   }, [workplaceId, router]);
 
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
-        setErrorMessage("");
+        setErrorMessage(""); // Clear error message after 3 seconds
       }, 3000);
-      return () => clearTimeout(timer);
+
+      return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
     }
     return undefined;
   }, [errorMessage]);
@@ -53,15 +52,7 @@ const Page = () => {
   const handleSignIn = async () => {
     try {
       const userData = await signInUser(email, password, workplaceId);
-  
-      // Set the authToken cookie for the session, e.g., a token or user ID from `userData`
-      if (userData && userData.authToken) {
-        Cookies.set("authToken", userData.authToken, { expires: 1 }); // Expires in 1 day
-        setIsSignedIn(true); // Update sign-in status
-        console.log("authToken cookie set:", userData.authToken); // Confirm cookie in console
-      }
-  
-      // Navigate to the user's department
+
       const department = await getUserDepartments(userData);
       router.push(`/${department.URL}`);
     } catch (error: any) {
@@ -73,43 +64,29 @@ const Page = () => {
         setErrorMessage("Error signing in: " + error.message);
       }
     }
-  };
 
-  const handleSignOut = async () => {
-    try {
-      await logoutUser(); // Sign the user out
-      setIsSignedIn(false); // Update state to show user is signed out
-      router.push("./"); // Redirect to the sign-in page or a different route
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 3000);
   };
 
   return (
     <div>
-
-      
-      {!isSignedIn ? (
-        <>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={handleSignIn}>Sign In</button>
-          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-        </>
-      ) : (
-        <button onClick={handleSignOut}>Sign Out</button>
-      )}
-
+      <h1>Sign In</h1>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleSignIn}>Sign In</button>
+      {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>} {/* Display error message */}
     </div>
   );
 };
