@@ -1,6 +1,6 @@
 // editContactUtils.ts
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db } from '@/lib/firebaseClient';
 import { Company, Contact, Manufacturer, Buyer } from '@/app/types';
 
 type EntityType = 'Manufacturer' | 'Buyer';
