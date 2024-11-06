@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { db } from "@/firebase";
 import { collection, query, where, getDocs, DocumentData } from "firebase/firestore";
+import Link from "next/link";
 
 // Define the structure of FAQ data
 interface FAQ {
@@ -57,6 +58,10 @@ const FAQPage: React.FC = () => {
   };
 
   return (
+    <div className="header">
+        <Link href="/home">
+          <button style={{ marginBottom: '20px' }}>Home</button>
+        </Link>
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h1>Welcome to FAQ</h1>
       <p>Please select your role, product category, and FAQ category from the following dropdown boxes:</p>
@@ -130,6 +135,7 @@ const FAQPage: React.FC = () => {
         )}
       </div>
     </div>
+  </div>
   );
 };
 

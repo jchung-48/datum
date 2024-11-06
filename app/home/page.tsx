@@ -56,6 +56,16 @@ export default function Home() {
             <button style={{ marginBottom: '20px' }}>Merchandising</button>
           </Link>
         </li>
+        <li>
+          <Link href="/faq">
+            <button style={{ marginBottom: '20px' }}>FAQ</button>
+          </Link>
+        </li>
+        <li>
+          <Link href="/pdfSummary">
+            <button style={{ marginBottom: '20px' }}>PDF Summary</button>
+          </Link>
+        </li>
       </ul>
 
       {isSignedIn && (
