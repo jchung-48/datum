@@ -21,7 +21,6 @@ export default function Home() {
 
   return (
     <div>
-<<<<<<< HEAD
       <h1>Validating User..</h1>
       
       {/* <ul>
@@ -68,11 +67,5 @@ export default function Home() {
       </ul>
      */}
      </div>
-=======
-      <h1>Welcome to the Home Page</h1>
-      {/* Link to the route, not the file */}
-      <Link href="/upload">Go to Upload Page</Link>
-    </div>
->>>>>>> 10b1ba1b473f68dca8d54a9aa7998b5462b62a6d
   );
 }

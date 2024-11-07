@@ -2,7 +2,7 @@
 import Cookies from "js-cookie";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, query, where, arrayUnion, setDoc, doc, getDoc, collection, listCollections, getDocs, updateDoc } from "firebase/firestore";
-import { auth, db } from '../firebase.js'; // Import initialized Firebase instances
+import { auth, db } from '@/lib/firebaseClient'; // Import initialized Firebase instances
 
 
 onAuthStateChanged(auth, (user) => {

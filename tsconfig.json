@@ -8,7 +8,9 @@
     "test/**/*.ts",
     ".next/types/**/*.ts",
     "firebase.js",
-    "jest.setup.ts"
+    "jest.setup.ts",
+    "lib/*.ts",
+    "lib/*.js",
   ],
   "compilerOptions": {
     "module": "commonjs",
