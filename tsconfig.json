@@ -5,7 +5,6 @@
     "app/**/*.ts",
     "app/*.js",
     "src/**/*.ts",
-    "src",
     "test/**/*.ts",
     ".next/types/**/*.ts",
     "firebase.js",

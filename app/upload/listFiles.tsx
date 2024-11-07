@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
-import { db, storage } from '../../firebase';
+import { db, storage } from '@/lib/firebaseClient';
 import { FileData, FileListProps } from '../types';
 import * as pdfjsLib from 'pdfjs-dist';
 
@@ -66,6 +66,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
           thumbnail = await generatePDFThumbnail(downloadURL); // Generate PDF thumbnail
         } catch (error) {
           console.error("Error generating PDF thumbnail:", error);
+          thumbnail = 'https://firebasestorage.googleapis.com/v0/b/datum-115a.appspot.com/o/pdf_thumbnail.png?alt=media&token=762f3694-9262-4c48-962d-9718245d80c4';
         }
       } else if (fileName.match(/\.(jpeg|jpg|png)$/i)) {
         thumbnail = downloadURL; // Directly use image URLs for image files
