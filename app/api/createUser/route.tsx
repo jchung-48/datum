@@ -1,6 +1,7 @@
 import admin from '@/lib/firebaseAdmin';
 import { NextApiResponse } from 'next';
 import { headers } from "next/headers";
+import { sendResetEmail } from "../backendTools";
 
 type ErrorResponse = { message: string };
 type SuccessResponse = { message: string; resetLink?: string };
@@ -79,9 +80,10 @@ export async function POST(req: Request, res: NextApiResponse<ErrorResponse | Su
       users: admin.firestore.FieldValue.arrayUnion(employee)
     });
 
+    await sendResetEmail(email, resetLink, true);
 
     return new Response(
-      JSON.stringify({ message: 'User created successfully', resetLink }),
+      JSON.stringify({ message: 'User created successfully' }),
       { status: 201, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {

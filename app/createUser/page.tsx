@@ -73,7 +73,7 @@ const Page = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        setSuccessMessage(`${data.message} ${data.resetLink}`);
+        setSuccessMessage(`${data.message}`);
         setErrorMessage("");
         console.log(successMessage);
       } else {
