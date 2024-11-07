@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { callSummarizeFlow } from '../genkit';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
-import { db, storage } from '../../firebase';
+import { db, storage } from '@/lib/firebaseClient';
 import * as pdfjsLib from 'pdfjs-dist';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';

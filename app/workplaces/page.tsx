@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import { getCompanies } from "../authentication";
+import { auth, db } from '@/lib/firebaseClient'; 
+import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
 import React from 'react';
-import Cookies from "js-cookie";
+
 interface Company {
   id: string;
   name: string;
@@ -16,14 +18,26 @@ const Page = () => {
   const router = useRouter(); 
 
   useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const companyId = (await user.getIdTokenResult()).claims.companyId as string;
+        const employeeRef = doc(db, "Company", companyId, "Employees", user.uid);
+        const emSnap = await getDoc(employeeRef);
+        if (emSnap.exists()) {
+          const depRef = emSnap.get("departments")[0];
+          const depSnap = await getDoc(depRef);
+          if (depSnap.exists()) {
+            const url = depSnap.get("URL");
+            router.push(`/${url}`);
+          }
+        }
+      }
+    });
 
-    const authToken = Cookies.get('authToken'); // Use 'authToken' to match the cookie name
-    console.log("Cookie authToken:", authToken);
-    if (authToken) {
-      // Redirect to Quality Assurance if user is authenticated
-      router.push('/qaDepartment'); //ryan please change this to their actual deparment
+    return () => unsubscribe();
+  }, [router]);
 
-    }
+  useEffect(() => {
     const fetchCompanies = async () => {
       try {
         const companiesList = await getCompanies();

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs, QuerySnapshot, DocumentData } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
-import { db, storage } from "../../firebase"; 
+import { db, storage } from "@/lib/firebaseClient"; 
 
 type FileData = {
   id: string;

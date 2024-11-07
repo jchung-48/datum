@@ -20,7 +20,7 @@ import {
   arrayRemove,
   deleteDoc,
 } from "firebase/firestore";
-import { storage, db } from "../../firebase";
+import { storage, db } from "../../lib/firebaseClient";
 
 const UploadPage = () => {
   interface Company {
