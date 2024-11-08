@@ -2,12 +2,13 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import React, { useState, useEffect, useRef } from 'react';
+import { collection, getDocs, Timestamp } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { db, storage } from '@/lib/firebaseClient';
 import { FileData, FileListProps } from '../types';
 import * as pdfjsLib from 'pdfjs-dist';
+import styles from './listFiles.module.css'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.min.js';
 
@@ -20,9 +21,11 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
 }) => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const lowerCaseQuery = searchQuery.toLowerCase();
@@ -104,8 +107,26 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     return canvas.toDataURL(); // Return the thumbnail as a data URL
   };
 
+  const handleScroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -200 : 200; // Scroll amount in pixels
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const handleFileSelect = (fileId: string) => {
+    const newSelectedFiles = new Set(selectedFiles);
+    if (newSelectedFiles.has(fileId)) {
+      newSelectedFiles.delete(fileId);
+    } else {
+      newSelectedFiles.add(fileId);
+    }
+    setSelectedFiles(newSelectedFiles);
+    onFileSelect && onFileSelect(fileId);
+  };
+
   return (
-    <div className={`file-list ${horizontal ? 'horizontal' : ''}`}>
+    <div className={styles.fileList}>
       <h2>{title}</h2>
 
       {onSearch && (
@@ -118,40 +139,106 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         />
       )}
 
-      {filteredFiles.length === 0 ? (
-        <p>No files available.</p>
-      ) : (
-        <ul style={{ display: horizontal ? 'flex' : 'block', flexWrap: 'wrap' }}>
-          {filteredFiles.map((file) => (
-            <li key={file.id} style={{ margin: horizontal ? '10px' : '0' }}>
-              {onFileSelect && (
-                <input
-                  type="checkbox"
-                  onChange={() => onFileSelect(file.id)}
-                  style={{ marginRight: '5px' }}
-                />
-              )}
-              {horizontal ? (
-                <div style={{ textAlign: 'center' }}>
-                  <a href={file.download} target="_blank" rel="noopener noreferrer">
-                    <img
-                      src={file.thumbnail}
-                      alt={file.fileName}
-                      style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px' }}
-                    />
-                    <p style={{ maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {file.fileName}
-                    </p>
-                  </a>
+      
+      {horizontal ? (
+        <div className={styles.scrollContainer}>
+          <button className={`${styles.scrollButton} ${styles.left}`} onClick={() => handleScroll('left')}>
+            &larr;
+          </button>
+          <button className={`${styles.scrollButton} ${styles.right}`} onClick={() => handleScroll('right')}>
+            &rarr;
+          </button>
+          {/* <div className={`${styles.edgeFade} ${styles.left}`} />
+          <div className={`${styles.edgeFade} ${styles.right}`} /> */}
+
+          <div className={styles.fileItemsHorizontal} ref={scrollRef}>
+            {filteredFiles.length === 0 ? (
+              <p>No files available.</p>
+            ) : (
+              filteredFiles.map((file) => (
+                <div 
+                  key={file.id} 
+                  className={`${styles.fileItem} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                  onClick={(e) => {
+                    // Prevent selecting the file if file name is clicked
+                    if (!(e.target as HTMLElement).closest(`.${styles.fileThumbnail}`)) {
+                      handleFileSelect(file.id);
+                    }
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    className={styles.fileCheckboxThumbnail}
+                    onChange={() => handleFileSelect(file.id)}
+                    checked={selectedFiles.has(file.id)}
+                  />
+                  <img
+                    src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent row selection
+                      window.open(file.download, '_blank'); // Open file download link
+                    }}
+                  />
+                  <p className={styles.fileName}>{file.fileName}</p>
                 </div>
-              ) : (
-                <a href={file.download} target="_blank" rel="noopener noreferrer">
-                  {file.fileName}
-                </a>
-              )}
-            </li>
-          ))}
-        </ul>
+              ))
+            )}
+          </div>
+        </div>
+      ) : (
+        <table className={styles.fileTable}>
+          <thead>
+            <tr>
+              <th></th> {/* Checkbox column */}
+              <th>File Name</th>
+              <th>Owner</th>
+              <th>Upload Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredFiles.length === 0 ? (
+              <tr><td colSpan={4}>No files available.</td></tr>
+            ) : (
+              filteredFiles.map((file) => (
+                <tr
+                  key={file.id}
+                  className={`${styles.fileRow} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                  onClick={(e) => {
+                    // Prevent selecting the file if file name is clicked
+                    if (!(e.target as HTMLElement).closest(`.${styles.fileNameBox}`)) {
+                      handleFileSelect(file.id);
+                    }
+                  }}
+                >
+                  <td className={`${styles.fileCell} ${styles.checkbox}`}>
+                    <input
+                      type="checkbox"
+                      onChange={() => handleFileSelect(file.id)}
+                      checked={selectedFiles.has(file.id)}
+                    />
+                  </td>
+                  <td className={styles.fileCell}>
+                    <div
+                      className={`${styles.fileNameBox} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent row selection
+                        window.open(file.download, '_blank'); // Open file download link
+                      }}
+                    >
+                      {file.fileName}
+                    </div>
+                  </td>
+                  <td className={`${styles.fileCell} ${styles.userDisplayName}`}>
+                    {file.userDisplayName ? file.userDisplayName : 'N/A'}
+                  </td>
+                  <td className={`${styles.fileCell} ${styles.uploadTimeStamp}`}>
+                    {file.uploadTimeStamp ? file.uploadTimeStamp.toDate().toLocaleString() : 'N/A'}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       )}
     </div>
   );

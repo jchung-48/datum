@@ -4,6 +4,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { FileList } from '../upload/listFiles';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import './styles.css';
+import { LuCloudLightning } from 'react-icons/lu';
+import { FaUserCircle } from 'react-icons/fa';
+import { auth} from "@/lib/firebaseClient";
 
 const LogisticsDepartment: React.FC = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -41,6 +45,8 @@ const LogisticsDepartment: React.FC = () => {
       alert('Please select a file before uploading.');
       return;
     }
+
+    //console.log("current user:",auth.currentUser);
 
     const storagePath = `Company/Departments/Logistics/${file.name}`;
     const downloadURL = await uploadFileToStorage(file, storagePath);
@@ -87,15 +93,20 @@ const LogisticsDepartment: React.FC = () => {
   ] as [string, ...string[]];
 
   return (
-    <div>
+    <div className="body">
       <div className="header">
         <Link href="/home">
-          <button style={{ marginBottom: '20px' }}>Home</button>
+          <div className="home">
+            <LuCloudLightning className="cloud-icon"/>
+            DATUM
+          </div>
         </Link>
+        <FaUserCircle className="profile" />
+      </div>
 
-        <h1>Welcome to Logistics!</h1>
-        <p>These are the Logistics files.</p>
+      <div className="department">Logistics</div>
 
+      <div className="upload">
         {/* File upload section */}
         <div style={{ marginTop: '20px' }}>
           <input type="file" onChange={handleFileChange} />
@@ -104,7 +115,7 @@ const LogisticsDepartment: React.FC = () => {
             <option value="customsFiles">Customs Files</option>
             <option value="financialFiles">Financial Files</option>
           </select>
-          <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
+          <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
             Upload
           </button>
           {uploadStatus && <p>{uploadStatus}</p>}
@@ -112,24 +123,26 @@ const LogisticsDepartment: React.FC = () => {
       </div>
 
       <div className="files">
-
+      <div className="file-title">Transportation Files</div>
         <FileList 
               collectionPath={transportationFilesPath} 
-              title="Transportation Files" 
+              title="" 
               onSearch={() => {}}
               onFileSelect={handleFileSelect}
               horizontal
         />
+        <div className="file-title">Customs Files</div>
         <FileList 
               collectionPath={customsFilesPath} 
-              title="Customs Files" 
+              title="" 
               onSearch={() => {}}
               onFileSelect={handleFileSelect}
               horizontal
         />
+        <div className="file-title">Financial Files</div>
         <FileList 
               collectionPath={financialFilesPath} 
-              title="Financial Files" 
+              title="" 
               onSearch={() => {}}
               onFileSelect={handleFileSelect}
               horizontal
@@ -140,12 +153,3 @@ const LogisticsDepartment: React.FC = () => {
 };
 
 export default LogisticsDepartment;
-
-
-{/* <FileList 
-          collectionPath={deptFilesPath}
-          title="Department Files"
-          onSearch={() => {}}
-          onFileSelect={handleFileSelect}
-          horizontal
-        /> */}
