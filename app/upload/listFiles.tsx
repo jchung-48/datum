@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, Timestamp } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { db, storage } from '@/lib/firebaseClient';
 import { FileData, FileListProps } from '../types';
@@ -139,50 +139,107 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         />
       )}
 
-      <div className={styles.scrollContainer}>
-        {horizontal && (
-          <>
-            <button className={`${styles.scrollButton} ${styles.left}`} onClick={() => handleScroll('left')}>
-              &larr;
-            </button>
-            <button className={`${styles.scrollButton} ${styles.right}`} onClick={() => handleScroll('right')}>
-              &rarr;
-            </button>
-            <div className={`${styles.edgeFade} ${styles.left}`} />
-            <div className={`${styles.edgeFade} ${styles.right}`} />
-          </>
-        )}
+      
+      {horizontal ? (
+        <div className={styles.scrollContainer}>
+          <button className={`${styles.scrollButton} ${styles.left}`} onClick={() => handleScroll('left')}>
+            &larr;
+          </button>
+          <button className={`${styles.scrollButton} ${styles.right}`} onClick={() => handleScroll('right')}>
+            &rarr;
+          </button>
+          {/* <div className={`${styles.edgeFade} ${styles.left}`} />
+          <div className={`${styles.edgeFade} ${styles.right}`} /> */}
 
-        <div
-          className={horizontal ? styles.fileItemsHorizontal : styles.fileItemsDefault}
-          ref={scrollRef}
-        >
-          {filteredFiles.length === 0 ? (
-            <p>No files available.</p>
-          ) : (
-            filteredFiles.map((file) => (
-              <div
-                key={file.id}
-                className={`${styles.fileItem} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
-              >
-                <a href={file.download} target="_blank" rel="noopener noreferrer">
-                  {horizontal ? (
-                    <img src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail} />
-                  ) : (
-                    <div className={styles.fileBlock}>{file.fileName}</div>
-                  )}
-                </a>
-                <input
-                  type="checkbox"
-                  className={styles.fileCheckbox}
-                  checked={selectedFiles.has(file.id)}
-                  onChange={() => handleFileSelect(file.id)}
-                />
-              </div>
-            ))
-          )}
+          <div className={styles.fileItemsHorizontal} ref={scrollRef}>
+            {filteredFiles.length === 0 ? (
+              <p>No files available.</p>
+            ) : (
+              filteredFiles.map((file) => (
+                <div 
+                  key={file.id} 
+                  className={`${styles.fileItem} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                  onClick={(e) => {
+                    // Prevent selecting the file if file name is clicked
+                    if (!(e.target as HTMLElement).closest(`.${styles.fileThumbnail}`)) {
+                      handleFileSelect(file.id);
+                    }
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    className={styles.fileCheckboxThumbnail}
+                    onChange={() => handleFileSelect(file.id)}
+                    checked={selectedFiles.has(file.id)}
+                  />
+                  <img
+                    src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent row selection
+                      window.open(file.download, '_blank'); // Open file download link
+                    }}
+                  />
+                  <p className={styles.fileName}>{file.fileName}</p>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <table className={styles.fileTable}>
+          <thead>
+            <tr>
+              <th></th> {/* Checkbox column */}
+              <th>File Name</th>
+              <th>Owner</th>
+              <th>Upload Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredFiles.length === 0 ? (
+              <tr><td colSpan={4}>No files available.</td></tr>
+            ) : (
+              filteredFiles.map((file) => (
+                <tr
+                  key={file.id}
+                  className={`${styles.fileRow} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                  onClick={(e) => {
+                    // Prevent selecting the file if file name is clicked
+                    if (!(e.target as HTMLElement).closest(`.${styles.fileNameBox}`)) {
+                      handleFileSelect(file.id);
+                    }
+                  }}
+                >
+                  <td className={`${styles.fileCell} ${styles.checkbox}`}>
+                    <input
+                      type="checkbox"
+                      onChange={() => handleFileSelect(file.id)}
+                      checked={selectedFiles.has(file.id)}
+                    />
+                  </td>
+                  <td className={styles.fileCell}>
+                    <div
+                      className={`${styles.fileNameBox} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent row selection
+                        window.open(file.download, '_blank'); // Open file download link
+                      }}
+                    >
+                      {file.fileName}
+                    </div>
+                  </td>
+                  <td className={`${styles.fileCell} ${styles.userDisplayName}`}>
+                    {file.userDisplayName ? file.userDisplayName : 'N/A'}
+                  </td>
+                  <td className={`${styles.fileCell} ${styles.uploadTimeStamp}`}>
+                    {file.uploadTimeStamp ? file.uploadTimeStamp.toDate().toLocaleString() : 'N/A'}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
