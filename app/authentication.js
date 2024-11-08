@@ -1,7 +1,6 @@
 // authentication.js
-
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { signInWithEmailAndPassword, signOut, updatePhoneNumber, PhoneAuthProvider, reauthenticateWithCredential, signInWithPhoneNumber } from "firebase/auth";
+import { doc, getDoc, collection, getDocs, updateDoc } from "firebase/firestore";
 import { auth, db } from '../lib/firebaseClient.js'; // Import initialized Firebase instances
 
 // Fetch departments from Firestore
@@ -77,6 +76,85 @@ export const signInUser = async (email, password, companyId) => {
   } catch (error) {
     console.error("Error signing in:", error);
     throw error; // Throw the error to be handled in the UI
+  }
+};
+
+export const resetPassword = async (email) => { // Pete
+  try {
+    const response = await fetch("/api/resetPass", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setSuccessMessage(`${data.message}`);
+      setErrorMessage("");
+      console.log(successMessage);
+      alert("Reset link sent to your email!");
+    } else {
+      const errorData = await response.json();
+      setErrorMessage(errorData.message || "Failed to create user");
+    }
+  } catch (error) {
+    setErrorMessage("Error reseting password");
+  }
+};
+
+export const updatePhoneNumberForUser = async (newPhoneNumber, verificationCode) => { // Pete
+  window.recaptchaVerifier = new RecaptchaVerifier(
+    "recaptcha-container",
+    {
+      size: "invisible",
+      callback: (response) => {
+        console.log("reCAPTCHA solved", response);
+      },
+    },
+    auth
+  );
+
+  try {
+    const appVerifier = window.recaptchaVerifier;
+    const confirmationResult = await signInWithPhoneNumber(auth, newPhoneNumber, appVerifier);
+    setVerificationId(confirmationResult.verificationId);
+    console.log("Verification code sent to:", newPhoneNumber);
+
+    const user = auth.currentUser;
+    const phoneCredential = PhoneAuthProvider.credential(
+      newPhoneNumber.verificationCode,
+      verificationCode
+    );
+
+    await updatePhoneNumber(user, phoneCredential);
+    console.log("Phone number updated successfully.");
+  } catch (error) {
+    console.error("Error updating phone number:", error);
+    setErrorMessage(`Error reseting password: ${error}`);
+  }
+};
+
+export const changeDisplayName = async (newDisplayName) => { // Pete
+  const user = auth.currentUser;
+  try {
+    user.updateProfile({
+      displayName: newDisplayName
+    }).then(() => {
+      console.log('Display name updated successfully!');
+    }).catch(error => {
+      console.error('Error updating display name:', error);
+    });
+
+    const companyId = (await user.getIdTokenResult()).claims.companyId;
+    const docRef = doc(db, `/Company/${companyId}/Employees`, user.uid);
+    await updateDoc(docRef, {
+      name: newDisplayName
+    });
+  } catch (error) {
+    console.error("Error changing name: ", error);
   }
 };
 

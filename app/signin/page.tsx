@@ -3,7 +3,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
 import { auth, db } from '@/lib/firebaseClient'; 
-import { signInUser, getUserDepartments } from "../authentication";
+import { signInUser, getUserDepartments, resetPassword } from "../authentication";
 import { doc, getDoc } from "firebase/firestore";
 
 const Page = () => {
@@ -14,7 +14,7 @@ const Page = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Track error messages
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async user => {
@@ -70,6 +70,14 @@ const Page = () => {
     }, 3000);
   };
 
+  const handlePassReset = async () => {
+    if (email) {
+      resetPassword(email);
+    } else {
+      alert("Please enter an email in order to reset your password!");
+    }
+  };
+
   return (
     <div>
       <h1>Sign In</h1>
@@ -85,6 +93,7 @@ const Page = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <button onClick={handlePassReset}>Imagine forgetting your password lmaoooooo</button>
       <button onClick={handleSignIn}>Sign In</button>
       {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>} {/* Display error message */}
     </div>
