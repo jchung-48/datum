@@ -1,5 +1,5 @@
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { storage, db, auth} from "@/lib/firebaseClient";
 
 
@@ -62,12 +62,13 @@ export const updateFirestore = async (
   const { collectionType, companyId, departmentId, customCollectionName, buyerId, manufacturerId } = firestorePath;
 
   const user = auth.currentUser;
+  //console.log("current user:", user);
   
   if (!user){
     throw new Error("User not authenticated.");
   }
 
-  const timestamp = new Date().getTime();
+  const timestamp = Timestamp.now();
 
   if (collectionType === "Departments" && departmentId) {
     // Use custom collection name if provided, otherwise default to "files"
@@ -78,6 +79,7 @@ export const updateFirestore = async (
       download: downloadURL, 
       filePath: storagePath, 
       uploadedBy: user.uid, 
+      userDisplayName: user.displayName,
       uploadTimeStamp: timestamp, 
       tags: [] 
     });
@@ -89,6 +91,7 @@ export const updateFirestore = async (
       download: downloadURL, 
       filePath: storagePath, 
       uploadedBy: user.uid, 
+      userDisplayName: user.displayName,
       uploadTimeStamp: timestamp, 
       tags: [] 
     });
@@ -100,6 +103,7 @@ export const updateFirestore = async (
       download: downloadURL, 
       filePath: storagePath, 
       uploadedBy: user.uid, 
+      userDisplayName: user.displayName,
       uploadTimeStamp: timestamp, 
       tags: [] 
     });
