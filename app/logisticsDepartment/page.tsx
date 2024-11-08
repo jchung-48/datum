@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FileList } from './logistics'; // Adjust the path accordingly
+import { FileList } from '../upload/listFiles';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 
 const LogisticsDepartment: React.FC = () => {
@@ -13,12 +13,21 @@ const LogisticsDepartment: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<string>('transportationFiles'); // Default collection
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
+  };
+
+  const handleFileSelect = (fileId: string) => {
+    setSelectedFiles((prevSelected) => 
+      prevSelected.includes(fileId) 
+        ? prevSelected.filter(id => id !== fileId) 
+        : [...prevSelected, fileId]
+    );
   };
 
   // Handle collection selection
@@ -103,12 +112,40 @@ const LogisticsDepartment: React.FC = () => {
       </div>
 
       <div className="files">
-        <FileList collectionPath={transportationFilesPath} title="Transportation Files" />
-        <FileList collectionPath={customsFilesPath} title="Customs Files" />
-        <FileList collectionPath={financialFilesPath} title="Financial Files" />
+
+        <FileList 
+              collectionPath={transportationFilesPath} 
+              title="Transportation Files" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+        />
+        <FileList 
+              collectionPath={customsFilesPath} 
+              title="Customs Files" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+        />
+        <FileList 
+              collectionPath={financialFilesPath} 
+              title="Financial Files" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+        />
       </div>
     </div>
   );
 };
 
 export default LogisticsDepartment;
+
+
+{/* <FileList 
+          collectionPath={deptFilesPath}
+          title="Department Files"
+          onSearch={() => {}}
+          onFileSelect={handleFileSelect}
+          horizontal
+        /> */}
