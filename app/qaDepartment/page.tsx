@@ -74,7 +74,7 @@ const qaDepartment = () => {
   return (
     <div className="body">
       <div className="header">
-        <Link href="/">
+        <Link href="/home">
           <div className="home">
             <LuCloudLightning className="cloud-icon"/>
             DATUM

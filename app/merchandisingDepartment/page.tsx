@@ -203,37 +203,35 @@ const MerchandisingDepartment = () => {
       
         <div style={{ marginTop: '20px' }}>
           <input type="file" onChange={handleFileChange} />
-
-          <div>
-            <label>
+            <label className="checkbox">
               <input
                 type="checkbox"
                 value="files"
                 checked={selectedCollections.includes('files')}
                 onChange={handleCheckboxChange}
               />
-              Department Files
+              Department
             </label>
-          </div>
 
-          <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload to Merchandising Department
+          <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
+            Upload
           </button>
           {uploadStatus && <p>{uploadStatus}</p>}
         </div>
       </div>
 
       <div className="files">
-        <FileList 
+        <div className="file-title">Department</div>
+        <FileList
           collectionPath={deptFilesPath}
-          title="Department Files"
+          title=""
           onSearch={() => {}}
           onFileSelect={handleFileSelect}
           horizontal
         />
         {selectedFiles.length > 0 && (
-          <button onClick={handleMoveToRecords} style={{ marginTop: '10px' }}>
-            Move Selected Files to Records
+          <button className="move-button" onClick={handleMoveToRecords} style={{ marginTop: '10px' }}>
+            Move to Records
           </button>
         )}
         <FileList 
