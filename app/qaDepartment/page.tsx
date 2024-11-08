@@ -17,7 +17,6 @@ const qaDepartment = () => {
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-  const [selectedCollection, setSelectedCollection] = useState('files'); // State for selected collection
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +39,7 @@ const qaDepartment = () => {
       collectionType: 'Departments' as const,
       companyId: COMPANYID,
       departmentId: DEPARTMENTID,
-      customCollectionName: selectedCollection, // Use the selected collection name
+      customCollectionName: "files", // Use the selected collection name
     };
 
     try {
@@ -87,11 +86,6 @@ const qaDepartment = () => {
         {/* File upload section */}
         <div style={{ marginTop: '20px' }}>
           <input type="file" onChange={handleFileChange} />
-          <select value={selectedCollection} onChange={(e) => setSelectedCollection(e.target.value)}>
-            <option value="files">Department Files</option>
-            <option value="inbox">Inbox</option>
-            {/* Add more options as needed */}
-          </select>
           <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
             Upload to QA Department
           </button>

@@ -153,4 +153,3 @@ const LogisticsDepartment: React.FC = () => {
 };
 
 export default LogisticsDepartment;
-
