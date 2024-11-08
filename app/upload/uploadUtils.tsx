@@ -1,6 +1,7 @@
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import { storage, db } from "@/lib/firebaseClient";
+import { storage, db, auth} from "@/lib/firebaseClient";
+
 
 // Function to upload file to Firebase Storage and return the download URL
 export const uploadFileToStorage = async (
@@ -60,19 +61,48 @@ export const updateFirestore = async (
 ) => {
   const { collectionType, companyId, departmentId, customCollectionName, buyerId, manufacturerId } = firestorePath;
 
+  const user = auth.currentUser;
+  
+  if (!user){
+    throw new Error("User not authenticated.");
+  }
+
+  const timestamp = new Date().getTime();
+
   if (collectionType === "Departments" && departmentId) {
     // Use custom collection name if provided, otherwise default to "files"
     const collectionName = customCollectionName ? customCollectionName : "files";
     const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, collectionName, fileName);
-    await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: storagePath });
+    await setDoc(filesDocRef, { 
+      fileName, 
+      download: downloadURL, 
+      filePath: storagePath, 
+      uploadedBy: user.uid, 
+      uploadTimeStamp: timestamp, 
+      tags: [] 
+    });
   } else if (collectionType === "Buyers" && buyerId ) {
     // Add file information to the PDFs array under the specific Quote in Buyers
     const quoteDocRef = doc(db, "Company", companyId, "Buyers", buyerId, "Quotes", fileName);
-    await setDoc(quoteDocRef, { fileName, download: downloadURL, filePath: storagePath });
+    await setDoc(quoteDocRef, { 
+      fileName, 
+      download: downloadURL, 
+      filePath: storagePath, 
+      uploadedBy: user.uid, 
+      uploadTimeStamp: timestamp, 
+      tags: [] 
+    });
   } else if (collectionType === "Manufacturers" && manufacturerId ) {
     // Add file information to the PDFs array under the specific Quote in Buyers
     const productDocRef = doc(db, "Company", companyId, "Manufacturers", manufacturerId, "Products", fileName);
-    await setDoc(productDocRef, { fileName, download: downloadURL, filePath: storagePath });
+    await setDoc(productDocRef, { 
+      fileName, 
+      download: downloadURL, 
+      filePath: storagePath, 
+      uploadedBy: user.uid, 
+      uploadTimeStamp: timestamp, 
+      tags: [] 
+    });
   } else {
     throw new Error("Invalid Firestore path provided.");
   }
