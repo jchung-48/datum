@@ -50,21 +50,15 @@
     background-color: #8Ab9ee; /* Light blue */
     position: relative;
   }
-  
-  /* Checkbox styling */
-  .fileCheckbox {
-    transform: scale(1.2);
-    cursor: pointer;
-  }
 
-  .checkboxContainer {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    z-index: 1;
+  .fileBlock {
+    padding: 10px;
+    font-size: 14px;
+    text-align: center;
+    color: #555;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
   }
-  
-
   
   .fileItem a {
     text-decoration: none;
@@ -92,6 +86,19 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  /* Checkbox styling */
+  .fileCheckbox {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+
+  .checkboxContainer {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 1;
   }
   
   /* Scroll buttons */
@@ -132,7 +139,7 @@
     top: 0;
     bottom: 0;
     width: 50px;
-    background: linear-gradient(to left, transparent, rgba(245, 245, 245, 0.9));
+    background: linear-gradient(to left, transparent, var(--edge-fade-color,rgba(0, 0, 0, 0.9)));
     pointer-events: none;
   }
   
@@ -142,6 +149,6 @@
   
   .edgeFade.right {
     right: 0;
-    background: linear-gradient(to right, transparent, rgba(245, 245, 245, 0.9));
+    background: linear-gradient(to right, transparent, var(--edge-fade-color,rgba(0, 0, 0, 0.9)));
   }
   
