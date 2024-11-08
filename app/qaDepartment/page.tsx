@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import './styles.css';
-import "@fontsource/darker-grotesque";
 import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 import { LuCloudLightning } from "react-icons/lu";
