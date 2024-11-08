@@ -1,10 +1,9 @@
 // qualityassurance.tsx
 "use client";
-
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, QuerySnapshot, DocumentData } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
-import { db, storage } from '../../firebase';
+import { db, storage } from '@/lib/firebaseClient';
 import { FileData, FileListProps } from '../types';
 
 export const FileList: React.FC<FileListProps> = ({ collectionPath, title }) => {

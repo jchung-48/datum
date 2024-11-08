@@ -1,6 +1,6 @@
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import { doc, setDoc, updateDoc, arrayUnion, deleteDoc, arrayRemove } from "firebase/firestore";
-import { storage, db } from "../../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { storage, db } from "@/lib/firebaseClient";
 
 // Function to upload file to Firebase Storage and return the download URL
 export const uploadFileToStorage = async (
@@ -62,7 +62,7 @@ export const updateFirestore = async (
 
   if (collectionType === "Departments" && departmentId) {
     // Use custom collection name if provided, otherwise default to "files"
-    const collectionName = customCollectionName || "files";
+    const collectionName = customCollectionName ? customCollectionName : "files";
     const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, collectionName, fileName);
     await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: storagePath });
   } else if (collectionType === "Buyers" && buyerId ) {

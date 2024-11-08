@@ -1,14 +1,40 @@
-// Example in index.tsx or layout.tsx
-import Link from 'next/link';
-import React from 'react';
+"use client";
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { auth, db } from '@/lib/firebaseClient'; 
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const companyId = (await user.getIdTokenResult()).claims.companyId as string;
+        const employeeRef = doc(db, "Company", companyId, "Employees", user.uid);
+        const emSnap = await getDoc(employeeRef);
+        if (emSnap.exists()) {
+          const depRef = emSnap.get("departments")[0];
+          const depSnap = await getDoc(depRef);
+          if (depSnap.exists()) {
+            const url = depSnap.get("URL");
+            router.push(`/${url}`);
+          }
+        }
+      } else {
+        router.push('/workplaces');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
   return (
     <div>
-      <h1>Welcome to the Home Page</h1>
-      <ul>
+      <h1>Validating User..</h1>
+      
+      {/* <ul>
         <li>
-          {/* Link to the route, not the file */}
           <Link href="/upload">
             <button style={{ marginBottom: '20px' }}>Upload Documents</button>
           </Link>
@@ -19,7 +45,6 @@ export default function Home() {
           </Link>
         </li>
         <li>
-          {/* Link to the route, not the file */}
           <Link href="/user">
             <button style={{ marginBottom: '20px' }}>Log In/Sign up</button>
           </Link>
@@ -44,7 +69,13 @@ export default function Home() {
             <button style={{ marginBottom: '20px' }}>Merchandising</button>
           </Link>
         </li>
+        <li>
+          <Link href="/pdfSummary">
+            <button style={{ marginBottom: '20px' }}>PDF Summary Generator</button>
+          </Link>
+        </li>
       </ul>
-    </div>
+     */}
+     </div>
   );
 }

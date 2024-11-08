@@ -2,19 +2,19 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-//import './styles.css';
-import { FileList } from './humanResources'; // Adjust the path accordingly
-import { handleFileUpload } from '../upload/uploadUtils'; // Import the utility function
+//import './styles.css'; // Ensure this import is correct
+import { FileList } from '../upload/listFiles'; // Adjust path if needed
+import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 
-const qaDepartment = () => {
+const hrDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
-  const DEPARTMENTID = 'NpaV1QtwGZ2MDNOGAlXa'; // Update to the QA department ID
+  const DEPARTMENTID = 'NpaV1QtwGZ2MDNOGAlXa'; // Correct HR department ID
 
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-  const [selectedCollection, setSelectedCollection] = useState('files'); // State for selected collection
+  const [selectedCollection, setSelectedCollection] = useState('files');
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,17 +31,18 @@ const qaDepartment = () => {
     }
 
     // Define the storage path and Firestore path
-    const storagePath = `Company/Departments/Human-Resources/${file.name}`;
+    const storagePath = `Company/Departments/HumanResources/${file.name}`;
+    const downloadURL = await uploadFileToStorage(file, storagePath);
     const firestorePath = {
       collectionType: 'Departments' as const,
       companyId: COMPANYID,
       departmentId: DEPARTMENTID,
-      customCollectionName: selectedCollection, // Use the selected collection name
+      customCollectionName: selectedCollection,
     };
 
     try {
       // Call the utility function to upload the file and update Firestore
-      await handleFileUpload(file, storagePath, firestorePath);
+      await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
       setUploadStatus('File uploaded successfully!');
       setFile(null); // Reset the file input
     } catch (error) {
@@ -59,18 +60,18 @@ const qaDepartment = () => {
     'files',
   ] as [string, ...string[]];
 
-  const inboxFilesPath = [
+  const incidentFilesPath = [
     'Company',
     COMPANYID,
     'Departments',
     DEPARTMENTID,
-    'inbox',
+    'incident',
   ] as [string, ...string[]];
 
   return (
     <div>
       <div className="header">
-        <Link href="/">
+        <Link href="/home">
           <button style={{ marginBottom: '20px' }}>Home</button>
         </Link>
 
@@ -82,11 +83,10 @@ const qaDepartment = () => {
           <input type="file" onChange={handleFileChange} />
           <select value={selectedCollection} onChange={(e) => setSelectedCollection(e.target.value)}>
             <option value="files">Department Files</option>
-            <option value="inbox">Inbox</option>
-            {/* Add more options as needed */}
+            <option value="incident">Incident Files</option>
           </select>
           <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload to QA Department
+            Upload to HR Department
           </button>
           {uploadStatus && <p>{uploadStatus}</p>}
         </div>
@@ -94,10 +94,10 @@ const qaDepartment = () => {
 
       <div className="files">
         <FileList collectionPath={deptFilesPath} title="Department Files" />
-        <FileList collectionPath={inboxFilesPath} title="Incident Files" />
+        <FileList collectionPath={incidentFilesPath} title="Incident Files" />
       </div>
     </div>
   );
 };
 
-export default qaDepartment;
+export default hrDepartment;

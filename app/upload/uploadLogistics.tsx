@@ -1,6 +1,6 @@
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
-import { storage, db } from "../../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { storage, db } from "@/lib/firebaseClient";
 
 // Function to upload files and update Firestore
 export const handleFileUpload = async (
@@ -67,7 +67,7 @@ const updateFirestore = async (
 
   if (collectionType === "Departments" && departmentId) {
     // Add file information to the specified collection in Departments
-    const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, collectionName, fileName);
+    const filesDocRef = doc(db, "Company", companyId, "Departments", departmentId, (collectionName as string), fileName);
     await setDoc(filesDocRef, { fileName, download: downloadURL, filePath: storagePath });
     console.log(`File added to Firestore: ${fileName}`);
   } else {

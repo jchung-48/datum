@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { getCompanies } from "../authentication";
+import { auth, db } from '@/lib/firebaseClient'; 
+import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
 import React from 'react';
 
@@ -14,6 +16,26 @@ const Page = () => {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [loading, setLoading] = useState(true); // Loading state to track fetch status
   const router = useRouter(); 
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const companyId = (await user.getIdTokenResult()).claims.companyId as string;
+        const employeeRef = doc(db, "Company", companyId, "Employees", user.uid);
+        const emSnap = await getDoc(employeeRef);
+        if (emSnap.exists()) {
+          const depRef = emSnap.get("departments")[0];
+          const depSnap = await getDoc(depRef);
+          if (depSnap.exists()) {
+            const url = depSnap.get("URL");
+            router.push(`/${url}`);
+          }
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   useEffect(() => {
     const fetchCompanies = async () => {
