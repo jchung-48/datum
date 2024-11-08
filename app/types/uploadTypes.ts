@@ -3,6 +3,7 @@ export type FileData = {
     fileName: string;
     download: string;
     filePath: string;
+    thumbnail: string;
 };
 
 export type FileListProps = {

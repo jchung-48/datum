@@ -1,6 +1,18 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compileOnSave": true,
+  "include": [
+    "app/**/*.tsx",
+    "app/**/*.ts",
+    "app/*.js",
+    "src/**/*.ts",
+    "test/**/*.ts",
+    ".next/types/**/*.ts",
+    "firebase.js",
+    "jest.setup.ts",
+    "lib/*.ts",
+    "lib/*.js",
+  ],
   "compilerOptions": {
     "module": "commonjs",
     "noImplicitReturns": true,

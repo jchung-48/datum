@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import './styles.css';
 import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
+import { LuCloudLightning } from 'react-icons/lu';
+import { FaUserCircle } from 'react-icons/fa';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils'; // Import the utility function
 
 const qaDepartment = () => {
@@ -15,7 +17,6 @@ const qaDepartment = () => {
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-  const [selectedCollection, setSelectedCollection] = useState('files'); // State for selected collection
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +39,7 @@ const qaDepartment = () => {
       collectionType: 'Departments' as const,
       companyId: COMPANYID,
       departmentId: DEPARTMENTID,
-      customCollectionName: selectedCollection, // Use the selected collection name
+      customCollectionName: "files", // Use the selected collection name
     };
 
     try {
@@ -70,23 +71,21 @@ const qaDepartment = () => {
   ] as [string, ...string[]];
 
   return (
-    <div>
+    <div className="body">
       <div className="header">
-        <Link href="/home">
-          <button style={{ marginBottom: '20px' }}>Home</button>
+        <Link href="/">
+          <div className="home">
+            <LuCloudLightning className="cloud-icon"/>
+            DATUM
+          </div>
         </Link>
-
-        <h1>Welcome to Quality Assurance!</h1>
-        <p>These are the QA files.</p>
-
+        <FaUserCircle className="profile" />
+      </div>
+      <div>
+        <div className="department">Quality Assurance</div>
         {/* File upload section */}
         <div style={{ marginTop: '20px' }}>
           <input type="file" onChange={handleFileChange} />
-          <select value={selectedCollection} onChange={(e) => setSelectedCollection(e.target.value)}>
-            <option value="files">Department Files</option>
-            <option value="inbox">Inbox</option>
-            {/* Add more options as needed */}
-          </select>
           <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
             Upload to QA Department
           </button>
@@ -95,8 +94,18 @@ const qaDepartment = () => {
       </div>
 
       <div className="files">
-        <FileList collectionPath={deptFilesPath} title="Department Files" />
-        <FileList collectionPath={inboxFilesPath} title="Inbox Files" />
+        <div className="file-section">
+          <div className="file-title">Department</div>
+          <div className="file-box">
+            <FileList collectionPath={deptFilesPath} title='' />
+          </div>
+        </div>
+        <div className="file-section">
+          <div className="file-title">Inbox</div>
+          <div className="file-box">
+            <FileList collectionPath={inboxFilesPath} title='' />
+          </div>
+        </div>
       </div>
     </div>
   );

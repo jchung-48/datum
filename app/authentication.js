@@ -1,4 +1,5 @@
 // authentication.js
+
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { auth, db } from '../lib/firebaseClient.js'; // Import initialized Firebase instances
