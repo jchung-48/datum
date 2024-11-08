@@ -1,10 +1,15 @@
 import admin from 'firebase-admin';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Initialize Firebase Admin only if it hasn't been initialized already
 try {
-  admin.initializeApp({
-    credential: admin.credential.cert('./datum-115a-firebase-adminsdk-8jq7s-5464beb7be.json')
-  });
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(process.env.FIREBASE_ADMIN_JSON || "")
+    });
+  }
 } catch (error) {
   console.error('Error initializing Firebase Admin SDK:', error);
 }
