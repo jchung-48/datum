@@ -152,7 +152,11 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
             <div className={`${styles.edgeFade} ${styles.right}`} />
           </>
         )}
-        <div className={horizontal ? styles.fileItemsHorizontal : styles.fileItemsDefault} ref={scrollRef}>
+
+        <div
+          className={horizontal ? styles.fileItemsHorizontal : styles.fileItemsDefault}
+          ref={scrollRef}
+        >
           {filteredFiles.length === 0 ? (
             <p>No files available.</p>
           ) : (
@@ -161,18 +165,19 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                 key={file.id}
                 className={`${styles.fileItem} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
               >
-                <div className={styles.checkboxContainer}>
-                  <input
-                    type="checkbox"
-                    className={styles.fileCheckbox}
-                    checked={selectedFiles.has(file.id)}
-                    onChange={() => handleFileSelect(file.id)}
-                  />
-                </div>
                 <a href={file.download} target="_blank" rel="noopener noreferrer">
-                  <img src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail} />
-                  <p>{file.fileName}</p>
+                  {horizontal ? (
+                    <img src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail} />
+                  ) : (
+                    <div className={styles.fileBlock}>{file.fileName}</div>
+                  )}
                 </a>
+                <input
+                  type="checkbox"
+                  className={styles.fileCheckbox}
+                  checked={selectedFiles.has(file.id)}
+                  onChange={() => handleFileSelect(file.id)}
+                />
               </div>
             ))
           )}
