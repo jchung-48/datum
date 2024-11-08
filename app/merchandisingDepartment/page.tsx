@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import './styles.css';
 import { FileList } from '../upload/listFiles';
+import { LuCloudLightning } from 'react-icons/lu';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import { FaUserCircle } from 'react-icons/fa';
 import { fetchContacts } from '../editCompanyContacts/editContactUtils';
 import { Buyer, Manufacturer } from '../types';
 
@@ -186,15 +188,19 @@ const MerchandisingDepartment = () => {
   };
 
   return (
-    <div>
+    <div className="body">
       <div className="header">
         <Link href="/home">
-          <button style={{ marginBottom: '20px' }}>Home</button>
+          <div className="home">
+            <LuCloudLightning className="cloud-icon"/>
+            DATUM
+          </div>
         </Link>
-
-        <h1>Welcome to Merchandising!</h1>
-        <p>These are the Merchandising files.</p>
-
+        <FaUserCircle className="profile" />
+      </div>
+      <div>
+      <div className="department">Merchandising</div>
+      
         <div style={{ marginTop: '20px' }}>
           <input type="file" onChange={handleFileChange} />
 
