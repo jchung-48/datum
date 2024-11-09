@@ -5,10 +5,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { collection, getDocs, Timestamp } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
-import { db, storage } from '@/lib/firebaseClient';
+import { db, storage, auth } from '@/lib/firebaseClient';
 import { FileData, FileListProps } from '../types';
+import { handleFileDelete } from './uploadUtils';
 import * as pdfjsLib from 'pdfjs-dist';
-import styles from './listFiles.module.css'
+import styles from './listFiles.module.css';
+import { onAuthStateChanged } from 'firebase/auth';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.min.js';
 
@@ -27,10 +29,23 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [currentUserUid, setCurrentUserUid] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserUid(user.uid);
+      } else {
+        setCurrentUserUid(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchFiles = async () => {
-      setLoading(true); // Optional
+      setLoading(true);
       try {
         const filesCollectionRef = collection(db, ...collectionPath);
         const querySnapshot = await getDocs(filesCollectionRef);
@@ -50,28 +65,22 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
   }, [collectionPath, title, refreshTrigger]);
 
   useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const filesCollectionRef = collection(db, ...collectionPath);
-        const querySnapshot = await getDocs(filesCollectionRef);
-        const filesData = await processFiles(querySnapshot);
-
-        setFiles(filesData);
-        setFilteredFiles(filesData);
-        setLoading(false);
-      } catch (error) {
-        console.error(`Error fetching files for ${title}:`, error);
-        setError(`Failed to load ${title.toLowerCase()}.`);
-        setLoading(false);
-      }
-    };
-
-    fetchFiles();
-  }, [collectionPath, title]);
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    const filtered = files.filter((file) =>
+      file.fileName.toLowerCase().includes(lowerCaseQuery)
+    );
+    setFilteredFiles(filtered);
+  }, [searchQuery, files]);
 
   const processFiles = async (querySnapshot: any): Promise<FileData[]> => {
     const filesPromises = querySnapshot.docs.map(async (doc: any) => {
       const fileData = doc.data();
+
+      const tags = fileData.tags || [];
+      const uploadTimeStamp = fileData.uploadTimeStamp;
+      const userDisplayName = fileData.userDisplayName;
+      const uploadedBy = fileData.uploadedBy;
+
       const fileName = fileData.fileName;
       const filePath = fileData.filePath;
 
@@ -82,13 +91,14 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
 
       if (fileName.endsWith('.pdf')) {
         try {
-          thumbnail = await generatePDFThumbnail(downloadURL); // Generate PDF thumbnail
+          thumbnail = await generatePDFThumbnail(downloadURL);
         } catch (error) {
-          console.error("Error generating PDF thumbnail:", error);
-          thumbnail = 'https://firebasestorage.googleapis.com/v0/b/datum-115a.appspot.com/o/pdf_thumbnail.png?alt=media&token=762f3694-9262-4c48-962d-9718245d80c4';
+          console.error('Error generating PDF thumbnail:', error);
+          thumbnail =
+            'https://firebasestorage.googleapis.com/v0/b/datum-115a.appspot.com/o/pdf_thumbnail.png?alt=media&token=762f3694-9262-4c48-962d-9718245d80c4';
         }
       } else if (fileName.match(/\.(jpeg|jpg|png)$/i)) {
-        thumbnail = downloadURL; // Directly use image URLs for image files
+        thumbnail = downloadURL;
       }
 
       return {
@@ -96,7 +106,11 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         fileName: fileName,
         download: downloadURL,
         filePath: filePath,
-        thumbnail: thumbnail || downloadURL, // Use the thumbnail if available
+        thumbnail: thumbnail || downloadURL,
+        tags: tags,
+        uploadTimeStamp: uploadTimeStamp,
+        uploadedBy: uploadedBy,
+        userDisplayName: userDisplayName,
       };
     });
 
@@ -105,27 +119,27 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
 
   const generatePDFThumbnail = async (pdfUrl: string): Promise<string> => {
     const pdf = await pdfjsLib.getDocument({ url: pdfUrl }).promise;
-    const page = await pdf.getPage(1); // Get the first page
+    const page = await pdf.getPage(1);
     const viewport = page.getViewport({ scale: 0.5 });
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
-    if (!context) throw new Error("Canvas context is not available");
+    if (!context) throw new Error('Canvas context is not available');
 
     canvas.width = viewport.width;
     canvas.height = viewport.height;
 
     await page.render({
-      canvasContext: context!,
+      canvasContext: context,
       viewport: viewport,
     }).promise;
 
-    return canvas.toDataURL(); // Return the thumbnail as a data URL
+    return canvas.toDataURL();
   };
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const scrollAmount = direction === 'left' ? -200 : 200; // Scroll amount in pixels
+      const scrollAmount = direction === 'left' ? -200 : 200;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -139,6 +153,29 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     }
     setSelectedFiles(newSelectedFiles);
     if (onFileSelect) onFileSelect(fileId);
+  };
+
+  const handleDelete = async (file: FileData) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${file.fileName}?`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await handleFileDelete(file.filePath, {
+        collectionType: 'Departments',
+        companyId: collectionPath[1],
+        departmentId: collectionPath[3],
+        collectionName: collectionPath[4],
+      });
+
+      // After deletion, refresh the file list
+      setFiles((prevFiles) => prevFiles.filter((f) => f.id !== file.id));
+      setFilteredFiles((prevFiles) => prevFiles.filter((f) => f.id !== file.id));
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      alert('Failed to delete the file.');
+    }
   };
 
   return (
@@ -155,28 +192,37 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         />
       )}
 
-      
-      {display === "horizontal" ? (
+      {display === 'horizontal' ? (
         <div className={styles.scrollContainer}>
-          <button className={`${styles.scrollButton} ${styles.left}`} onClick={() => handleScroll('left')}>
+          <button
+            className={`${styles.scrollButton} ${styles.left}`}
+            onClick={() => handleScroll('left')}
+          >
             &larr;
           </button>
-          <button className={`${styles.scrollButton} ${styles.right}`} onClick={() => handleScroll('right')}>
+          <button
+            className={`${styles.scrollButton} ${styles.right}`}
+            onClick={() => handleScroll('right')}
+          >
             &rarr;
           </button>
-          {/* <div className={`${styles.edgeFade} ${styles.left}`} />
-          <div className={`${styles.edgeFade} ${styles.right}`} /> */}
 
           <div className={styles.fileItemsHorizontal} ref={scrollRef}>
             {filteredFiles.length === 0 ? (
               <p>No files available.</p>
             ) : (
               filteredFiles.map((file) => (
-                <div 
-                  key={file.id} 
-                  className={`${styles.fileItem} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                <div
+                  key={file.id}
+                  className={`${styles.fileItem} ${
+                    selectedFiles.has(file.id) ? styles.selected : ''
+                  }`}
                   onClick={(e) => {
-                    if (!(e.target as HTMLElement).closest(`.${styles.fileCheckboxThumbnail}`)) {
+                    if (
+                      !(e.target as HTMLElement).closest(
+                        `.${styles.fileCheckboxThumbnail}`
+                      )
+                    ) {
                       handleFileSelect(file.id);
                     }
                   }}
@@ -188,29 +234,48 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                     checked={selectedFiles.has(file.id)}
                   />
                   <img
-                    src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail}
+                    src={file.thumbnail}
+                    alt={file.fileName}
+                    className={styles.fileThumbnail}
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent file selection
-                      window.open(file.download, '_blank'); // Open file download link
+                      e.stopPropagation();
+                      window.open(file.download, '_blank');
                     }}
                   />
                   <p className={styles.fileName}>{file.fileName}</p>
+                  {currentUserUid === file.uploadedBy && (
+                    <button
+                      className={styles.deleteButton}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(file);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               ))
             )}
           </div>
         </div>
-      ) : display === "grid" ? (
+      ) : display === 'grid' ? (
         <div className={styles.fileGrid}>
           {filteredFiles.length === 0 ? (
             <p>No files available.</p>
           ) : (
             filteredFiles.map((file) => (
-              <div 
-                key={file.id} 
-                className={`${styles.fileItem} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+              <div
+                key={file.id}
+                className={`${styles.fileItem} ${
+                  selectedFiles.has(file.id) ? styles.selected : ''
+                }`}
                 onClick={(e) => {
-                  if (!(e.target as HTMLElement).closest(`.${styles.fileCheckboxThumbnail}`)) {
+                  if (
+                    !(e.target as HTMLElement).closest(
+                      `.${styles.fileCheckboxThumbnail}`
+                    )
+                  ) {
                     handleFileSelect(file.id);
                   }
                 }}
@@ -222,13 +287,26 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                   checked={selectedFiles.has(file.id)}
                 />
                 <img
-                  src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail}
+                  src={file.thumbnail}
+                  alt={file.fileName}
+                  className={styles.fileThumbnail}
                   onClick={(e) => {
                     e.stopPropagation();
                     window.open(file.download, '_blank');
                   }}
                 />
                 <p className={styles.fileName}>{file.fileName}</p>
+                {currentUserUid === file.uploadedBy && (
+                  <button
+                    className={styles.deleteButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(file);
+                    }}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             ))
           )}
@@ -241,19 +319,27 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
               <th>File Name</th>
               <th>Owner</th>
               <th>Upload Date</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredFiles.length === 0 ? (
-              <tr><td colSpan={4}>No files available.</td></tr>
+              <tr>
+                <td colSpan={5}>No files available.</td>
+              </tr>
             ) : (
               filteredFiles.map((file) => (
                 <tr
                   key={file.id}
-                  className={`${styles.fileRow} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                  className={`${styles.fileRow} ${
+                    selectedFiles.has(file.id) ? styles.selected : ''
+                  }`}
                   onClick={(e) => {
-                    // Prevent selecting the file if file name is clicked
-                    if (!(e.target as HTMLElement).closest(`.${styles.fileCell} ${styles.checkbox}`)) {
+                    if (
+                      !(e.target as HTMLElement).closest(
+                        `.${styles.fileCell} ${styles.checkbox}`
+                      )
+                    ) {
                       handleFileSelect(file.id);
                     }
                   }}
@@ -267,10 +353,12 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                   </td>
                   <td className={styles.fileCell}>
                     <div
-                      className={`${styles.fileNameBox} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                      className={`${styles.fileNameBox} ${
+                        selectedFiles.has(file.id) ? styles.selected : ''
+                      }`}
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent row selection
-                        window.open(file.download, '_blank'); // Open file download link
+                        e.stopPropagation();
+                        window.open(file.download, '_blank');
                       }}
                     >
                       {file.fileName}
@@ -280,7 +368,22 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                     {file.userDisplayName ? file.userDisplayName : 'N/A'}
                   </td>
                   <td className={`${styles.fileCell} ${styles.uploadTimeStamp}`}>
-                    {file.uploadTimeStamp ? file.uploadTimeStamp.toDate().toLocaleString() : 'N/A'}
+                    {file.uploadTimeStamp
+                      ? file.uploadTimeStamp.toDate().toLocaleString()
+                      : 'N/A'}
+                  </td>
+                  <td className={`${styles.fileCell} ${styles.actions}`}>
+                    {currentUserUid === file.uploadedBy && (
+                      <button
+                        className={styles.deleteButton}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(file);
+                        }}
+                      >
+                        <span className={styles.trashIcon}>🗑</span>
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))
