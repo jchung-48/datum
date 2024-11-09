@@ -18,6 +18,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
   onSearch,
   onFileSelect,
   display = "list" as const,
+  refreshTrigger,
 }) => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
@@ -28,10 +29,25 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    const filtered = files.filter((file) => file.fileName.toLowerCase().includes(lowerCaseQuery));
-    setFilteredFiles(filtered);
-  }, [searchQuery, files]);
+    const fetchFiles = async () => {
+      setLoading(true); // Optional
+      try {
+        const filesCollectionRef = collection(db, ...collectionPath);
+        const querySnapshot = await getDocs(filesCollectionRef);
+        const filesData = await processFiles(querySnapshot);
+
+        setFiles(filesData);
+        setFilteredFiles(filesData);
+        setLoading(false);
+      } catch (error) {
+        console.error(`Error fetching files for ${title}:`, error);
+        setError(`Failed to load ${title.toLowerCase()}.`);
+        setLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, [collectionPath, title, refreshTrigger]);
 
   useEffect(() => {
     const fetchFiles = async () => {

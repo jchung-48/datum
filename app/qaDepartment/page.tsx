@@ -7,6 +7,7 @@ import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils'; // Import the utility function
+import UploadComponent from '../upload/Upload/uploadComponent'; // Import the UploadComponent
 
 const qaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
@@ -17,6 +18,7 @@ const qaDepartment = () => {
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [fileListUpdated, setFileListUpdated] = useState(false);
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,26 +86,26 @@ const qaDepartment = () => {
       <div>
         <div className="department">Quality Assurance</div>
         {/* File upload section */}
-        <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
-          <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload to QA Department
-          </button>
-          {uploadStatus && <p>{uploadStatus}</p>}
-        </div>
+        <UploadComponent
+              companyId={COMPANYID}
+              departmentId={DEPARTMENTID}
+              departmentName="QualityAssurance"
+              collections={['files']}
+              onUploadSuccess={() => setFileListUpdated(!fileListUpdated)}/>
+
       </div>
 
       <div className="files">
         <div className="file-section">
           <div className="file-title">Department</div>
           <div className="file-box">
-            <FileList collectionPath={deptFilesPath} title='' display='grid'/>
+            <FileList collectionPath={deptFilesPath} title='' display='grid' refreshTrigger={fileListUpdated}/>
           </div>
         </div>
         <div className="file-section">
           <div className="file-title">Inbox</div>
           <div className="file-box">
-            <FileList collectionPath={inboxFilesPath} title='' />
+            <FileList collectionPath={inboxFilesPath} title='' refreshTrigger={fileListUpdated}/>
           </div>
         </div>
       </div>

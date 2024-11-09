@@ -9,23 +9,7 @@ import {
 } from 'firebase/firestore';
 import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
 import './SearchBar.css';
-
-interface DocumentData {
-    filePath: string;
-    download: string;
-    tags?: string[]; // Optional, based on your example
-    fileName: string;
-    uploadTimeStamp?: any; // You can specify this as Timestamp if Firestore timestamp types are imported
-}
-
-interface SearchResult {
-    name: string;
-    downloadURL: string;
-}
-
-interface SearchBarProps {
-    paths: string[]; // Array of department IDs or department IDs with subpaths
-}
+import {FileData, SearchResult, SearchBarProps} from '../../types';
 
 // Debounce function to limit search calls
 const debounce = (func: (...args: any[]) => void, delay: number) => {
@@ -100,7 +84,7 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
                         const collectionRef = collection(
                             db,
                             collectionPath,
-                        ) as CollectionReference<DocumentData>;
+                        ) as CollectionReference<FileData>;
 
                         await fetchAndFilterDocs(
                             collectionRef,
@@ -123,7 +107,7 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
                     const collectionRef = collection(
                         db,
                         collectionPath,
-                    ) as CollectionReference<DocumentData>;
+                    ) as CollectionReference<FileData>;
 
                     await fetchAndFilterDocs(
                         collectionRef,
@@ -144,13 +128,13 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
 
     // Helper function to fetch and filter documents
     const fetchAndFilterDocs = async (
-        collectionRef: CollectionReference<DocumentData>,
+        collectionRef: CollectionReference<FileData>,
         searchResults: SearchResult[],
         queryTextSplit: string[],
     ) => {
         const docsSnap = await getDocs(collectionRef);
 
-        docsSnap.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+        docsSnap.forEach((doc: QueryDocumentSnapshot<FileData>) => {
             const data = doc.data();
 
             // Use fileName instead of name

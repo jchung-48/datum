@@ -9,6 +9,7 @@ import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 import { FaUserCircle } from 'react-icons/fa';
 import { fetchContacts } from '../editCompanyContacts/editContactUtils';
 import { Buyer, Manufacturer } from '../types';
+import  UploadComponent  from '../upload/Upload/uploadComponent';
 
 const MerchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -24,6 +25,7 @@ const MerchandisingDepartment = () => {
   const [contactFile, setContactFile] = useState<File | null>(null);
   const [contactUploadStatus, setContactUploadStatus] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [fileListUpdated, setFileListUpdated] = useState(false);
 
   // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,24 +202,14 @@ const MerchandisingDepartment = () => {
       </div>
       <div>
       <div className="department">Merchandising</div>
-      
-        <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                value="files"
-                checked={selectedCollections.includes('files')}
-                onChange={handleCheckboxChange}
-              />
-              Department
-            </label>
+        <UploadComponent
+          companyId={COMPANYID}
+          departmentId={DEPARTMENTID}
+          departmentName="Merchandising"
+          collections={['files']}
+          onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
 
-          <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload
-          </button>
-          {uploadStatus && <p>{uploadStatus}</p>}
-        </div>
+
       </div>
 
       <div className="files">
@@ -228,6 +220,7 @@ const MerchandisingDepartment = () => {
           onSearch={() => {}}
           onFileSelect={handleFileSelect}
           display = 'horizontal'
+          refreshTrigger={fileListUpdated}
         />
         {selectedFiles.length > 0 && (
           <button className="move-button" onClick={handleMoveToRecords} style={{ marginTop: '10px' }}>
@@ -238,6 +231,8 @@ const MerchandisingDepartment = () => {
           collectionPath={deptRecordsPath}
           title="Records"
           onSearch={() => {}}
+
+          refreshTrigger={fileListUpdated}
         />
       </div>
 
@@ -304,6 +299,8 @@ const MerchandisingDepartment = () => {
             collectionPath={selectedContactFilesPath as [string, ...string[]]}
             title={`${selectedContactType} Files`}
             onSearch={() => {}}
+
+            refreshTrigger={fileListUpdated}
           />
 
           {/* File upload for selected contact */}

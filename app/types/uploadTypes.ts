@@ -19,5 +19,13 @@ export type FileListProps = {
     onSearch?: (query: string) => void;
     onFileSelect?: (fileId: string) => void;
     display?: "list" | "horizontal" | "grid";
+    refreshTrigger?: boolean;
 };
 
+export type UploadComponentProps = {
+    companyId: string;
+    departmentId: string;
+    departmentName: string;
+    collections?: string[]; 
+    onUploadSuccess?: () => void;
+};
