@@ -131,8 +131,9 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
 
       {onSearch && (
         <input
+          className="search"
           type="text"
-          placeholder="Search files by name"
+          placeholder="Filter files.."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{ marginBottom: '10px' }}

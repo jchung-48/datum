@@ -202,15 +202,16 @@ const MerchandisingDepartment = () => {
       <div className="department">Merchandising</div>
       
         <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
+          <input className="upload" type="file" onChange={handleFileChange} />
             <label className="checkbox">
               <input
+                className="checkbox"
                 type="checkbox"
                 value="files"
                 checked={selectedCollections.includes('files')}
                 onChange={handleCheckboxChange}
               />
-              Department
+                <div className="checkbox-title">Department</div>
             </label>
 
           <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
@@ -234,11 +235,13 @@ const MerchandisingDepartment = () => {
             Move to Records
           </button>
         )}
-        <FileList 
-          collectionPath={deptRecordsPath}
-          title="Records"
-          onSearch={() => {}}
-        />
+        <div className="record-title">
+          <FileList 
+            collectionPath={deptRecordsPath}
+            title="Records"
+            onSearch={() => {}}
+          />
+        </div>
       </div>
 
       {/* Buyers List */}

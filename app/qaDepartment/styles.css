@@ -17,7 +17,7 @@ body {
 .header {
     display: flex;
     align-items: center;
-    background: linear-gradient(10deg, #5aef84 20%, #64b4ff 74%);
+    background: linear-gradient(10deg, #627D9F 20%, #64b4ff 74%);
     justify-content: space-between;
     height: 66px;
     padding-left: 2%;
