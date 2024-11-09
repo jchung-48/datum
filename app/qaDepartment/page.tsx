@@ -97,7 +97,7 @@ const qaDepartment = () => {
         <div className="file-section">
           <div className="file-title">Department</div>
           <div className="file-box">
-            <FileList collectionPath={deptFilesPath} title='' />
+            <FileList collectionPath={deptFilesPath} title='' display='grid'/>
           </div>
         </div>
         <div className="file-section">

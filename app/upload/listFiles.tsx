@@ -17,7 +17,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
   title,
   onSearch,
   onFileSelect,
-  horizontal = false,
+  display = "list" as const,
 }) => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
@@ -122,7 +122,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
       newSelectedFiles.add(fileId);
     }
     setSelectedFiles(newSelectedFiles);
-    onFileSelect && onFileSelect(fileId);
+    if (onFileSelect) onFileSelect(fileId);
   };
 
   return (
@@ -140,7 +140,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
       )}
 
       
-      {horizontal ? (
+      {display === "horizontal" ? (
         <div className={styles.scrollContainer}>
           <button className={`${styles.scrollButton} ${styles.left}`} onClick={() => handleScroll('left')}>
             &larr;
@@ -160,8 +160,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                   key={file.id} 
                   className={`${styles.fileItem} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
                   onClick={(e) => {
-                    // Prevent selecting the file if file name is clicked
-                    if (!(e.target as HTMLElement).closest(`.${styles.fileThumbnail}`)) {
+                    if (!(e.target as HTMLElement).closest(`.${styles.fileCheckboxThumbnail}`)) {
                       handleFileSelect(file.id);
                     }
                   }}
@@ -175,7 +174,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                   <img
                     src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail}
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent row selection
+                      e.stopPropagation(); // Prevent file selection
                       window.open(file.download, '_blank'); // Open file download link
                     }}
                   />
@@ -184,6 +183,39 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
               ))
             )}
           </div>
+        </div>
+      ) : display === "grid" ? (
+        <div className={styles.fileGrid}>
+          {filteredFiles.length === 0 ? (
+            <p>No files available.</p>
+          ) : (
+            filteredFiles.map((file) => (
+              <div 
+                key={file.id} 
+                className={`${styles.fileItem} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
+                onClick={(e) => {
+                  if (!(e.target as HTMLElement).closest(`.${styles.fileCheckboxThumbnail}`)) {
+                    handleFileSelect(file.id);
+                  }
+                }}
+              >
+                <input
+                  type="checkbox"
+                  className={styles.fileCheckboxThumbnail}
+                  onChange={() => handleFileSelect(file.id)}
+                  checked={selectedFiles.has(file.id)}
+                />
+                <img
+                  src={file.thumbnail} alt={file.fileName} className={styles.fileThumbnail}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(file.download, '_blank');
+                  }}
+                />
+                <p className={styles.fileName}>{file.fileName}</p>
+              </div>
+            ))
+          )}
         </div>
       ) : (
         <table className={styles.fileTable}>
@@ -205,7 +237,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                   className={`${styles.fileRow} ${selectedFiles.has(file.id) ? styles.selected : ''}`}
                   onClick={(e) => {
                     // Prevent selecting the file if file name is clicked
-                    if (!(e.target as HTMLElement).closest(`.${styles.fileNameBox}`)) {
+                    if (!(e.target as HTMLElement).closest(`.${styles.fileCell} ${styles.checkbox}`)) {
                       handleFileSelect(file.id);
                     }
                   }}

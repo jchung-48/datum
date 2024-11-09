@@ -1,35 +1,14 @@
+
+
 .fileList {
     width: 100%;
     overflow: hidden;
     position: relative;
   }
   
-  .scrollContainer {
-    position: relative;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-  }
 
-  /* Edge fading effect */
-  .edgeFade {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 50px;
-    background: linear-gradient(to left, transparent, rgba(245, 245, 245, 0.9));
-    pointer-events: none;
-  }
-  
-  .edgeFade.left {
-    left: 0;
-  }
-  
-  .edgeFade.right {
-    right: 0;
-    background: linear-gradient(to right, transparent, rgba(245, 245, 245, 0.9));
-  }  
-  
+
+
   .fileItemsHorizontal {
     display: flex;
     gap: 16px;
@@ -121,7 +100,10 @@
     cursor: pointer;
   }
 
-  /* Styling for the table for default view. */
+  /* ====================================
+  Styling for the table for default view.
+  ==================================== */ 
+
   .fileTable {
     width: 100%;
     border-collapse: separate;
@@ -155,9 +137,6 @@
     border-bottom-right-radius: 10px;
   }
   
-  /* tr:last-child td:first-child { border-bottom-left-radius: 10px; }
-  tr:last-child td:last-child { border-bottom-right-radius: 10px; } */
-
   .fileRow:hover {
     background-color: #616161;
   }
@@ -202,6 +181,15 @@
     background-color: #8ba5b1;
   }
   
+  /* Scroll and Edge containers for horizontal display */
+
+  .scrollContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
   /* Scroll buttons */
   .scrollButton {
     background-color: #627d9f;
@@ -232,4 +220,32 @@
   
   .scrollButton:hover {
     background-color: #4e6784;
+  }
+
+  /* Edge fading effect */
+  .edgeFade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    background: linear-gradient(to left, transparent, rgba(245, 245, 245, 0.9));
+    pointer-events: none;
+  }
+  
+  .edgeFade.left {
+    left: 0;
+  }
+  
+  .edgeFade.right {
+    right: 0;
+    background: linear-gradient(to right, transparent, rgba(245, 245, 245, 0.9));
+  }  
+  
+  /* Grid View */
+
+  .fileGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 15px;
+    padding: 10px;
   }
