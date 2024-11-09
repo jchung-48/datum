@@ -7,7 +7,8 @@ import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 import './styles.css';
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import { auth} from "@/lib/firebaseClient";
+import AIButton from "../aiAddon/aiButton";
+import SearchBar from "../upload/SearchBar/searchBar";
 
 const LogisticsDepartment: React.FC = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -106,21 +107,29 @@ const LogisticsDepartment: React.FC = () => {
 
       <div className="department">Logistics</div>
 
-      <div className="upload">
-        {/* File upload section */}
-        <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
-          <select value={selectedCollection} onChange={handleCollectionChange} style={{ marginLeft: '10px' }}>
-            <option value="transportationFiles">Transportation Files</option>
-            <option value="customsFiles">Customs Files</option>
-            <option value="financialFiles">Financial Files</option>
-          </select>
-          <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload
-          </button>
-          {uploadStatus && <p>{uploadStatus}</p>}
+      <div className="upload-search-container">
+
+        <div className="upload">
+          {/* File upload section */}
+          <div style={{ marginTop: '20px' }}>
+            <input type="file" onChange={handleFileChange} />
+            <select value={selectedCollection} onChange={handleCollectionChange} style={{ marginLeft: '10px' }}>
+              <option value="transportationFiles">Transportation Files</option>
+              <option value="customsFiles">Customs Files</option>
+              <option value="financialFiles">Financial Files</option>
+            </select>
+            <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
+              Upload
+            </button>
+            {uploadStatus && <p>{uploadStatus}</p>}
+          </div>
+        </div>
+
+        <div className="search">
+        <SearchBar department="Logistics" />
         </div>
       </div>
+      
 
       <div className="files">
       <div className="file-title">Transportation Files</div>
@@ -147,6 +156,9 @@ const LogisticsDepartment: React.FC = () => {
               onFileSelect={handleFileSelect}
               horizontal
         />
+      </div>
+      <div className="ai-features">
+        <AIButton/>
       </div>
     </div>
   );

@@ -1,80 +1,84 @@
-// components/AIButton.tsx
-"use client";
-
 import React, { useState } from 'react';
-import './AIButton.module.css';
+import './styles.css';
 
-const AIButton: React.FC = () => {
-  // State for card visibility, mode selection, and input
+const AiButton: React.FC = () => {
   const [isCardVisible, setIsCardVisible] = useState(false);
   const [mode, setMode] = useState<'summarize' | 'chat'>('summarize');
   const [inputValue, setInputValue] = useState('');
 
   // Toggle card visibility
-  const toggleCardVisibility = () => {
-    setIsCardVisible((prev) => !prev);
+  const toggleCard = () => {
+    setIsCardVisible(!isCardVisible);
   };
 
-  // Handle mode toggle
+  // Toggle between Summarize and Chat modes
   const handleModeToggle = (selectedMode: 'summarize' | 'chat') => {
     setMode(selectedMode);
     setInputValue(''); // Clear input when mode changes
   };
 
-  // Handle input change
+  // Handle input change for chat input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
   return (
-    <div className="ai-button-container">
-      {/* AI Button */}
-      <button className="ai-button" onClick={toggleCardVisibility}>
-        <img src="/path/to/icon.png" alt="AI Button Icon" /> {/* Replace with actual path */}
+    <div>
+      {/* Circle Button in the bottom right */}
+      <button className="circle-button" onClick={toggleCard}>
+        {/* ollamaLogo.png from ../../public/images/ollamaLogo.png */}
+        <img className="ai-logo" src="/images/ollamaLogo.png"/>
       </button>
 
-      {/* AI Card */}
+      {/* Overlay and Card */}
       {isCardVisible && (
-        <div className="ai-card">
-          {/* Mode Toggle */}
-          <div className="mode-toggle">
-            <button
-              className={mode === 'summarize' ? 'active' : ''}
-              onClick={() => handleModeToggle('summarize')}
-            >
-              Summarize
-            </button>
-            <button
-              className={mode === 'chat' ? 'active' : ''}
-              onClick={() => handleModeToggle('chat')}
-            >
-              Chat
-            </button>
-          </div>
+        <div className="overlay" onClick={toggleCard}>
+          <div className="card" onClick={(e) => e.stopPropagation()}>
+            {/* Tab Buttons */}
+            <div className="mode-toggle">
+              <button
+                className={`tab-button ${mode === 'summarize' ? 'active' : ''}`}
+                onClick={() => handleModeToggle('summarize')}
+              >
+                Summarize
+              </button>
+              <button
+                className={`tab-button ${mode === 'chat' ? 'active' : ''}`}
+                onClick={() => handleModeToggle('chat')}
+              >
+                Chat
+              </button>
+            </div>
 
-          {/* Content Display Area */}
-          <div className="content-display">
-            {mode === 'summarize' ? 'Summary' : 'Chat'}
-          </div>
+            {/* Content Display Area */}
+            <div className="content-display">
+              
+            </div>
 
-          {/* Input Area */}
-          <div className="input-area">
-            {mode === 'summarize' ? (
-              <>
-                <input type="file" />
-                <button className="summarize-button">Summarize</button>
-              </>
-            ) : (
-              <>
-                <input
-                  type="text"
-                  placeholder="Chat with the LLM"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                />
-                <button className="send-button">Send</button>
-              </>
-            )}
+            {/* Input Area */}
+            <div className="input-area">
+              {mode === 'summarize' ? (
+                <>
+                  <input type="file" />
+                  <button className="action-button">Summarize</button>
+                </>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Chat with the LLM"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                  />
+                  <button className="action-button">Send</button>
+                </>
+              )}
+            </div>
+
+            {/* Close Button */}
+            <button className="close-button" onClick={toggleCard}>
+              Close
+            </button>
           </div>
         </div>
       )}
@@ -82,4 +86,4 @@ const AIButton: React.FC = () => {
   );
 };
 
-export default AIButton;
+export default AiButton;

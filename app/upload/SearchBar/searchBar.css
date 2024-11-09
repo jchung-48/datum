@@ -1,0 +1,75 @@
+/* Centering main container */
+.main-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px;/* Full viewport height */
+    text-align: center;
+}
+
+/* Search bar styling */
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Search input styling */
+.search-input {
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+/* Small search button styling */
+.search-button {
+    padding: 6px;
+    font-size: 12px;
+    background-color: #627D9F;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #4b617b;
+}
+
+/* Search results card directly below the search bar */
+.search-results-card {
+    position: absolute;
+    top: 100%; /* Positions below search bar */
+    left: 0;
+    width: 100%; /* Matches width of search bar */
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    margin-top: 5px;
+    padding: 10px;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Styling for search result items */
+.search-result-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
