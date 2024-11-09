@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
-import { updatePhoneNumberForUser } from "../authentication";
-import { RecaptchaVerifier, signInWithPhoneNumber, PhoneAuthProvider } from "firebase/auth";
+import { RecaptchaVerifier, signInWithCredential, PhoneAuthProvider, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "@/lib/firebaseClient";
 
 interface Window {
   recaptchaVerifier: import("firebase/auth").RecaptchaVerifier;
@@ -11,7 +11,7 @@ interface Window {
 const Page = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
-  const [verificationId, setVerificationId] = useState(null);
+  const [verificationId, setVerificationId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -31,7 +31,25 @@ const Page = () => {
       return;
     }
     try {
-      const appVerifier = window.recaptchaVerifier;
+      const verifier = new RecaptchaVerifier(auth, "recaptcha-container");
+      const provider = new PhoneAuthProvider(auth);
+      const verificationId = await provider.verifyPhoneNumber(phoneNumber, verifier);
+      setVerificationId(verificationId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const verifyAndUpdatePhoneNumber = async () => {
+    if (!verificationCode || !verificationId) {
+      setErrorMessage("Enter OTP!");
+    }
+    try {
+      const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
+      await signInWithCredential(auth, credential);
+    }  catch (error) {
+      console.error("Error verifying OTP:", error);
+      setErrorMessage("Failed to verify OTP. Please try again.");
     }
   };
 
@@ -44,7 +62,7 @@ const Page = () => {
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
       />
-      <button onClick={updatePhoneNumberForUser}>Send Verification Code</button>
+      <button onClick={sendVerificationCode}>Send Verification Code</button>
       
       {verificationId && (
         <>

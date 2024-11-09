@@ -1,7 +1,7 @@
 // authentication.js
 import { signInWithEmailAndPassword, signOut, updatePhoneNumber, PhoneAuthProvider, reauthenticateWithCredential, signInWithPhoneNumber } from "firebase/auth";
 import { doc, getDoc, collection, getDocs, updateDoc } from "firebase/firestore";
-import { auth, db } from '../lib/firebaseClient.js'; // Import initialized Firebase instances
+import { auth, db } from '@/lib/firebaseClient.js'; // Import initialized Firebase instances
 
 // Fetch departments from Firestore
 export const getDepartments = async (companyId) => {
@@ -102,38 +102,6 @@ export const resetPassword = async (email) => { // Pete
     }
   } catch (error) {
     setErrorMessage("Error reseting password");
-  }
-};
-
-export const updatePhoneNumberForUser = async (newPhoneNumber, verificationCode) => { // Pete
-  window.recaptchaVerifier = new RecaptchaVerifier(
-    "recaptcha-container",
-    {
-      size: "invisible",
-      callback: (response) => {
-        console.log("reCAPTCHA solved", response);
-      },
-    },
-    auth
-  );
-
-  try {
-    const appVerifier = window.recaptchaVerifier;
-    const confirmationResult = await signInWithPhoneNumber(auth, newPhoneNumber, appVerifier);
-    setVerificationId(confirmationResult.verificationId);
-    console.log("Verification code sent to:", newPhoneNumber);
-
-    const user = auth.currentUser;
-    const phoneCredential = PhoneAuthProvider.credential(
-      newPhoneNumber.verificationCode,
-      verificationCode
-    );
-
-    await updatePhoneNumber(user, phoneCredential);
-    console.log("Phone number updated successfully.");
-  } catch (error) {
-    console.error("Error updating phone number:", error);
-    setErrorMessage(`Error reseting password: ${error}`);
   }
 };
 
