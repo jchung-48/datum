@@ -126,7 +126,9 @@ const LogisticsDepartment: React.FC = () => {
         </div>
 
         <div className="search">
-        <SearchBar department="Logistics" />
+        <SearchBar 
+                paths={["KZm56fUOuTobsTRCfknJ"]} 
+        />
         </div>
       </div>
       

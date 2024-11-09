@@ -1,54 +1,205 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { ref, listAll } from "firebase/storage";
-import { storage } from "@/lib/firebaseClient"; // Adjust import path if necessary
-import "./SearchBar.css";
+import React, {useState, useRef, useEffect, useCallback} from 'react';
+import {
+    collection,
+    getDocs,
+    CollectionReference,
+    QueryDocumentSnapshot,
+} from 'firebase/firestore';
+import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
+import './SearchBar.css';
+
+interface DocumentData {
+    filePath: string;
+    download: string;
+    tags?: string[]; // Optional, based on your example
+    fileName: string;
+    uploadTimeStamp?: any; // You can specify this as Timestamp if Firestore timestamp types are imported
+}
 
 interface SearchResult {
     name: string;
+    downloadURL: string;
 }
 
-const SearchBar: React.FC<{ department: string }> = ({ department }) => {
-    const [queryText, setQueryText] = useState("");
+interface SearchBarProps {
+    paths: string[]; // Array of department IDs or department IDs with subpaths
+}
+
+// Debounce function to limit search calls
+const debounce = (func: (...args: any[]) => void, delay: number) => {
+    let timer: NodeJS.Timeout;
+    return (...args: any[]) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => func(...args), delay);
+    };
+};
+
+const companyId = 'mh3VZ5IrZjubXUCZL381';
+
+const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
+    const [queryText, setQueryText] = useState('');
     const [results, setResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isResultsVisible, setIsResultsVisible] = useState(false);
+
+    const resultsRef = useRef<HTMLDivElement>(null);
+
+    const getSubcollections = async (
+        departmentId: string,
+    ): Promise<string[]> => {
+        if (!departmentId) {
+            return [];
+        }
+        if (departmentId === 'KZm56fUOuTobsTRCfknJ') {
+            return ['transportationFiles', 'financialFiles', 'customsFiles'];
+        } else if (departmentId === 'Eq2IDInbEQB5nI5Ar6Vj') {
+            return ['files'];
+        } else if (departmentId === 'NpaV1QtwGZ2MDNOGAlXa') {
+            return ['files', 'incidents'];
+        } else if (departmentId === 'ti7yNByDOzarVXoujOog') {
+            return ['files', 'records'];
+        } else {
+            return [];
+        }
+    };
 
     const handleSearch = async () => {
-        if (!queryText) return;
+        if (!queryText) {
+            setResults([]);
+            setIsResultsVisible(false);
+            return;
+        }
 
         setLoading(true);
         const searchResults: SearchResult[] = [];
 
         try {
-            // Reference to the department’s directory in Firebase Storage
-            const departmentPath = `Company/Departments/${department}`;
-            const departmentRef = ref(storage, departmentPath);
+            const queryTextSplit = queryText.toLowerCase().split(' ');
 
-            // Retrieve list of all files in the specified directory
-            const list = await listAll(departmentRef);
+            for (const path of paths) {
+                const pathSegments = path.split('/');
 
-            // Filter files based on the search query
-            for (const itemRef of list.items) {
-                if (itemRef.name.toLowerCase().includes(queryText.toLowerCase())) {
-                    searchResults.push({
-                        name: itemRef.name,
-                    });
+                const departmentId = pathSegments[0];
+                const subPathSegments = pathSegments.slice(1);
+
+                if (subPathSegments.length === 0) {
+                    const subcollections =
+                        await getSubcollections(departmentId);
+
+                    for (const subcollection of subcollections) {
+                        const collectionPath = [
+                            'Company',
+                            companyId,
+                            'Departments',
+                            departmentId,
+                            subcollection,
+                        ].join('/');
+
+                        const collectionRef = collection(
+                            db,
+                            collectionPath,
+                        ) as CollectionReference<DocumentData>;
+
+                        await fetchAndFilterDocs(
+                            collectionRef,
+                            searchResults,
+                            queryTextSplit,
+                        );
+                    }
+                } else {
+                    // Subpaths are provided
+                    const collectionPathSegments = [
+                        'Company',
+                        companyId,
+                        'Departments',
+                        departmentId,
+                        ...subPathSegments,
+                    ];
+
+                    const collectionPath = collectionPathSegments.join('/');
+
+                    const collectionRef = collection(
+                        db,
+                        collectionPath,
+                    ) as CollectionReference<DocumentData>;
+
+                    await fetchAndFilterDocs(
+                        collectionRef,
+                        searchResults,
+                        queryTextSplit,
+                    );
                 }
             }
+
+            setIsResultsVisible(true);
         } catch (error) {
-            console.error("Error retrieving search results:", error);
+            console.error('Error retrieving search results:', error);
         }
 
         setResults(searchResults);
         setLoading(false);
     };
 
-    const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            await handleSearch();
+    // Helper function to fetch and filter documents
+    const fetchAndFilterDocs = async (
+        collectionRef: CollectionReference<DocumentData>,
+        searchResults: SearchResult[],
+        queryTextSplit: string[],
+    ) => {
+        const docsSnap = await getDocs(collectionRef);
+
+        docsSnap.forEach((doc: QueryDocumentSnapshot<DocumentData>) => {
+            const data = doc.data();
+
+            // Use fileName instead of name
+            const name = data.fileName?.toLowerCase();
+
+            // Ensure name is defined before trying to use it
+            if (!name) return;
+
+            const matches = queryTextSplit.every(word => name.includes(word));
+
+            if (matches) {
+                searchResults.push({
+                    name: data.fileName, // Use fileName for displaying
+                    downloadURL: data.download, // Use download field for URL
+                });
+            }
+        });
+    };
+
+    // Debounced version of handleSearch with a 500ms delay
+    const debouncedSearch = useCallback(debounce(handleSearch, 500), [
+        queryText,
+        paths,
+    ]);
+
+    const handleEscapePress = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            setIsResultsVisible(false);
         }
     };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (
+            resultsRef.current &&
+            !resultsRef.current.contains(event.target as Node)
+        ) {
+            setIsResultsVisible(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscapePress);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscapePress);
+        };
+    }, []);
 
     return (
         <div className="main-container">
@@ -57,30 +208,30 @@ const SearchBar: React.FC<{ department: string }> = ({ department }) => {
                     type="text"
                     placeholder="Search..."
                     value={queryText}
-                    onChange={(e) => setQueryText(e.target.value)}
-                    onKeyUp={handleKeyPress}
+                    onChange={e => {
+                        setQueryText(e.target.value);
+                        debouncedSearch();
+                    }}
                     className="search-input"
                 />
-                <button onClick={handleSearch} className="search-button">🔍</button>
-    
-                {loading && <p>Loading results...</p>}
-    
-                {results.length > 0 && (
-                    <div className="search-results-card">
-                        <h3>Search Results</h3>
-                        <ul>
-                            {results.map((item, index) => (
-                                <li key={index} className="search-result-item">
-                                    {item.name}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+
+                {isResultsVisible && results.length > 0 && (
+                <div ref={resultsRef} className="search-results-card">
+                    <ul>
+                    {results.map((item, index) => (
+                        <li key={index} className="search-result-item">
+                        <a href={item.downloadURL} target="_blank" rel="noopener noreferrer">
+                            {item.name}
+                        </a>
+                        </li>
+                    ))}
+                    </ul>
+                </div>
                 )}
+
             </div>
         </div>
     );
-    
 };
 
 export default SearchBar;

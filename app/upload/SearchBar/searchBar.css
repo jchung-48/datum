@@ -3,52 +3,40 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 10px;/* Full viewport height */
+    padding-top: 10px;
     text-align: center;
 }
 
 /* Search bar styling */
 .search-bar {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    width: 500px; /* Set a fixed width */
 }
 
 /* Search input styling */
 .search-input {
+    width: 100%; /* Full width of the search bar */
     padding: 6px;
     font-size: 14px;
+    color: black;
+    background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
-    flex-grow: 1;
+    box-sizing: border-box; /* Include padding and border in width */
 }
 
-/* Small search button styling */
-.search-button {
-    padding: 6px;
-    font-size: 12px;
-    background-color: #627D9F;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.search-button:hover {
-    background-color: #4b617b;
-}
+/* Remove the search button if it's no longer used */
 
 /* Search results card directly below the search bar */
 .search-results-card {
     position: absolute;
-    top: 100%; /* Positions below search bar */
+    top: 100%; /* Position below the search bar */
     left: 0;
-    width: 100%; /* Matches width of search bar */
+    width: 100%; /* Match the width of the search bar */
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 8px;
+    box-sizing: border-box;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     margin-top: 5px;
     padding: 10px;
