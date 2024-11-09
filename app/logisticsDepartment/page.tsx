@@ -2,8 +2,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FileList } from './logistics'; // Adjust the path accordingly
+import { FileList } from '../upload/listFiles';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import './styles.css';
+import { LuCloudLightning } from 'react-icons/lu';
+import { FaUserCircle } from 'react-icons/fa';
+import { auth} from "@/lib/firebaseClient";
 
 const LogisticsDepartment: React.FC = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -13,12 +17,21 @@ const LogisticsDepartment: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<string>('transportationFiles'); // Default collection
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
+  };
+
+  const handleFileSelect = (fileId: string) => {
+    setSelectedFiles((prevSelected) => 
+      prevSelected.includes(fileId) 
+        ? prevSelected.filter(id => id !== fileId) 
+        : [...prevSelected, fileId]
+    );
   };
 
   // Handle collection selection
@@ -32,6 +45,8 @@ const LogisticsDepartment: React.FC = () => {
       alert('Please select a file before uploading.');
       return;
     }
+
+    //console.log("current user:",auth.currentUser);
 
     const storagePath = `Company/Departments/Logistics/${file.name}`;
     const downloadURL = await uploadFileToStorage(file, storagePath);
@@ -78,15 +93,20 @@ const LogisticsDepartment: React.FC = () => {
   ] as [string, ...string[]];
 
   return (
-    <div>
+    <div className="body">
       <div className="header">
         <Link href="/home">
-          <button style={{ marginBottom: '20px' }}>Home</button>
+          <div className="home">
+            <LuCloudLightning className="cloud-icon"/>
+            DATUM
+          </div>
         </Link>
+        <FaUserCircle className="profile" />
+      </div>
 
-        <h1>Welcome to Logistics!</h1>
-        <p>These are the Logistics files.</p>
+      <div className="department">Logistics</div>
 
+      <div className="upload">
         {/* File upload section */}
         <div style={{ marginTop: '20px' }}>
           <input type="file" onChange={handleFileChange} />
@@ -95,7 +115,7 @@ const LogisticsDepartment: React.FC = () => {
             <option value="customsFiles">Customs Files</option>
             <option value="financialFiles">Financial Files</option>
           </select>
-          <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
+          <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
             Upload
           </button>
           {uploadStatus && <p>{uploadStatus}</p>}
@@ -103,9 +123,30 @@ const LogisticsDepartment: React.FC = () => {
       </div>
 
       <div className="files">
-        <FileList collectionPath={transportationFilesPath} title="Transportation Files" />
-        <FileList collectionPath={customsFilesPath} title="Customs Files" />
-        <FileList collectionPath={financialFilesPath} title="Financial Files" />
+      <div className="file-title">Transportation Files</div>
+        <FileList 
+              collectionPath={transportationFilesPath} 
+              title="" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+        />
+        <div className="file-title">Customs Files</div>
+        <FileList 
+              collectionPath={customsFilesPath} 
+              title="" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+        />
+        <div className="file-title">Financial Files</div>
+        <FileList 
+              collectionPath={financialFilesPath} 
+              title="" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+        />
       </div>
     </div>
   );
