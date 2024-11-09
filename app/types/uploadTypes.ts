@@ -18,5 +18,6 @@ export type FileListProps = {
     title: string;
     onSearch?: (query: string) => void;
     onFileSelect?: (fileId: string) => void;
+    display?: "list" | "horizontal" | "grid";
 };
 
