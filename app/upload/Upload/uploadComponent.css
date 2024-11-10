@@ -1,0 +1,61 @@
+/* uploadComponentStyles.css */
+
+.upload-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .pill-upload-button {
+    padding: 10px 20px;
+    border-radius: 50px;
+    background-color: #1F2122;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pill-upload-button:hover {
+    background-color: #333;
+  }
+  
+  /* New class to hide the button visually but keep its space */
+  .hidden-button {
+    visibility: hidden; /* Hides the button but keeps the space occupied */
+  }
+  
+  .upload-card {
+    position: absolute;
+    top: 0; /* Adjust as needed to position over the button */
+    left: 0;
+    /* Alternatively, position the card wherever you need */
+    margin-top: 0;
+    padding: 20px;
+    background-color: #181A1B;
+    border: 1px solid #444;
+    border-radius: 8px;
+    width: 250px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .upload-card input[type="file"],
+  .upload-card select,
+  .upload-card button {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .upload-card button {
+    background-color: #1F2122;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .upload-card button:hover {
+    background-color: #333;
+  }
+  

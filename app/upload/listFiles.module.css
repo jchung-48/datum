@@ -127,7 +127,7 @@
   ==================================== */ 
 
   .fileTable {
-    width: 100%;
+    width: 97.45%;
     border-collapse: separate;
     border-spacing: 0 0.4em;
     margin-top: 5px;
@@ -143,6 +143,22 @@
   .fileTable th {
     background-color: #333333;
     font-weight: bold;
+    min-width: 100px;
+    height: 45px;
+  }
+
+  .sortable-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .ascDesImg {        /* cant seem to get this inline w/ text */
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    filter: brightness(0) invert(1);
   }
 
   .fileRow {
@@ -263,3 +279,39 @@
     background: linear-gradient(to right, transparent, var(--edge-fade-color,rgba(0, 0, 0, 0.9)));
   }
   
+
+
+
+  .deleteButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #e74c3c; /* Red color */
+    font-size: 1.2em;
+    padding: 0;
+    margin-left: 10px;
+    transition: color 0.2s ease;
+  }
+  
+  .deleteButton:hover {
+    color: #c0392b; /* Darker red on hover */
+  }
+  
+  .trashIcon {
+    pointer-events: none; /* Ensure the icon doesn't capture click events */
+  }
+  
+  /* Adjustments for the table cell */
+  .actions {
+    text-align: center;
+  }
+  
+  .fileItem {
+    position: relative;
+  }
+  
+  .fileItem .deleteButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }

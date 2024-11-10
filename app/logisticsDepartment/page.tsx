@@ -7,7 +7,9 @@ import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
 import './styles.css';
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import { auth} from "@/lib/firebaseClient";
+import AIButton from "../aiAddon/aiButton";
+import SearchBar from "../upload/SearchBar/searchBar";
+import UploadComponent from '../upload/Upload/uploadComponent';
 
 const LogisticsDepartment: React.FC = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -18,7 +20,7 @@ const LogisticsDepartment: React.FC = () => {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<string>('transportationFiles'); // Default collection
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
-
+  const [fileListUpdated, setFileListUpdated] = useState(false);
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -106,21 +108,23 @@ const LogisticsDepartment: React.FC = () => {
 
       <div className="department">Logistics</div>
 
-      <div className="upload">
-        {/* File upload section */}
-        <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
-          <select value={selectedCollection} onChange={handleCollectionChange} style={{ marginLeft: '10px' }}>
-            <option value="transportationFiles">Transportation Files</option>
-            <option value="customsFiles">Customs Files</option>
-            <option value="financialFiles">Financial Files</option>
-          </select>
-          <button className="upload-button" onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload
-          </button>
-          {uploadStatus && <p>{uploadStatus}</p>}
+      <div className="upload-search-container">
+
+        <UploadComponent 
+              companyId={COMPANYID} 
+              departmentId={DEPARTMENTID} 
+              departmentName="Logistics"
+              collections={['transportationFiles', 'customsFiles', 'financialFiles']}
+              onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
+
+
+        <div className="search">
+        <SearchBar 
+                paths={["KZm56fUOuTobsTRCfknJ"]} 
+        />
         </div>
       </div>
+      
 
       <div className="files">
       <div className="file-title">Transportation Files</div>
@@ -130,6 +134,7 @@ const LogisticsDepartment: React.FC = () => {
               onSearch={() => {}}
               onFileSelect={handleFileSelect}
               horizontal
+              refreshTrigger={fileListUpdated}
         />
         <div className="file-title">Customs Files</div>
         <FileList 
@@ -138,6 +143,7 @@ const LogisticsDepartment: React.FC = () => {
               onSearch={() => {}}
               onFileSelect={handleFileSelect}
               horizontal
+              refreshTrigger={fileListUpdated}
         />
         <div className="file-title">Financial Files</div>
         <FileList 
@@ -146,7 +152,11 @@ const LogisticsDepartment: React.FC = () => {
               onSearch={() => {}}
               onFileSelect={handleFileSelect}
               horizontal
+              refreshTrigger={fileListUpdated}
         />
+      </div>
+      <div className="ai-features">
+        <AIButton/>
       </div>
     </div>
   );
