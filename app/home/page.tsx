@@ -37,6 +37,11 @@ export default function Home() {
           </Link>
         </li>
         <li>
+          <Link href="/profile">
+            <button style={{ marginBottom: '20px' }}>Your Profile</button>
+          </Link>
+        </li>
+        <li>
           <Link href="/qaDepartment">
             <button style={{ marginBottom: '20px' }}>Quality Assurance</button>
           </Link>
