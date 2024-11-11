@@ -4,7 +4,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import './styles.css';
 import { auth, db } from '@/lib/firebaseClient'; 
-import { signInUser, getUserDepartments } from "../authentication";
+import { signInUser, getUserDepartments, resetPassword } from "../authentication";
 import { doc, getDoc } from "firebase/firestore";
 
 const Page = () => {
@@ -15,7 +15,7 @@ const Page = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Track error messages
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async user => {
@@ -69,6 +69,14 @@ const Page = () => {
     setTimeout(() => {
       setErrorMessage("");
     }, 3000);
+  };
+
+  const handlePassReset = async () => {
+    if (email) {
+      resetPassword(email);
+    } else {
+      alert("Please enter an email in order to reset your password!");
+    }
   };
 
   return (

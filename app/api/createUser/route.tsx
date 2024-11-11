@@ -29,7 +29,7 @@ export async function POST(req: Request, res: NextApiResponse<ErrorResponse | Su
       // return res.status(403).json({ message: 'Access denied. No company association found.' });
     }
     const comapnyRef = admin.firestore().doc(`/Company/${companyId}`);
-    const companyDoc = await comapnyRef.get();
+    const companyDoc = await comapnyRef.get(); // get company
 
     if (!companyDoc.exists) {
       return new Response(JSON.stringify({ message: 'Company not found' }), { status: 404 });
@@ -77,8 +77,8 @@ export async function POST(req: Request, res: NextApiResponse<ErrorResponse | Su
     });
 
     departments[0].update({
-      users: admin.firestore.FieldValue.arrayUnion(employee)
-    });
+      users: admin.firestore.FieldValue.arrayUnion(employee) // i legit forgot what this does
+    }); // nvm it adds the user to the  department
 
     await sendResetEmail(email, resetLink, true);
 
@@ -93,4 +93,4 @@ export async function POST(req: Request, res: NextApiResponse<ErrorResponse | Su
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
-}
+};

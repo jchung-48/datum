@@ -1,8 +1,7 @@
 // authentication.js
-
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
-import { auth, db } from '../lib/firebaseClient.js'; // Import initialized Firebase instances
+import { signInWithEmailAndPassword, signOut, updatePhoneNumber, PhoneAuthProvider, RecaptchaVerifier } from "firebase/auth";
+import { doc, getDoc, collection, getDocs, updateDoc } from "firebase/firestore";
+import { auth, db } from '@/lib/firebaseClient.js'; // Import initialized Firebase instances
 
 // Fetch departments from Firestore
 export const getDepartments = async (companyId) => {
@@ -31,6 +30,7 @@ export const getUserDepartments = async (userData) => {
     const firstDepartmentRef = departmentRefs[0]; // get first department
     const departmentSnap = await getDoc(firstDepartmentRef);
     const departmentData = departmentSnap.data();
+    console.log(departmentData);
     return departmentData;
   } catch (error) {
     console.error("Error fetching departments for user:", error);
@@ -80,6 +80,86 @@ export const signInUser = async (email, password, companyId) => {
   }
 };
 
+export const sendVerificationCode = async (phoneNumber) => { // Pete
+  // auth.settings.appVerificationDisabledForTesting = true;
+  if (!phoneNumber) {
+    console.error("Please enter a phone number.");
+    return;
+  }
+  try {
+    const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+      'size': 'invisible',
+    });
+    const provider = new PhoneAuthProvider(auth);
+    const verificationId = await provider.verifyPhoneNumber(phoneNumber, verifier);
+    return verificationId;
+  } catch (error) {
+    console.error(error);
+    return "";
+  }
+};
+
+export const verifyAndUpdatePhoneNumber = async (verificationCode, verificationId ) => { // Pete
+  if (!verificationCode || !verificationId) {
+    console.error("set OTP!");
+    return;
+  }
+  try {
+    const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
+    const user = auth.currentUser;
+    if (user) {
+      await updatePhoneNumber(user, credential);
+    }
+  }  catch (error) {
+    console.error("Error verifying OTP:", error);
+  }
+};
+
+export const resetPassword = async (email) => { // Pete
+  try {
+    const response = await fetch("/api/resetPass", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log(`${data.message}`);
+      alert("Reset link sent to your email!");
+    } else {
+      const errorData = await response.json();
+      console.error(errorData.message || "Failed to create user");
+    }
+  } catch (error) {
+    console.error("Error reseting password");
+  }
+};
+
+export const changeDisplayName = async (newDisplayName) => { // Pete
+  const user = auth.currentUser;
+  try {
+    user.updateProfile({
+      displayName: newDisplayName
+    }).then(() => {
+      console.log('Display name updated successfully!');
+    }).catch(error => {
+      console.error('Error updating display name:', error);
+    });
+
+    const companyId = (await user.getIdTokenResult()).claims.companyId;
+    const docRef = doc(db, `/Company/${companyId}/Employees`, user.uid);
+    await updateDoc(docRef, {
+      name: newDisplayName
+    });
+  } catch (error) {
+    console.error("Error changing name: ", error);
+  }
+};
+
 export const logoutUser = async () => {
   try {
     await signOut(auth);
@@ -88,6 +168,7 @@ export const logoutUser = async () => {
     console.error("Error signing out: ", error);
   }
 };
+
 export const getEmployeeProfile = async (uid) => {
   try {
     const employeeRef = doc(db, "Company/mh3VZ5IrZjubXUCZL381/Employees", uid);
