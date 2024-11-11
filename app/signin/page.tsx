@@ -98,8 +98,11 @@ const Page = () => {
           {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>}
         </div>
         <div className="box-right">
-            <p className="new">New Here?</p>
-            <p className="datum">Welcome to Datum!</p>
+          <div className="triangle-right"></div>
+          <div className="circle"></div>
+          <div className="circle2"></div>
+          <p className="new">New Here?</p>
+          <p className="datum">Welcome to Datum!</p>
         </div>
       </div>
     </div>
