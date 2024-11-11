@@ -5,6 +5,7 @@ import Link from 'next/link';
 //import './styles.css'; // Ensure this import is correct
 import { FileList } from '../upload/listFiles'; // Adjust path if needed
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import UploadComponent from '../upload/Upload/uploadComponent';
 
 const hrDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
@@ -15,12 +16,22 @@ const hrDepartment = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [selectedCollection, setSelectedCollection] = useState('files');
+  const [fileListUpdated, setFileListUpdated] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
+  };
+
+  const handleFileSelect = (fileId: string) => {
+    setSelectedFiles((prevSelected) => 
+      prevSelected.includes(fileId) 
+        ? prevSelected.filter(id => id !== fileId) 
+        : [...prevSelected, fileId]
+    );
   };
 
   // Handle file upload
@@ -79,24 +90,22 @@ const hrDepartment = () => {
         <p>These are the HR files.</p>
 
         {/* File upload section */}
-        <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
-          <select value={selectedCollection} onChange={(e) => setSelectedCollection(e.target.value)}>
-            <option value="files">Department Files</option>
-            <option value="incident">Incident Files</option>
-          </select>
-          <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload to HR Department
-          </button>
-          {uploadStatus && <p>{uploadStatus}</p>}
-        </div>
-      </div>
+        <UploadComponent
+          companyId={COMPANYID}
+          departmentId={DEPARTMENTID}
+          departmentName="HumanResources"
+          collections={['files', 'incident']}
+          onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
+
 
       <div className="files">
-        <FileList collectionPath={deptFilesPath} title="Department Files" />
-        <FileList collectionPath={incidentFilesPath} title="Incident Files" />
+        <div className="file-title">Department Files</div>
+        <FileList collectionPath={deptFilesPath} title="" onSearch={() => {}} onFileSelect={handleFileSelect} horizontal refreshTrigger={fileListUpdated} />
+        <div className="file-title">Incident Files</div>
+        <FileList collectionPath={incidentFilesPath} title="" onSearch={() => {}} onFileSelect={handleFileSelect} horizontal refreshTrigger={fileListUpdated} />
       </div>
     </div>
+  </div>
   );
 };
 

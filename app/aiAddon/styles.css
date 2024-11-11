@@ -1,0 +1,150 @@
+/* Circle Button */
+.circle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    background-color: #627D9F;
+    color: #ffffff;
+    font-size: 18px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s;
+    z-index: 1000;
+}
+
+.circle-button:hover {
+    background-color: #4b617b;
+}
+
+.ai-logo {
+    width: 60%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Card */
+.card {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    height: 510px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+/* Close Button in the Card */
+.card-close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: gray;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.card-close-button:hover {
+    color: red;
+}
+
+/* Close Button Wrapper */
+.tab-options {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0px 5px 0;
+    height: 25px;
+}
+
+/* Tab Button Styles */
+.mode-toggle {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    background-color: #f0f0f0;
+    color: black;   
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab-button.active {
+    background-color: #627D9F;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.tab-button:not(.active):hover {
+    background-color: #e0e0e0;
+}
+
+/* Content Display Area */
+.content-display {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    height: 350px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 16px;
+}
+
+.input-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-area input[type="text"],
+.input-area input[type="file"] {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: black;
+    background-color: white;
+    font-size: 14px;
+}
+
+.action-button {
+    padding: 8px 12px;
+    background-color: #627D9F;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    width: auto;
+    max-width: 50px;
+    box-sizing: border-box;
+}
+
+.action-button:hover {
+    background-color: #4b617b;
+}

@@ -2,8 +2,14 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FileList } from './logistics'; // Adjust the path accordingly
+import { FileList } from '../upload/listFiles';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import './styles.css';
+import { LuCloudLightning } from 'react-icons/lu';
+import { FaUserCircle } from 'react-icons/fa';
+import AIButton from "../aiAddon/aiButton";
+import SearchBar from "../upload/SearchBar/searchBar";
+import UploadComponent from '../upload/Upload/uploadComponent';
 
 const LogisticsDepartment: React.FC = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -13,12 +19,21 @@ const LogisticsDepartment: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<string>('transportationFiles'); // Default collection
-
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [fileListUpdated, setFileListUpdated] = useState(false);
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
+  };
+
+  const handleFileSelect = (fileId: string) => {
+    setSelectedFiles((prevSelected) => 
+      prevSelected.includes(fileId) 
+        ? prevSelected.filter(id => id !== fileId) 
+        : [...prevSelected, fileId]
+    );
   };
 
   // Handle collection selection
@@ -32,6 +47,8 @@ const LogisticsDepartment: React.FC = () => {
       alert('Please select a file before uploading.');
       return;
     }
+
+    //console.log("current user:",auth.currentUser);
 
     const storagePath = `Company/Departments/Logistics/${file.name}`;
     const downloadURL = await uploadFileToStorage(file, storagePath);
@@ -78,34 +95,70 @@ const LogisticsDepartment: React.FC = () => {
   ] as [string, ...string[]];
 
   return (
-    <div>
+    <div className="body">
       <div className="header">
         <Link href="/home">
-          <button style={{ marginBottom: '20px' }}>Home</button>
+          <div className="home">
+            <LuCloudLightning className="cloud-icon"/>
+            DATUM
+          </div>
         </Link>
-
-        <h1>Welcome to Logistics!</h1>
-        <p>These are the Logistics files.</p>
-
-        {/* File upload section */}
-        <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
-          <select value={selectedCollection} onChange={handleCollectionChange} style={{ marginLeft: '10px' }}>
-            <option value="transportationFiles">Transportation Files</option>
-            <option value="customsFiles">Customs Files</option>
-            <option value="financialFiles">Financial Files</option>
-          </select>
-          <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload
-          </button>
-          {uploadStatus && <p>{uploadStatus}</p>}
-        </div>
+        <Link href="/profile">
+          <FaUserCircle className="profile" />
+        </Link>
       </div>
 
+      <div className="department">Logistics</div>
+
+      <div className="upload-search-container">
+
+        <UploadComponent 
+              companyId={COMPANYID} 
+              departmentId={DEPARTMENTID} 
+              departmentName="Logistics"
+              collections={['transportationFiles', 'customsFiles', 'financialFiles']}
+              onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
+
+
+        <div className="search">
+        <SearchBar 
+                paths={["KZm56fUOuTobsTRCfknJ"]} 
+        />
+        </div>
+      </div>
+      
+
       <div className="files">
-        <FileList collectionPath={transportationFilesPath} title="Transportation Files" />
-        <FileList collectionPath={customsFilesPath} title="Customs Files" />
-        <FileList collectionPath={financialFilesPath} title="Financial Files" />
+      <div className="file-title">Transportation Files</div>
+        <FileList 
+              collectionPath={transportationFilesPath} 
+              title="" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+              refreshTrigger={fileListUpdated}
+        />
+        <div className="file-title">Customs Files</div>
+        <FileList 
+              collectionPath={customsFilesPath} 
+              title="" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+              refreshTrigger={fileListUpdated}
+        />
+        <div className="file-title">Financial Files</div>
+        <FileList 
+              collectionPath={financialFilesPath} 
+              title="" 
+              onSearch={() => {}}
+              onFileSelect={handleFileSelect}
+              horizontal
+              refreshTrigger={fileListUpdated}
+        />
+      </div>
+      <div className="ai-features">
+        <AIButton/>
       </div>
     </div>
   );

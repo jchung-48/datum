@@ -1,0 +1,129 @@
+html {
+    height: 100%;
+    margin: 0;
+}
+
+@font-face {
+    font-family: 'Darker Grotesque';
+    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
+    font-style: normal;
+}
+
+body {
+    background-color: #e3e3e3;
+    background-image: 
+        linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
+        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+    background-size: 100% 100%, 50px 50px, 50px 50px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.home {
+    display: flex;
+    align-items: center;
+    font-family: "Darker Grotesque";
+    color: #1F3C53;
+    font-weight: 800;
+    font-size: 40px;
+}
+
+.cloud-icon {
+    margin-right: 12px;
+    height: 35px;
+    width: 35px;
+}
+
+.top-buttons {
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+    padding-left: 20px;
+    font-family: "Darker Grotesque";
+    font-weight: 800;
+    font-size: 20px;
+    color: #1F3C53;
+}
+
+.top-buttons:hover {
+    color: #627D9F;
+}
+
+.user-container {
+    padding-top: 15px;;
+}
+.create-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1F3C53;
+    font-family: "Darker Grotesque";
+    font-weight: 800;
+    font-size: 20px;
+    height: 40px;
+    width: 170px;
+    border-radius: 25px;
+}
+
+.create-user:hover, .faq-button:hover, .ai-button:hover {
+    background-color: #627D9F;
+}
+
+.motto {
+    color: #000000;
+    font-family: "Darker Grotesque";
+    font-weight: 800;
+    font-size: 120px;
+    padding-left: 7%;
+}
+
+.description {
+    color: #1F3C53;
+    font-family: "Darker Grotesque";
+    font-size: 25px;
+    padding-left: 7%;
+    padding-top: 1%;
+}
+
+.bottom-buttons {
+    display: flex;
+    padding-left: 7%;
+    padding-top: 5%;
+}
+
+.faq-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1.5%;
+    margin-right: 5%;
+    background-color: #1F3C53;
+    font-family: "Darker Grotesque";
+    font-weight: 800;
+    font-size: 20px;
+    height: 40px;
+    width: 100px;
+    border-radius: 25px;
+}
+
+.ai-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1.5%;
+    background-color: #1F3C53;
+    font-family: "Darker Grotesque";
+    font-weight: 100;
+    font-size: 20px;
+    height: 40px;
+    width: 170px;
+    border-radius: 25px;
+}

@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from '@/lib/firebaseClient'; 
 import { useRouter } from 'next/navigation';
 import { logoutUser } from '../authentication';
+import { LuCloudLightning } from 'react-icons/lu';
+import './styles.css';
 
 export default function Home() {
   const router = useRouter();
@@ -23,56 +25,48 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Welcome to the Home Page real</h1>
-      <ul>
-        
-        <li>
-          <Link href="/createUser">
-            <button style={{ marginBottom: '20px' }}>Create Employee</button>
-          </Link>
-        </li>
-        <li>
-          <Link href="/profile">
-            <button style={{ marginBottom: '20px' }}>Your Profile</button>
-          </Link>
-        </li>
-        <li>
+      <div className="header">
+        <div className="home">
+          <LuCloudLightning className="cloud-icon"/>
+        </div>
           <Link href="/qaDepartment">
-            <button style={{ marginBottom: '20px' }}>Quality Assurance</button>
+            <div className="top-buttons" style={{ marginBottom: '20px' }}>Quality Assurance</div>
           </Link>
-        </li>
-        <li>
           <Link href="/hrDepartment">
-            <button style={{ marginBottom: '20px' }}>Human Resources</button>
+            <div className="top-buttons" style={{ marginBottom: '20px' }}>Human Resources</div>
           </Link>
-        </li>
-        <li>
           <Link href="/logisticsDepartment">
-            <button style={{ marginBottom: '20px' }}>Logistics</button>
+            <div className="top-buttons" style={{ marginBottom: '20px' }}>Logistics</div>
           </Link>
-        </li>
-        <li>
           <Link href="/merchandisingDepartment">
-            <button style={{ marginBottom: '20px' }}>Merchandising</button>
+            <div className="top-buttons" style={{ marginBottom: '20px' }}>Merchandising</div>
           </Link>
-        </li>
-        <li>
-          <Link href="/faq">
-            <button style={{ marginBottom: '20px' }}>FAQ</button>
+          <Link className="user-container" href="/createUser">
+            <div className="create-user"style={{ marginBottom: '20px' }}>Create Employee</div>
           </Link>
-        </li>
-        <li>
-          <Link href="/pdfSummary">
-            <button style={{ marginBottom: '20px' }}>PDF Summary</button>
-          </Link>
-        </li>
-      </ul>
 
-      {isSignedIn && (
-        <button onClick={handleSignOut} style={{ marginTop: '20px' }}>
-          Sign Out
-        </button>
-      )}
+        {isSignedIn && (
+          <button onClick={handleSignOut} style={{ marginTop: '20px' }}>
+            Sign Out
+          </button>
+        )}
+      </div>
+      <div className="motto">
+        Knowledge<br></br>
+        is Power
+      </div>
+      <div className="description">
+        Check out Datum, your source for excellence in supply <br></br>
+        chain management and knowledge sharing!
+      </div>
+      <div className="bottom-buttons">
+        <Link className="faq-button" href="/faq">
+          <div style={{ marginBottom: '20px' }}>FAQ</div>
+        </Link>
+        <Link className="ai-button" href="/pdfSummary">
+          <div style={{ marginBottom: '20px' }}>AI Summarizer</div>
+        </Link>
+      </div>
     </div>
   );
 }
