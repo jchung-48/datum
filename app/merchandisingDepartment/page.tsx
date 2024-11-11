@@ -4,9 +4,12 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import './styles.css';
 import { FileList } from '../upload/listFiles';
+import { LuCloudLightning } from 'react-icons/lu';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import { FaUserCircle } from 'react-icons/fa';
 import { fetchContacts } from '../editCompanyContacts/editContactUtils';
 import { Buyer, Manufacturer } from '../types';
+import  UploadComponent  from '../upload/Upload/uploadComponent';
 
 const MerchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -22,6 +25,7 @@ const MerchandisingDepartment = () => {
   const [contactFile, setContactFile] = useState<File | null>(null);
   const [contactUploadStatus, setContactUploadStatus] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [fileListUpdated, setFileListUpdated] = useState(false);
 
   // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -186,55 +190,54 @@ const MerchandisingDepartment = () => {
   };
 
   return (
-    <div>
+    <div className="body">
       <div className="header">
         <Link href="/home">
-          <button style={{ marginBottom: '20px' }}>Home</button>
-        </Link>
-
-        <h1>Welcome to Merchandising!</h1>
-        <p>These are the Merchandising files.</p>
-
-        <div style={{ marginTop: '20px' }}>
-          <input type="file" onChange={handleFileChange} />
-
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                value="files"
-                checked={selectedCollections.includes('files')}
-                onChange={handleCheckboxChange}
-              />
-              Department Files
-            </label>
+          <div className="home">
+            <LuCloudLightning className="cloud-icon"/>
+            DATUM
           </div>
+        </Link>
+        <Link href="/profile">
+          <FaUserCircle className="profile" />
+        </Link>
+      </div>
+      <div>
+      <div className="department">Merchandising</div>
+        <UploadComponent
+          companyId={COMPANYID}
+          departmentId={DEPARTMENTID}
+          departmentName="Merchandising"
+          collections={['files']}
+          onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
 
-          <button onClick={handleUpload} style={{ marginLeft: '10px' }}>
-            Upload to Merchandising Department
-          </button>
-          {uploadStatus && <p>{uploadStatus}</p>}
-        </div>
+
       </div>
 
       <div className="files">
-        <FileList 
+        <div className="file-title">Department</div>
+        <FileList
           collectionPath={deptFilesPath}
-          title="Department Files"
+          title=""
           onSearch={() => {}}
           onFileSelect={handleFileSelect}
-          horizontal
+          display = 'horizontal'
+          refreshTrigger={fileListUpdated}
         />
         {selectedFiles.length > 0 && (
-          <button onClick={handleMoveToRecords} style={{ marginTop: '10px' }}>
-            Move Selected Files to Records
+          <button className="move-button" onClick={handleMoveToRecords} style={{ marginTop: '10px' }}>
+            Move to Records
           </button>
         )}
-        <FileList 
-          collectionPath={deptRecordsPath}
-          title="Records"
-          onSearch={() => {}}
-        />
+        <div className="record-title">
+          <FileList 
+            collectionPath={deptRecordsPath}
+            title="Records"
+            onSearch={() => {}}
+
+          refreshTrigger={fileListUpdated}
+          />
+        </div>
       </div>
 
       {/* Buyers List */}
@@ -300,6 +303,8 @@ const MerchandisingDepartment = () => {
             collectionPath={selectedContactFilesPath as [string, ...string[]]}
             title={`${selectedContactType} Files`}
             onSearch={() => {}}
+
+            refreshTrigger={fileListUpdated}
           />
 
           {/* File upload for selected contact */}

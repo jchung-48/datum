@@ -2,6 +2,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
+import './styles.css';
 import { auth, db } from '@/lib/firebaseClient'; 
 import { signInUser, getUserDepartments, resetPassword } from "../authentication";
 import { doc, getDoc } from "firebase/firestore";
@@ -79,23 +80,39 @@ const Page = () => {
   };
 
   return (
-    <div>
-      <h1>Sign In</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handlePassReset}>Imagine forgetting your password lmaoooooo</button>
-      <button onClick={handleSignIn}>Sign In</button>
-      {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>} {/* Display error message */}
+    // Updated JSX in Page component
+    <div className="page-container">
+      <div className="top-left-circle"></div>
+      <div className="bottom-right-circle"></div>
+      <div className="box-container">
+        <div className="box">
+          <h1 className="login">Login</h1>
+          <h3 className="login-words">Please login to continue</h3>
+          <input
+            className="email"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            className="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="submit" onClick={handleSignIn}>Sign In</button>
+          {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>}
+        </div>
+        <div className="box-right">
+          <div className="triangle-right"></div>
+          <div className="circle"></div>
+          <div className="circle2"></div>
+          <p className="new">New Here?</p>
+          <p className="datum">Welcome to Datum!</p>
+        </div>
+      </div>
     </div>
   );
 };

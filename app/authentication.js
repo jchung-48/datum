@@ -30,6 +30,7 @@ export const getUserDepartments = async (userData) => {
     const firstDepartmentRef = departmentRefs[0]; // get first department
     const departmentSnap = await getDoc(firstDepartmentRef);
     const departmentData = departmentSnap.data();
+    console.log(departmentData);
     return departmentData;
   } catch (error) {
     console.error("Error fetching departments for user:", error);
@@ -165,5 +166,51 @@ export const logoutUser = async () => {
     console.log("User signed out successfully");
   } catch (error) {
     console.error("Error signing out: ", error);
+  }
+};
+
+export const getEmployeeProfile = async (uid) => {
+  try {
+    const employeeRef = doc(db, "Company/mh3VZ5IrZjubXUCZL381/Employees", uid);
+    const employeeSnap = await getDoc(employeeRef);
+
+    if (!employeeSnap.exists()) {
+      throw new Error("Employee does not exist");
+    }
+
+    const employeeData = employeeSnap.data();
+    return {
+      name: employeeSnap.data().name,
+      companyName: employeeSnap.data().companyName,
+      email: employeeSnap.data().email,
+      phoneNumber: employeeSnap.data().phoneNumber,
+      role: employeeSnap.data().role,
+      createdAt: employeeData.createdAt ? employeeData.createdAt.toDate().toDateString() : null,
+      departments: employeeData.departments || []
+    };
+  } catch (error) {
+    console.error("Error fetching employee profile:", error);
+    throw error;
+  }
+};
+
+/// fast get departments
+export const getUserDepartmentsNew = async (userData) => {
+  try {
+    const departmentRefs = userData.departments; // List of department references
+    const departmentNames = [];
+
+    for (const ref of departmentRefs) {
+      const departmentSnap = await getDoc(ref);
+      if (departmentSnap.exists()) {
+        const departmentData = departmentSnap.data();
+        departmentNames.push(departmentData.name); // Assuming department documents have a 'name' field
+      }
+    }
+    console.log(departmentNames);
+    return departmentNames; // List of department names
+  } catch (error) {
+    console.error("Error fetching departments for user:", error);
+    throw error;
   }
 };
