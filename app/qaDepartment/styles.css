@@ -11,13 +11,17 @@ html {
 }
 
 body {
-    background-color: white;
+    background-color: #e3e3e3;
+    background-image: 
+        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+    background-size: 50px 50px;
 }
 
 .header {
     display: flex;
     align-items: center;
-    background: linear-gradient(10deg, #627D9F 20%, #64b4ff 74%);
+    background-color: #1F3C53;
     justify-content: space-between;
     height: 66px;
     padding-left: 2%;

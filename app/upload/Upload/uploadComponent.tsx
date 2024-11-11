@@ -89,7 +89,7 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ companyId, department
               <select value={selectedCollection} onChange={handleCollectionChange}>
                 {collections.map((collection) => (
                   <option key={collection} value={collection}>
-                    {collection}
+                    {collection === "files" ? "Department" : collection === "incident" ? "Incident" : collection === "transportationFiles" ? "Transportation" : collection === "customsFiles" ? "Customs" : collection === "financialFiles" ? "Financial" : collection}
                   </option>
                 ))}
               </select>

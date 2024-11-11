@@ -5,16 +5,16 @@ html {
 
 @font-face {
     font-family: 'Darker Grotesque';
-    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype'); /* Corrected format */
+    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
     font-style: normal;
 }
 
 body {
     background-color: #e3e3e3;
     background-image: 
-        linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%), /* Subtle bottom-to-top gradient */
-        linear-gradient(to right, #bbbbbb39 1px, transparent 1px), /* Vertical grid lines */
-        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px); /* Horizontal grid lines */
+        linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
+        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
     background-size: 100% 100%, 50px 50px, 50px 50px;
 }
 

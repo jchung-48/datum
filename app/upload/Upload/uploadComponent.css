@@ -3,6 +3,7 @@
 .upload-container {
     position: relative;
     display: inline-block;
+    padding-left: 5%;
   }
   
   .pill-upload-button {
