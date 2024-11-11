@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css';
 
 const AiButton: React.FC = () => {
@@ -22,63 +22,81 @@ const AiButton: React.FC = () => {
     setInputValue(e.target.value);
   };
 
+  // Handle Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsCardVisible(false);
+      }
+    };
+
+    if (isCardVisible) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isCardVisible]);
+
   return (
     <div>
       {/* Circle Button in the bottom right */}
-      <button className="circle-button" onClick={toggleCard}>
-        {/* ollamaLogo.png from ../../public/images/ollamaLogo.png */}
-        <img className="ai-logo" src="/images/ollamaLogo.png"/>
-      </button>
+      {!isCardVisible && (
+        <button className="circle-button" onClick={toggleCard}>
+          <img className="ai-logo" src="/images/ollamaLogo.png"/>
+        </button>
+      )}
 
-      {/* Overlay and Card */}
+      {/* Card */}
       {isCardVisible && (
-        <div className="overlay" onClick={toggleCard}>
-          <div className="card" onClick={(e) => e.stopPropagation()}>
-            {/* Tab Buttons */}
-            <div className="mode-toggle">
-              <button
-                className={`tab-button ${mode === 'summarize' ? 'active' : ''}`}
-                onClick={() => handleModeToggle('summarize')}
-              >
-                Summarize
-              </button>
-              <button
-                className={`tab-button ${mode === 'chat' ? 'active' : ''}`}
-                onClick={() => handleModeToggle('chat')}
-              >
-                Chat
-              </button>
-            </div>
-
-            {/* Content Display Area */}
-            <div className="content-display">
-              
-            </div>
-
-            {/* Input Area */}
-            <div className="input-area">
-              {mode === 'summarize' ? (
-                <>
-                  <input type="file" />
-                  <button className="action-button">Summarize</button>
-                </>
-              ) : (
-                <>
-                  <input
-                    type="text"
-                    placeholder="Chat with the LLM"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                  />
-                  <button className="action-button">Send</button>
-                </>
-              )}
-            </div>
-
-            {/* Close Button */}
-            <button className="close-button" onClick={toggleCard}>
-              Close
+        <div className="card">
+          {/* Close Button */}
+          <div className="tab-options">
+            <button className="card-close-button" onClick={toggleCard}>
+              ×
             </button>
+          </div>
+          {/* Tab Buttons */}
+          <div className="mode-toggle">
+            <button
+              className={`tab-button ${mode === 'summarize' ? 'active' : ''}`}
+              onClick={() => handleModeToggle('summarize')}
+            >
+              Summarize
+            </button>
+            <button
+              className={`tab-button ${mode === 'chat' ? 'active' : ''}`}
+              onClick={() => handleModeToggle('chat')}
+            >
+              Chat
+            </button>
+          </div>
+
+          {/* Content Display Area */}
+          <div className="content-display">
+            {/* Content goes here */}
+          </div>
+
+          {/* Input Area */}
+          <div className="input-area">
+            {mode === 'summarize' ? (
+              <>
+                <input type="file" />
+                <button className="action-button">Summarize</button>
+              </>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  placeholder="Chat with the LLM"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                />
+                <button className="action-button">Send</button>
+              </>
+            )}
           </div>
         </div>
       )}

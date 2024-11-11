@@ -16,6 +16,7 @@
     cursor: pointer;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     transition: background-color 0.3s;
+    z-index: 1000;
 }
 
 .circle-button:hover {
@@ -23,70 +24,47 @@
 }
 
 .ai-logo {
-    width: 60%; /* Adjusts width to fill the button */
-    height: auto; /* Maintains aspect ratio */
-    object-fit: cover; /* Ensures the image covers the entire area */
-}
-
-/* Overlay */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+    width: 60%;
+    height: auto;
+    object-fit: cover;
 }
 
 /* Card */
 .card {
-    position: relative;
-    width: 100%;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    height: 510px;
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    margin-top: 5px;
     padding: 10px;
-    z-index: 10;
-    max-height: 200px;
+    z-index: 1000;
     overflow-y: auto;
 }
 
-/* Search Results Card (Fixed below search bar) */
-.search-bar {
-    position: relative;
-}
-
-.search-results-card {
-    position: absolute;
-    top: 100%; /* Directly below search bar */
-    left: 0;
-    width: 100%; /* Matches width of the search bar */
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    margin-top: 5px;
-    padding: 10px;
-    z-index: 1001; /* Above other content */
-    max-height: 200px; /* Limit height if many results */
-    overflow-y: auto; /* Enables scroll if content overflows */
-}
-
-/* Close Button in Search Results Card */
-.close-button {
-    position: absolute;
-    top: 8px;
-    right: 8px;
+/* Close Button in the Card */
+.card-close-button {
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 24px;
+    color: gray;
     cursor: pointer;
+    transition: color 0.3s;
+}
+
+.card-close-button:hover {
+    color: red;
+}
+
+/* Close Button Wrapper */
+.tab-options {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0px 5px 0;
+    height: 25px;
 }
 
 /* Tab Button Styles */
@@ -103,6 +81,7 @@
     font-size: 16px;
     border: none;
     background-color: #f0f0f0;
+    color: black;   
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -124,7 +103,7 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     width: 100%;
-    height: 150px;
+    height: 350px;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
@@ -147,6 +126,8 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    color: black;
+    background-color: white;
     font-size: 14px;
 }
 
@@ -160,33 +141,10 @@
     font-size: 14px;
     transition: background-color 0.3s;
     width: auto;
-    max-width: 100%;
+    max-width: 50px;
     box-sizing: border-box;
 }
 
 .action-button:hover {
     background-color: #4b617b;
-}
-
-/* Search Result List Styling */
-.search-results-card ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.search-result-item {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-    color: #333;
-}
-
-.search-result-item:last-child {
-    border-bottom: none;
-}
-
-.search-result-item:hover {
-    background-color: #f9f9f9;
-    cursor: pointer;
 }
