@@ -1,5 +1,5 @@
 // authentication.js
-import { signInWithEmailAndPassword, signOut, updatePhoneNumber, PhoneAuthProvider, reauthenticateWithCredential, signInWithPhoneNumber } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, updatePhoneNumber, PhoneAuthProvider, RecaptchaVerifier } from "firebase/auth";
 import { doc, getDoc, collection, getDocs, updateDoc } from "firebase/firestore";
 import { auth, db } from '@/lib/firebaseClient.js'; // Import initialized Firebase instances
 
@@ -79,6 +79,41 @@ export const signInUser = async (email, password, companyId) => {
   }
 };
 
+export const sendVerificationCode = async (phoneNumber) => { // Pete
+  // auth.settings.appVerificationDisabledForTesting = true;
+  if (!phoneNumber) {
+    console.error("Please enter a phone number.");
+    return;
+  }
+  try {
+    const verifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+      'size': 'invisible',
+    });
+    const provider = new PhoneAuthProvider(auth);
+    const verificationId = await provider.verifyPhoneNumber(phoneNumber, verifier);
+    return verificationId;
+  } catch (error) {
+    console.error(error);
+    return "";
+  }
+};
+
+export const verifyAndUpdatePhoneNumber = async (verificationCode, verificationId ) => { // Pete
+  if (!verificationCode || !verificationId) {
+    console.error("set OTP!");
+    return;
+  }
+  try {
+    const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
+    const user = auth.currentUser;
+    if (user) {
+      await updatePhoneNumber(user, credential);
+    }
+  }  catch (error) {
+    console.error("Error verifying OTP:", error);
+  }
+};
+
 export const resetPassword = async (email) => { // Pete
   try {
     const response = await fetch("/api/resetPass", {
@@ -92,16 +127,14 @@ export const resetPassword = async (email) => { // Pete
     });
     if (response.ok) {
       const data = await response.json();
-      setSuccessMessage(`${data.message}`);
-      setErrorMessage("");
-      console.log(successMessage);
+      console.log(`${data.message}`);
       alert("Reset link sent to your email!");
     } else {
       const errorData = await response.json();
-      setErrorMessage(errorData.message || "Failed to create user");
+      console.error(errorData.message || "Failed to create user");
     }
   } catch (error) {
-    setErrorMessage("Error reseting password");
+    console.error("Error reseting password");
   }
 };
 

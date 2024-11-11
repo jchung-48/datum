@@ -1,12 +1,7 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
-import { RecaptchaVerifier, signInWithCredential, PhoneAuthProvider, signInWithPhoneNumber } from "firebase/auth";
-import { auth } from "@/lib/firebaseClient";
-
-interface Window {
-  recaptchaVerifier: import("firebase/auth").RecaptchaVerifier;
-}
+import { sendVerificationCode, verifyAndUpdatePhoneNumber } from "../authentication";
 
 const Page = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -25,31 +20,10 @@ const Page = () => {
     return undefined;
   }, [errorMessage]);
 
-  const sendVerificationCode = async () => {
-    if (!phoneNumber) {
-      setErrorMessage("Please enter a phone number.");
-      return;
-    }
-    try {
-      const verifier = new RecaptchaVerifier(auth, "recaptcha-container");
-      const provider = new PhoneAuthProvider(auth);
-      const verificationId = await provider.verifyPhoneNumber(phoneNumber, verifier);
-      setVerificationId(verificationId);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const verifyAndUpdatePhoneNumber = async () => {
-    if (!verificationCode || !verificationId) {
-      setErrorMessage("Enter OTP!");
-    }
-    try {
-      const credential = PhoneAuthProvider.credential(verificationId, verificationCode);
-      await signInWithCredential(auth, credential);
-    }  catch (error) {
-      console.error("Error verifying OTP:", error);
-      setErrorMessage("Failed to verify OTP. Please try again.");
+  const handleVerificationCode = async () => {
+    const verId = await sendVerificationCode(phoneNumber);
+    if (verId) {
+      setVerificationId(verId);
     }
   };
 
@@ -62,7 +36,7 @@ const Page = () => {
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
       />
-      <button onClick={sendVerificationCode}>Send Verification Code</button>
+      <button onClick={handleVerificationCode}>Send Verification Code</button>
       
       {verificationId && (
         <>
@@ -72,7 +46,7 @@ const Page = () => {
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
           />
-          <button onClick={verifyAndUpdatePhoneNumber}>Verify and Update</button>
+          <button onClick={() => verifyAndUpdatePhoneNumber(verificationCode,verificationId)}>Verify and Update</button>
         </>
       )}
       
