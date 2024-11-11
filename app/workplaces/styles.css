@@ -1,0 +1,48 @@
+html {
+    height: 100%;
+    margin: 0;
+}
+
+@font-face {
+    font-family: 'Darker Grotesque';
+    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
+    font-style: normal;
+}
+
+body {
+    background-color: #e3e3e3;
+    background-image: 
+        linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
+        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+    background-size: 100% 100%, 50px 50px, 50px 50px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.home {
+    display: flex;
+    align-items: center;
+    font-family: "Darker Grotesque";
+    color: #1F3C53;
+    font-weight: 800;
+    font-size: 42px;
+}
+
+.cloud-icon {
+    margin-right: 12px;
+    height: 35px;
+    width: 35px;
+}
+
+.title {
+    font-family: "Darker Grotesque";
+    color: #1F3C53;
+    font-weight: 800;
+    font-size: 50px;
+}
