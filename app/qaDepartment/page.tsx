@@ -81,7 +81,9 @@ const qaDepartment = () => {
             DATUM
           </div>
         </Link>
-        <FaUserCircle className="profile" />
+        <Link href="/profile">
+          <FaUserCircle className="profile" />
+        </Link>
       </div>
       <div>
         <div className="department">Quality Assurance</div>

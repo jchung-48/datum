@@ -103,7 +103,9 @@ const LogisticsDepartment: React.FC = () => {
             DATUM
           </div>
         </Link>
-        <FaUserCircle className="profile" />
+        <Link href="/profile">
+          <FaUserCircle className="profile" />
+        </Link>
       </div>
 
       <div className="department">Logistics</div>
