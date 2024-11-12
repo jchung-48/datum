@@ -1,13 +1,11 @@
-
-
 .fileList {
     width: 100%;
     overflow: hidden;
     position: relative;
+    --main-text-color: #f5f5f5;
+    --main-font-size: 18px;
+    --light-font-weight: 400;
   }
-  
-
-
 
   .fileItemsHorizontal {
     display: flex;
@@ -38,6 +36,7 @@
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s;
+    font-family: "Darker Grotesque";
   }
 
   .fileItem img {
@@ -52,22 +51,11 @@
 
   .fileBlock {
     padding: 10px;
-    font-size: 14px;
+    font-size: var(--main-font-size);
     text-align: center;
     color: #555;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
-  }
-  
-  .fileItem a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100px;
-    margin-top: 6px;
   }
 
   .fileItem p {
@@ -79,15 +67,7 @@
     white-space: nowrap;
     cursor: default;
     vertical-align: text-bottom;
-  }
-
-  .fileBlock {
-    padding: 10px;
-    font-size: 14px;
-    text-align: center;
-    color: #555;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
+    font-size: var(--main-font-size);
   }
 
   /* Checkbox styling */
@@ -133,6 +113,7 @@
     margin-top: 5px;
     margin-left: 20px;
     margin-right: 20px;
+    color: var(--main-text-color);
   }
   
   .fileTable th, .fileTable td {
@@ -145,6 +126,7 @@
     font-weight: bold;
     min-width: 100px;
     height: 45px;
+    font-size: 22px;
   }
 
   .sortable-header {
@@ -187,6 +169,7 @@
     padding: 5px 5px; /* Padding within each cell */
     border: none; /* No borders between cells */
     display: table-cell;
+    font-size: var(--main-font-size);
   }
 
   .fileCell.checkbox {
