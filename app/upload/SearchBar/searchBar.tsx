@@ -8,7 +8,7 @@ import {
     QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
-import './SearchBar.css';
+import './searchBar.css';
 import {FileData, SearchResult, SearchBarProps} from '../../types';
 
 // Debounce function to limit search calls
