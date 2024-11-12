@@ -68,14 +68,6 @@ body {
     height: 30px;
 }
 
-.record-title {
-    display: flex;
-    justify-content: center;
-    color: #1F3C53;
-    font-family: "Darker Grotesque";
-    font-weight: 800;
-}
-
 .profile {
     display: flex;
     justify-content: right;

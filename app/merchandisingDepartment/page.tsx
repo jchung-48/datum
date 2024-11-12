@@ -229,7 +229,7 @@ const MerchandisingDepartment = () => {
             Move to Records
           </button>
         )}
-        <div className="record-title">
+        <div className="file-title">
           <FileList 
             collectionPath={deptRecordsPath}
             title="Records"
