@@ -1,4 +1,4 @@
-html {
+html, body {
     height: 100%;
     margin: 0;
 }
@@ -6,6 +6,12 @@ html {
 @font-face {
     font-family: 'Darker Grotesque';
     src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Darker Grotesque Med';
+    src: url('../fonts/DarkerGrotesque-Medium.ttf') format('truetype');
     font-style: normal;
 }
 
@@ -23,9 +29,13 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100vh; /* Full height to center content */
 }
 
 .home {
+    position: absolute; 
+    top: 10px;
+    left: 15px;
     display: flex;
     align-items: center;
     font-family: "Darker Grotesque";
@@ -45,4 +55,19 @@ body {
     color: #1F3C53;
     font-weight: 800;
     font-size: 50px;
+    margin-bottom: 20px;
+}
+
+select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    height: 30px;
+    width: 120px;
+    padding-left: 7px;
+    background-color: #727779;
+    border-radius: 9px;
+    outline: none;
+    font-family: "Darker Grotesque Med";
 }

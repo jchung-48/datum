@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { LuCloudLightning } from 'react-icons/lu';
 import './styles.css';
 import { useRouter } from "next/navigation";
+import { capitalize } from 'lodash';
 import React from 'react';
 
 interface Company {
@@ -72,12 +73,12 @@ const Page = () => {
           DATUM
         </div>
       </Link>
-      <h1 className="title">Select a Workplace</h1>
+      <h1 className="title">Select a Workplace:</h1>
       <select value={selectedCompany} onChange={companySelect}>
-        <option value="" disabled>Select a Workplace</option>
+        <option value="" disabled>Unselected</option>
         {companies.map((company) => (
           <option key={company.id} value={company.id}>
-            {company.name}
+            {capitalize(company.name)}
           </option>
         ))}
       </select>
