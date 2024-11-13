@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { callSummarizeFlow } from '../genkit';
+import { callSummarizeFlow } from '../aiAddon/summarization';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import { db, storage } from '@/lib/firebaseClient';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -58,7 +58,7 @@ export default function PdfSummaryPage() {
             const response = await fetch(selectedFileUrl);
             const arrayBuffer = await response.arrayBuffer();
             const textContent = await extractTextFromPdf(arrayBuffer);
-            const summaryResponse = await callSummarizeFlow(textContent);
+            const summaryResponse = await callSummarizeFlow(textContent,"meta");
             setSummary(summaryResponse);
         } catch (error) {
             console.error('Error generating summary:', error);

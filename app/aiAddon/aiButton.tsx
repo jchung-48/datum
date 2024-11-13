@@ -1,10 +1,23 @@
+
 import React, { useState, useEffect } from 'react';
 import './styles.css';
+import SearchBarAI from "../upload/SearchBarAI/searchBarAI";
+import { FaArrowCircleUp  } from 'react-icons/fa';
+import { AiButtonProps, SummarySearchResult } from '../types';
+import ReactMarkdown from 'react-markdown';
+import * as pdfjsLib from 'pdfjs-dist';
+// import { callSummarizeFlow } from './summarization';
 
-const AiButton: React.FC = () => {
+// Set the workerSrc for pdfjsLib
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
+
+const AiButton: React.FC<AiButtonProps> = ({paths}) => {
   const [isCardVisible, setIsCardVisible] = useState(false);
   const [mode, setMode] = useState<'summarize' | 'chat'>('summarize');
   const [inputValue, setInputValue] = useState('');
+  const [fileSelectedForSummary, setFileSelectedForSummary] = useState<SummarySearchResult | null>(null);
+  const [summaryContent, setSummaryContent] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   // Toggle card visibility
   const toggleCard = () => {
@@ -20,6 +33,60 @@ const AiButton: React.FC = () => {
   // Handle input change for chat input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
+  };
+
+  const extractTextFromPdf = async (arrayBuffer: ArrayBuffer): Promise<string> => {
+    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+    let textContent = '';
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const text = await page.getTextContent();
+      textContent += text.items.map((item: any) => item.str).join(' ') + '\n';
+    }
+    return textContent;
+  }
+
+  const handleFileSelect = (file: SummarySearchResult) =>{
+    setFileSelectedForSummary(file);
+    setSummaryContent(null);
+  }
+
+  const handleSummarizeClick = async () => {
+    if (!fileSelectedForSummary) {
+      alert('Please select a file to summarize.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(fileSelectedForSummary.downloadURL);
+      const arrayBuffer = await response.arrayBuffer();
+      const textContent = await extractTextFromPdf(arrayBuffer);
+      console.log("Calling summarize flow on file: ", fileSelectedForSummary.name);
+      
+      // Call the API route instead of a server-side function
+      const apiResponse = await fetch('/api/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: textContent,
+          metadata: `Title: ${fileSelectedForSummary.name}
+Author: ${fileSelectedForSummary.author}
+Upload Date: ${fileSelectedForSummary.uploadDate}`
+        }),
+      });
+
+      if (!apiResponse.ok) {
+        throw new Error('Failed to generate summary');
+      }
+
+      const data = await apiResponse.json();
+      setSummaryContent(data.summary);
+    } catch (error) {
+      console.error('Error fetching or parsing PDF:', error);
+      setSummaryContent('Error fetching or parsing PDF.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Handle Escape key press
@@ -76,15 +143,15 @@ const AiButton: React.FC = () => {
 
           {/* Content Display Area */}
           <div className="content-display">
-            {/* Content goes here */}
+            <ReactMarkdown>{summaryContent}</ReactMarkdown>
           </div>
 
           {/* Input Area */}
           <div className="input-area">
             {mode === 'summarize' ? (
               <>
-                <input type="file" />
-                <button className="action-button">Summarize</button>
+                <SearchBarAI paths={paths} onFileSelect={handleFileSelect} />
+                <button className="action-button" onClick={handleSummarizeClick} ><FaArrowCircleUp /></button>
               </>
             ) : (
               <>

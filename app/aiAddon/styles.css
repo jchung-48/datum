@@ -31,11 +31,14 @@
 
 /* Card */
 .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     position: fixed;
     bottom: 20px;
     right: 20px;
     width: 400px;
-    height: 510px;
+    height: 520px;
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -97,19 +100,44 @@
     background-color: #e0e0e0;
 }
 
-/* Content Display Area */
 .content-display {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 100%;
-    height: 350px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    font-size: 16px;
+    padding: 15px;
+    background-color: #f9f9f9; /* Light background for better readability */
+    border: 1px solid #ddd;    /* Subtle border to distinguish the area */
+    border-radius: 4px;        /* Rounded corners */
+    margin-top: 10px;          /* Space above the content */
+    max-height: 300px;         /* Adjust as needed for your design */
+    overflow-y: auto;          /* Enable vertical scrolling if content overflows */
+    box-sizing: border-box;    /* Ensure padding and borders are included in the total width and height */
+    flex-grow: 1; /* Allow the content area to expand and take available space */
+    margin-bottom: 10px;
+}
+
+/* Optional: Style Markdown Elements for Better Presentation */
+.content-display h1,
+.content-display h2,
+.content-display h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.content-display p {
+    margin-bottom: 10px;
+    line-height: 1.6; /* Improve readability */
+}
+
+.content-display ul {
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+
+.content-display a {
+    color: #0070f3;
+    text-decoration: none;
+}
+
+.content-display a:hover {
+    text-decoration: underline;
 }
 
 .input-area {
