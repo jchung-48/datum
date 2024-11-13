@@ -143,6 +143,10 @@
     font-size: 22px;
   }
 
+  .fileTable th a {
+    cursor: pointer;
+  }
+
   .sortable-header {
     display: flex;
     align-items: center;

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import './styles.css';
 import {FileList} from '../Utilities/ListFiles/listFiles';
 import {LuCloudLightning} from 'react-icons/lu';
-import { MdDelete } from 'react-icons/md';
 import {
   uploadFileToStorage,
   updateFirestore,

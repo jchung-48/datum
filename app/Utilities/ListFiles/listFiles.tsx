@@ -12,6 +12,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import styles from './listFiles.module.css';
 import {onAuthStateChanged} from 'firebase/auth';
 import { s } from '@genkit-ai/core/lib/action-CnIb9v86';
+import { MdDelete } from 'react-icons/md';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.min.js';
@@ -512,11 +513,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                                                     handleDelete(file);
                                                 }}
                                             >
-                                                <span
-                                                    className={styles.trashIcon}
-                                                >
-                                                    🗑
-                                                </span>
+                                                <MdDelete className='trashIcon'/>
                                             </button>
                                         )}
                                     </td>
