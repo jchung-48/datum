@@ -1,5 +1,9 @@
 import { configureGenkit } from '@genkit-ai/core';
 import { ollama } from 'genkitx-ollama';
+import { textEmbeddingGecko, vertexAI } from '@genkit-ai/vertexai';
+import {
+    devLocalVectorstore,
+  } from '@genkit-ai/dev-local-vectorstore';
 // Import other necessary plugins if any
 
 // Optionally, use environment variables for sensitive configurations
@@ -19,6 +23,14 @@ configureGenkit({
         // a GPU-accelerated machine.
         serverAddress: 'http://127.0.0.1:11434',
       }),
+      vertexAI(),
+       // the local vector store requires an embedder to translate from text to vector
+      devLocalVectorstore([
+        {
+          indexName: "knowledgeBase",
+          embedder: textEmbeddingGecko
+        }  
+      ])
     ],
     // Log debug output to tbe console.
     logLevel: "debug",

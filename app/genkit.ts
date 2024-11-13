@@ -2,6 +2,8 @@
 
 import * as z from 'zod';
 
+import './genkitConfig';
+
 // Import the Genkit core libraries and plugins.
 import { generate } from '@genkit-ai/ai';
 import { configureGenkit } from '@genkit-ai/core';
@@ -21,33 +23,6 @@ import { textEmbeddingGecko, vertexAI } from '@genkit-ai/vertexai';
 
 import pdf from 'pdf-parse';
 import { chunk } from 'llm-chunk';  
-
-configureGenkit({
-  plugins: [
-    ollama({
-      // Ollama provides an interface to many open generative models. Here,
-      // we specify Google's Gemma model. The models you specify must already be
-      // downloaded and available to the Ollama server.
-      models: [{ name: 'llama3.2' }],
-      // The address of your Ollama API server. This is often a different host
-      // from your app backend (which runs Genkit), in order to run Ollama on
-      // a GPU-accelerated machine.
-      serverAddress: 'http://127.0.0.1:11434',
-    }),
-    vertexAI(),
-     // the local vector store requires an embedder to translate from text to vector
-    devLocalVectorstore([
-      {
-        indexName: "knowledgeBase",
-        embedder: textEmbeddingGecko
-      }  
-    ])
-  ],
-  // Log debug output to tbe console.
-  logLevel: "debug",
-  // Perform OpenTelemetry instrumentation and enable trace collection.
-  enableTracingAndMetrics: true,
-});
 
 export const knowledgeBaseIndexer = devLocalIndexerRef('knowledgeBase');
 
@@ -211,37 +186,5 @@ Question: ${input}
   }
 );
 
-export const summarizeFlow = defineFlow(
-  {
-      name: 'summarizeFlow',
-      inputSchema: z.object({
-          text: z.string(),
-          metadata: z.string(),
-      }),
-      outputSchema: z.string(),
-  },
-  async ({text, metadata}) => {
-    console.log("getting response from llama3.2");
-      const response = await generate({
-          model: 'ollama/llama3.2',
-          prompt: `Summarize the following text. First provide context from the metadata which is provided below.
-          AFter providing context, Provide a brief summary of the document content.
-          followed by a bulleted list of the main points of the document content. If the file is not in the format of a PDF,
-          please say that the file is not a PDF and that the summarization may be inaccurate. In the case that it cannot 
-          be analyzed, you MUST say that the file cannot be summarized.  
-          Finally, list the key takeaways. Be clear, concise, and write in markdown format.
-          Metadata: ${metadata}
-          \n
-          Document Content: ${text}
-          `,
-          config: { temperature: 0.7 },
-      });
-      return response.text();
-  }
-);
 
-export async function callSummarizeFlow(text: string, metadata: string): Promise<string> {
-  console.log("in summarize Flow");
-  return await runFlow(summarizeFlow, {text, metadata});
-}
 

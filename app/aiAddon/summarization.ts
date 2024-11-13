@@ -1,12 +1,12 @@
 // genkit/summarization.ts
-
+"use server";
 import * as z from 'zod';
 import { generate } from '@genkit-ai/ai';
 import { defineFlow, runFlow } from '@genkit-ai/flow';
 import '../genkitConfig';
 
 // Define the summarizeFlow
-export const summarizeFlow = defineFlow(
+const summarizeFlow = defineFlow(
   {
     name: 'summarizeFlow',
     inputSchema: z.object({

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { callSummarizeFlow } from '../genkit';
+import { callSummarizeFlow } from '../aiAddon/summarization';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import { db, storage } from '@/lib/firebaseClient';
 import * as pdfjsLib from 'pdfjs-dist';
