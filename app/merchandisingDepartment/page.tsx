@@ -5,7 +5,7 @@ import Link from 'next/link';
 import './styles.css';
 import { FileList } from '../upload/listFiles';
 import { LuCloudLightning } from 'react-icons/lu';
-import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import { uploadFileToStorage, updateFirestore, moveDocument } from '../upload/uploadUtils';
 import { FaUserCircle } from 'react-icons/fa';
 import { fetchContacts } from '../editCompanyContacts/editContactUtils';
 import { Buyer, Manufacturer } from '../types';
@@ -26,6 +26,9 @@ const MerchandisingDepartment = () => {
   const [contactUploadStatus, setContactUploadStatus] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [fileListUpdated, setFileListUpdated] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [selectedContactFilesPath, setSelectedContactFilesPath] = useState<string[]>([]);
 
   // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,19 +63,11 @@ const MerchandisingDepartment = () => {
     try {
       // Loop over each file in selectedFiles
       for (const fileId of selectedFiles) {
-        const storagePath = `Company/Departments/Merchandising/${fileId}`;
-  
-        // Move file data to 'records' collection
-        await updateFirestore(
-          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, customCollectionName: 'records' },
-          '', fileId, storagePath
-        );
-  
-        // Remove file from 'files' collection
-        await updateFirestore(
-          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, customCollectionName: 'files' },
-          '', fileId, storagePath
-        );
+        await moveDocument(
+          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID },
+          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, collectionName: 'records' },
+          fileId
+        )
       }
   
       alert("Selected files moved to records successfully!");
@@ -149,17 +144,6 @@ const MerchandisingDepartment = () => {
     'records',
   ] as [string, ...string[]];
 
-  const selectedContactFilesPath =
-    selectedContactType && selectedContactId
-      ? [
-          'Company',
-          COMPANYID,
-          selectedContactType === 'Buyer' ? 'Buyers' : 'Manufacturers',
-          selectedContactId,
-          (selectedContactType === 'Buyer' ? 'Quotes' : 'Products'),
-        ]
-      : null;
-
 
   // Handle contact-specific file upload
   const handleContactFileUpload = async () => {
@@ -187,6 +171,18 @@ const MerchandisingDepartment = () => {
       console.error('Error uploading contact file:', error);
       setContactUploadStatus('Failed to upload file to contact.');
     }
+  };
+
+  const handleCardClick = (type: 'Buyer' | 'Manufacturer', id: string, name: string) => {
+    setSelectedContactFilesPath([
+      'Company',
+      COMPANYID,
+      type === 'Buyer' ? 'Buyers' : 'Manufacturers',
+      id,
+      type === 'Buyer' ? 'Quotes' : 'Products',
+    ]);
+    setModalTitle(`${name} - ${type} Files`);
+    setShowModal(true);
   };
 
   return (
@@ -240,78 +236,55 @@ const MerchandisingDepartment = () => {
         </div>
       </div>
 
-      {/* Buyers List */}
-      <div className="contact-list">
-        <h2>Buyers</h2>
-        {buyers.length === 0 ? (
-          <p>No buyers found.</p>
-        ) : (
-          <ul>
-            {buyers.map((buyer) =>
-              buyer.id ? (
-                <li
-                  key={buyer.id}
-                  onClick={() => {
-                    setSelectedContactId(buyer.id ? buyer.id : null);
-                    setSelectedContactType('Buyer');
-                  }}
-                  style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-                >
-                  {buyer.name} - {buyer.email} - {buyer.phone}
-                </li>
-              ) : null
-            )}
-          </ul>
-        )}
-        <Link href="/editCompanyContacts/crudBuyer">
-            <button style={{ marginBottom: '20px' }}>Add/Edit Buyers</button>
-        </Link>
+      <div className="contact-lists-container">
+        {/* Buyers List */}
+        <div className="contact-list">
+          <h2>Buyers</h2>
+          {buyers.map((buyer) =>
+            buyer.id ? (
+              <div
+                key={buyer.id}
+                className="contact-card"
+                onClick={() => handleCardClick('Buyer', buyer.id ? buyer.id : '', buyer.name)}
+              >
+                <div className="contact-name">{buyer.name}</div>
+                <div className="contact-details">{buyer.email}</div>
+                <div className="contact-details">{buyer.phone}</div>
+              </div>
+            ) : null
+          )}
+        </div>
+
+        {/* Manufacturers List */}
+        <div className="contact-list">
+          <h2>Manufacturers</h2>
+          {manufacturers.map((manufacturer) =>
+            manufacturer.id ? (
+              <div
+                key={manufacturer.id}
+                className="contact-card"
+                onClick={() => handleCardClick('Manufacturer', manufacturer.id ? manufacturer.id : '', manufacturer.name)}
+              >
+                <div className="contact-name">{manufacturer.name}</div>
+                <div className="contact-details">{manufacturer.email}</div>
+                <div className="contact-details">{manufacturer.phone}</div>
+              </div>
+            ) : null
+          )}
+        </div>
       </div>
 
-      {/* Manufacturers List */}
-      <div className="contact-list">
-        <h2>Manufacturers</h2>
-        {manufacturers.length === 0 ? (
-          <p>No manufacturers found.</p>
-        ) : (
-          <ul>
-            {manufacturers.map((manufacturer) =>
-              manufacturer.id ? (
-                <li
-                  key={manufacturer.id}
-                  onClick={() => {
-                    setSelectedContactId(manufacturer.id ? manufacturer.id : null);
-                    setSelectedContactType('Manufacturer');
-                  }}
-                  style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-                >
-                  {manufacturer.name} - {manufacturer.email} - {manufacturer.phone}
-                </li>
-              ) : null
-            )}
-          </ul>
-        )}
-        <Link href="/editCompanyContacts/crudManufacturer">
-          <button style={{ marginBottom: '20px' }}>Add/Edit Manufacturers</button>
-        </Link>
-      </div>
-
-      {/* Files for Selected Contact */}
-      {selectedContactFilesPath && (
-        <div className="files">
-          <FileList
-            collectionPath={selectedContactFilesPath as [string, ...string[]]}
-            title={`${selectedContactType} Files`}
-            onSearch={() => {}}
-
-            refreshTrigger={fileListUpdated}
-          />
-
-          {/* File upload for selected contact */}
-          <div style={{ marginTop: '20px' }}>
-            <input type="file" onChange={handleContactFileChange} />
-            <button onClick={handleContactFileUpload}>Upload File to {selectedContactType}</button>
-            {contactUploadStatus && <p>{contactUploadStatus}</p>}
+      {/* File List Modal */}
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <button className="close-button" onClick={() => setShowModal(false)}>✖</button>
+            {/* <h2>{modalTitle}</h2> */}
+            <FileList
+              collectionPath={selectedContactFilesPath as [string, ...string[]]}
+              title={modalTitle}
+              display="grid"
+            />
           </div>
         </div>
       )}
