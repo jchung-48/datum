@@ -10,6 +10,8 @@ import { FaUserCircle } from 'react-icons/fa';
 import { fetchContacts } from '../editCompanyContacts/editContactUtils';
 import { Buyer, Manufacturer } from '../types';
 import  UploadComponent  from '../upload/Upload/uploadComponent';
+import AIButton from "../aiAddon/aiButton";
+import SearchBar from "../upload/SearchBar/searchBar";
 
 const MerchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -211,6 +213,9 @@ const MerchandisingDepartment = () => {
           collections={['files']}
           onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
 
+        <SearchBar 
+                paths={["ti7yNByDOzarVXoujOog"]} 
+        />
 
       </div>
 
@@ -315,6 +320,7 @@ const MerchandisingDepartment = () => {
           </div>
         </div>
       )}
+    <AIButton paths={["ti7yNByDOzarVXoujOog"]} />
     </div>
   );
 };
