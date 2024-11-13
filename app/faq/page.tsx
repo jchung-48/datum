@@ -5,7 +5,7 @@ import { db } from "@/lib/firebaseClient";
 import { collection, query, where, getDocs, DocumentData } from "firebase/firestore";
 import Link from "next/link";
 import { LuCloudLightning } from 'react-icons/lu';
-import './styles.css';
+import './styles.modules.css';
 
 // Define the structure of FAQ data
 interface FAQ {

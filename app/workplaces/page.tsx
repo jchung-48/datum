@@ -5,7 +5,7 @@ import { auth, db } from '@/lib/firebaseClient';
 import { doc, getDoc } from "firebase/firestore";
 import Link from 'next/link';
 import { LuCloudLightning } from 'react-icons/lu';
-import './styles.css';
+import './styles.modules.css';
 import { useRouter } from "next/navigation";
 import { capitalize } from 'lodash';
 import React from 'react';

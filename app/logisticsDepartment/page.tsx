@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { FileList } from '../upload/listFiles';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
-import './styles.css';
+import './styles.modules.css';
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
 import AIButton from "../aiAddon/aiButton";

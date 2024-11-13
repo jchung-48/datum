@@ -5,7 +5,7 @@ import { auth, db } from '@/lib/firebaseClient';
 import { useRouter } from 'next/navigation';
 import { logoutUser } from '../authentication';
 import { LuCloudLightning } from 'react-icons/lu';
-import './styles.css';
+import './styles.modules.css';
 
 export default function Home() {
   const router = useRouter();

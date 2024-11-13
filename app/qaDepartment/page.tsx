@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import './styles.css';
+import './styles.modules.css';
 import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';

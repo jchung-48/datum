@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import './styles.css';
+import './styles.modules.css';
 import { FileList } from '../upload/listFiles';
 import { LuCloudLightning } from 'react-icons/lu';
 import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
