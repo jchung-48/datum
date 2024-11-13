@@ -5,7 +5,7 @@ import Link from 'next/link';
 import './styles.css';
 import { FileList } from '../upload/listFiles';
 import { LuCloudLightning } from 'react-icons/lu';
-import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
+import { uploadFileToStorage, updateFirestore, moveDocument } from '../upload/uploadUtils';
 import { FaUserCircle } from 'react-icons/fa';
 import { fetchContacts } from '../editCompanyContacts/editContactUtils';
 import { Buyer, Manufacturer } from '../types';

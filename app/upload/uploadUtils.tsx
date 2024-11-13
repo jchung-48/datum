@@ -260,7 +260,7 @@ export const moveDocument = async (
     departmentId?: string;
     buyerId?: string;
     manufacturerId?: string;
-    documentId: string;
+    collectionName?: string;
   },
   destinationPath: {
     collectionType: "Departments" | "Buyers" | "Manufacturers";
@@ -268,12 +268,14 @@ export const moveDocument = async (
     departmentId?: string;
     buyerId?: string;
     manufacturerId?: string;
-  }
+    collectionName?: string;
+  },
+  documentId: string,
 ): Promise<void> => {
   try {
     // Get the document from the source path
-    const { collectionType, companyId, departmentId, buyerId, manufacturerId, documentId } = sourcePath;
-    const sourceDocRef = getFirestoreRef(collectionType, companyId, departmentId, buyerId, manufacturerId, documentId);
+    const { collectionType, companyId, documentId, departmentId, buyerId, manufacturerId } = sourcePath;
+    const sourceDocRef = getFirestoreRef(collectionType, companyId, documentId, departmentId, buyerId, manufacturerId);
     const docSnapshot = await getDoc(sourceDocRef);
 
     if (!docSnapshot.exists()) {
