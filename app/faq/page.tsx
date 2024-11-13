@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { db } from "@/lib/firebaseClient";
 import { collection, query, where, getDocs, DocumentData } from "firebase/firestore";
 import Link from "next/link";
+import { LuCloudLightning } from 'react-icons/lu';
+import './styles.css';
 
 // Define the structure of FAQ data
 interface FAQ {
@@ -60,17 +62,20 @@ const FAQPage: React.FC = () => {
   return (
     <div className="header">
         <Link href="/home">
-          <button style={{ marginBottom: '20px' }}>Home</button>
-        </Link>
+        <div className="home">
+          <LuCloudLightning className="cloud-icon"/>
+          DATUM
+        </div>
+      </Link>
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>Welcome to FAQ</h1>
-      <p>Please select your role, product category, and FAQ category from the following dropdown boxes:</p>
+      <h1 className="title">FAQ</h1>
+      <p className="prompt">Please select from the following dropdown menus: </p>
 
       {/* Dropdown for Role */}
       <div>
-        <label>
-          Role:
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
+        <label className="role">
+          <div className="role-title">ROLE</div>
+          <select className="role-select" value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="">Select One</option>
             <option value="Merchandiser">Merchandiser</option>
             <option value="QA Manager">QA Manager</option>
@@ -80,11 +85,10 @@ const FAQPage: React.FC = () => {
         </label>
       </div>
 
-      {/* Dropdown for Product Category */}
       <div>
-        <label>
-          Product Category:
-          <select value={productCategory} onChange={(e) => setProductCategory(e.target.value)}>
+        <label className="role">
+          <div className="role-title">PRODUCT CATEGORY</div>
+          <select className="role-select" value={productCategory} onChange={(e) => setProductCategory(e.target.value)}>
             <option value="">Select One</option>
             <option value="Small Kitchen Appliances">Small Kitchen Appliances</option>
             <option value="Furniture">Furniture</option>
@@ -96,8 +100,8 @@ const FAQPage: React.FC = () => {
 
       {/* Dropdown for FAQ Category */}
       <div>
-        <label>
-          FAQ Category:
+        <label className="role">
+          <div className="role-title">FAQ CATEGORY</div>
           <select value={faqCategory} onChange={(e) => setFaqCategory(e.target.value)}>
             <option value="">Select One</option>
             <option value="Product Availability">Product Availability</option>
@@ -108,16 +112,17 @@ const FAQPage: React.FC = () => {
         </label>
       </div>
 
-      {/* Search Button */}
-      <button onClick={handleSearch} style={{ marginTop: "10px", padding: "5px 15px" }}>
-        Search
-      </button>
+      <div className="button">
+        <button className="search-button" onClick={handleSearch} style={{ marginTop: "10px", padding: "5px 15px" }}>
+          Search
+        </button>
+      </div>
 
       {/* Error Message */}
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
       {/* Display Results */}
-      <div style={{ marginTop: "20px" }}>
+      <div className="response" style={{ marginTop: "20px" }}>
         {faqResults.length > 0 ? (
           <ul>
             {faqResults.map((faq) => (
