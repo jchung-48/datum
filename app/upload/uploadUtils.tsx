@@ -241,13 +241,17 @@ const getFirestoreRef = (
   departmentId?: string,
   buyerId?: string,
   manufacturerId?: string,
+  collectionName?: string,
 ) => {
   if (collectionType === "Departments" && departmentId) {
-    return doc(db, "Company", companyId, "Departments", departmentId, "files", documentId);
+    if (!collectionName) collectionName = "files";
+    return doc(db, "Company", companyId, "Departments", departmentId, collectionName, documentId);
   } else if (collectionType === "Buyers" && buyerId) {
-    return doc(db, "Company", companyId, "Buyers", buyerId, "Quotes", documentId);
+    if (!collectionName) collectionName = "Quotes";
+    return doc(db, "Company", companyId, "Buyers", buyerId, collectionName, documentId);
   } else if (collectionType === "Manufacturers" && manufacturerId) {
-    return doc(db, "Company", companyId, "Manufacturers", manufacturerId, "Products", documentId);
+    if (!collectionName) collectionName = "Products";
+    return doc(db, "Company", companyId, "Manufacturers", manufacturerId, collectionName, documentId);
   } else {
     throw new Error("Invalid Firestore path provided.");
   }
@@ -274,8 +278,8 @@ export const moveDocument = async (
 ): Promise<void> => {
   try {
     // Get the document from the source path
-    const { collectionType, companyId, documentId, departmentId, buyerId, manufacturerId } = sourcePath;
-    const sourceDocRef = getFirestoreRef(collectionType, companyId, documentId, departmentId, buyerId, manufacturerId);
+    const { collectionType, companyId, departmentId, buyerId, manufacturerId, collectionName } = sourcePath;
+    const sourceDocRef = getFirestoreRef(collectionType, companyId, documentId, departmentId, buyerId, manufacturerId, collectionName);
     const docSnapshot = await getDoc(sourceDocRef);
 
     if (!docSnapshot.exists()) {
@@ -291,7 +295,8 @@ export const moveDocument = async (
       documentId,
       destinationPath.departmentId,
       destinationPath.buyerId,
-      destinationPath.manufacturerId
+      destinationPath.manufacturerId,
+      destinationPath.collectionName
     );
     await setDoc(destinationDocRef, documentData);
 

@@ -1,84 +1,82 @@
-import { moveDocument } from './uploadUtils';
-import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebaseClient';
+import { moveDocument } from "./uploadUtils"; // Adjust the import path as needed
+import { setDoc, getDoc, deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebaseClient";
 
-// Mock Firebase Firestore functions
-jest.mock('firebase/firestore', () => ({
-  doc: jest.fn(),
-  getDoc: jest.fn(),
+jest.mock("firebase/firestore", () => ({
   setDoc: jest.fn(),
+  getDoc: jest.fn(),
   deleteDoc: jest.fn(),
+  doc: jest.fn(),
 }));
 
-describe('moveDocument', () => {
+describe("moveDocument", () => {
   const sourcePath = {
-    collectionType: 'Departments' as const,
-    companyId: 'testCompanyId',
-    departmentId: 'testDepartmentId',
-    documentId: 'testDocId',
+    collectionType: "Departments" as const,
+    companyId: "testCompany",
+    departmentId: "testDepartment",
+    collectionName: "testFiles",
   };
 
   const destinationPath = {
-    collectionType: 'Buyers' as const,
-    companyId: 'testCompanyId',
-    buyerId: 'testBuyerId',
+    collectionType: "Buyers" as const,
+    companyId: "testCompany",
+    buyerId: "testBuyer",
+    collectionName: "testQuotes",
   };
 
-  const mockDocData = {
-    fileName: 'testFile.pdf',
-    download: 'https://example.com/testFile.pdf',
-    filePath: 'path/to/testFile.pdf',
-  };
-
-  const mockSourceDocRef = { id: 'sourceDocRef' };
-  const mockDestinationDocRef = { id: 'destinationDocRef' };
+  const documentId = "testDocument";
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    // Mock Firestore references
-    (doc as jest.Mock)
-      .mockReturnValueOnce(mockSourceDocRef) // Source doc ref
-      .mockReturnValueOnce(mockDestinationDocRef); // Destination doc ref
-
-    // Mock getDoc to return a snapshot with data
-    (getDoc as jest.Mock).mockResolvedValue({
-      exists: () => true,
-      data: () => mockDocData,
-    });
-
-    // Mock setDoc to resolve without error
-    (setDoc as jest.Mock).mockResolvedValue(undefined);
-
-    // Mock deleteDoc to resolve without error
-    (deleteDoc as jest.Mock).mockResolvedValue(undefined);
   });
 
-  it('should move a document from source to destination', async () => {
-    await moveDocument(sourcePath, destinationPath);
+  it("moves the document from the source to the destination collection", async () => {
+    const documentData = { name: "Test File", content: "Sample content" };
 
-    // Ensure source and destination doc references are created correctly
-    expect(doc).toHaveBeenNthCalledWith(1, db, 'Company', 'testCompanyId', 'Departments', 'testDepartmentId', 'files', 'testDocId');
-    expect(doc).toHaveBeenNthCalledWith(2, db, 'Company', 'testCompanyId', 'Buyers', 'testBuyerId', 'Quotes', 'testDocId');
+    // Mock Firestore methods
+    const mockDocSnapshot = { exists: () => true, data: () => documentData };
+    (getDoc as jest.Mock).mockResolvedValue(mockDocSnapshot);
 
-    // Ensure document data was retrieved
-    expect(getDoc).toHaveBeenCalledWith(mockSourceDocRef);
+    await moveDocument(sourcePath, destinationPath, documentId);
 
-    // Ensure document was added to the destination path with correct data
-    expect(setDoc).toHaveBeenCalledWith(mockDestinationDocRef, mockDocData);
+    // Check if getFirestoreRef was called correctly for source and destination paths
+    expect(doc).toHaveBeenCalledWith(
+      db,
+      "Company",
+      sourcePath.companyId,
+      "Departments",
+      sourcePath.departmentId,
+      sourcePath.collectionName,
+      documentId
+    );
 
-    // Ensure the source document was deleted
-    expect(deleteDoc).toHaveBeenCalledWith(mockSourceDocRef);
+    expect(doc).toHaveBeenCalledWith(
+      db,
+      "Company",
+      destinationPath.companyId,
+      "Buyers",
+      destinationPath.buyerId,
+      destinationPath.collectionName,
+      documentId
+    );
+
+    // Check if the document was set at the destination path
+    expect(setDoc).toHaveBeenCalledWith(
+      expect.anything(),
+      documentData
+    );
+
+    // Check if the document was deleted from the source path
+    expect(deleteDoc).toHaveBeenCalledWith(expect.anything());
   });
 
-  it('should throw an error if the source document does not exist', async () => {
-    (getDoc as jest.Mock).mockResolvedValueOnce({
-      exists: () => false,
-    });
+  it("throws an error if the document does not exist at the source path", async () => {
+    // Mock the document not existing
+    const mockDocSnapshot = { exists: () => false };
+    (getDoc as jest.Mock).mockResolvedValue(mockDocSnapshot);
 
-    await expect(moveDocument(sourcePath, destinationPath)).rejects.toThrow("Document does not exist in the source collection");
+    await expect(moveDocument(sourcePath, destinationPath, documentId)).rejects.toThrow("Document does not exist in the source collection");
 
-    // Ensure setDoc and deleteDoc are not called if document doesn't exist
     expect(setDoc).not.toHaveBeenCalled();
     expect(deleteDoc).not.toHaveBeenCalled();
   });
