@@ -3,15 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import './styles.css';
-import { FileList } from '../upload/listFiles';
+import { FileList } from '../Utilities/ListFiles/listFiles';
 import { LuCloudLightning } from 'react-icons/lu';
-import { uploadFileToStorage, updateFirestore, moveDocument } from '../upload/uploadUtils';
+import { uploadFileToStorage, updateFirestore, moveDocument } from '../Utilities/Upload/uploadUtils';
 import { FaUserCircle } from 'react-icons/fa';
 import { fetchContacts } from '../editCompanyContacts/editContactUtils';
 import { Buyer, Manufacturer } from '../types';
-import  UploadComponent  from '../upload/Upload/uploadComponent';
+import  UploadComponent  from '../Utilities/Upload/uploadComponent';
 import AIButton from "../aiAddon/aiButton";
-import SearchBar from "../upload/SearchBar/searchBar";
+import SearchBar from "../Utilities/SearchBar/searchBar";
 
 const MerchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';

@@ -3,13 +3,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import './styles.css';
-import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
+import { FileList } from '../Utilities/ListFiles/listFiles'; // Adjust the path accordingly
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils'; // Import the utility function
-import UploadComponent from '../upload/Upload/uploadComponent'; // Import the UploadComponent
+import { uploadFileToStorage, updateFirestore } from '../Utilities/Upload/uploadUtils'; // Import the utility function
+import UploadComponent from '../Utilities/Upload/uploadComponent'; // Import the UploadComponent
 import AIButton from "../aiAddon/aiButton";
-import SearchBar from "../upload/SearchBar/searchBar";
+import SearchBar from "../Utilities/SearchBar/searchBar";
 
 const qaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore

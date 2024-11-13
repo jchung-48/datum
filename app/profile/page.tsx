@@ -79,9 +79,16 @@ export default function ProfilePage() {
                 alert("Phone number updated successfully!");
             } catch (error) {
                 console.error("Error updating phone number:", error);
-                alert(error.code === 'auth/requires-recent-login'
-                    ? "Please log in again to change your phone number for security reasons."
-                    : "Failed to update phone number.");
+                if (
+                    typeof error === 'object' &&
+                    error !== null &&
+                    'code' in error &&
+                    error.code === 'auth/requires-recent-login'
+                  ) {
+                    alert('Please log in again to continue.');
+                  } else {
+                    alert('An unexpected error occurred.');
+                  }
             }
         }
     };
