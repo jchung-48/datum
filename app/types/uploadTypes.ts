@@ -29,3 +29,12 @@ export type UploadComponentProps = {
     collections?: string[]; 
     onUploadSuccess?: () => void;
 };
+
+// export type FirestorePath = {
+//     collectionType: "Departments" | "Buyers" | "Manufacturers";
+//     companyId: string;
+//     departmentId?: string;
+//     collectionName?: string;
+//     buyerId?: string;
+//     manufacturerId?: string;
+// }

@@ -1,8 +1,9 @@
 // uploadUtils.ts
 
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import { doc, setDoc, deleteDoc, Timestamp } from "firebase/firestore";
+import { doc, setDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { storage, db, auth } from "@/lib/firebaseClient";
+// import { FirestorePath} from 'app/types/uploadTypes';
 
 // Function to upload file to Firebase Storage and return the download URL
 export const uploadFileToStorage = async (
@@ -157,6 +158,8 @@ export const updateFirestore = async (
   console.log(`File added to Firestore: ${fileName}`);
 };
 
+
+
 // Function to delete a file from Firebase Storage and Firestore
 export const handleFileDelete = async (
   fileFullPath: string,
@@ -228,5 +231,73 @@ export const handleFileDelete = async (
   } catch (error) {
     console.error("Error deleting file:", error);
     throw error; // Re-throw the error to be handled by the calling function
+  }
+};
+
+const getFirestoreRef = (
+  collectionType: "Departments" | "Buyers" | "Manufacturers",
+  companyId: string,
+  documentId: string,
+  departmentId?: string,
+  buyerId?: string,
+  manufacturerId?: string,
+) => {
+  if (collectionType === "Departments" && departmentId) {
+    return doc(db, "Company", companyId, "Departments", departmentId, "files", documentId);
+  } else if (collectionType === "Buyers" && buyerId) {
+    return doc(db, "Company", companyId, "Buyers", buyerId, "Quotes", documentId);
+  } else if (collectionType === "Manufacturers" && manufacturerId) {
+    return doc(db, "Company", companyId, "Manufacturers", manufacturerId, "Products", documentId);
+  } else {
+    throw new Error("Invalid Firestore path provided.");
+  }
+};
+
+export const moveDocument = async (
+  sourcePath: {
+    collectionType: "Departments" | "Buyers" | "Manufacturers";
+    companyId: string;
+    departmentId?: string;
+    buyerId?: string;
+    manufacturerId?: string;
+    documentId: string;
+  },
+  destinationPath: {
+    collectionType: "Departments" | "Buyers" | "Manufacturers";
+    companyId: string;
+    departmentId?: string;
+    buyerId?: string;
+    manufacturerId?: string;
+  }
+): Promise<void> => {
+  try {
+    // Get the document from the source path
+    const { collectionType, companyId, departmentId, buyerId, manufacturerId, documentId } = sourcePath;
+    const sourceDocRef = getFirestoreRef(collectionType, companyId, departmentId, buyerId, manufacturerId, documentId);
+    const docSnapshot = await getDoc(sourceDocRef);
+
+    if (!docSnapshot.exists()) {
+      throw new Error("Document does not exist in the source collection.");
+    }
+
+    const documentData = docSnapshot.data();
+
+    // Set the document in the destination path
+    const destinationDocRef = getFirestoreRef(
+      destinationPath.collectionType,
+      destinationPath.companyId,
+      documentId,
+      destinationPath.departmentId,
+      destinationPath.buyerId,
+      destinationPath.manufacturerId
+    );
+    await setDoc(destinationDocRef, documentData);
+
+    // Delete the document from the source path
+    await deleteDoc(sourceDocRef);
+    console.log(`Document ${documentId} moved successfully.`);
+  } catch (error) {
+    console.error("Error moving document:", error);
+    throw error;
   }
 };

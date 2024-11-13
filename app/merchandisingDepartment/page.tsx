@@ -67,12 +67,6 @@ const MerchandisingDepartment = () => {
           { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, customCollectionName: 'records' },
           '', fileId, storagePath
         );
-  
-        // Remove file from 'files' collection
-        await updateFirestore(
-          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, customCollectionName: 'files' },
-          '', fileId, storagePath
-        );
       }
   
       alert("Selected files moved to records successfully!");
