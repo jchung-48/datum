@@ -158,7 +158,7 @@ const LogisticsDepartment: React.FC = () => {
         />
       </div>
       <div className="ai-features">
-        <AIButton/>
+        <AIButton paths={['KZm56fUOuTobsTRCfknJ']}/>
       </div>
     </div>
   );

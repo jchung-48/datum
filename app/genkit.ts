@@ -214,24 +214,34 @@ Question: ${input}
 export const summarizeFlow = defineFlow(
   {
       name: 'summarizeFlow',
-      inputSchema: z.string(),
+      inputSchema: z.object({
+          text: z.string(),
+          metadata: z.string(),
+      }),
       outputSchema: z.string(),
   },
-  async (text: string) => {
+  async ({text, metadata}) => {
+    console.log("getting response from llama3.2");
       const response = await generate({
           model: 'ollama/llama3.2',
-          prompt: `Summarize the following text. Provide a brief summary 
-          followed by a bulleted list of the main points of the text. If the file is not in the format of a PDF,
+          prompt: `Summarize the following text. First provide context from the metadata which is provided below.
+          AFter providing context, Provide a brief summary of the document content.
+          followed by a bulleted list of the main points of the document content. If the file is not in the format of a PDF,
           please say that the file is not a PDF and that the summarization may be inaccurate. In the case that it cannot 
           be analyzed, you MUST say that the file cannot be summarized.  
-          Finally, list the key takeaways. Be clear, concise, and write in markdown format:\n\n${text}`,
+          Finally, list the key takeaways. Be clear, concise, and write in markdown format.
+          Metadata: ${metadata}
+          \n
+          Document Content: ${text}
+          `,
           config: { temperature: 0.7 },
       });
       return response.text();
   }
 );
 
-export async function callSummarizeFlow(text: string): Promise<string> {
-  return await runFlow(summarizeFlow, text);
+export async function callSummarizeFlow(text: string, metadata: string): Promise<string> {
+  console.log("in summarize Flow");
+  return await runFlow(summarizeFlow, {text, metadata});
 }
 

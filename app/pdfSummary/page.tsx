@@ -58,7 +58,7 @@ export default function PdfSummaryPage() {
             const response = await fetch(selectedFileUrl);
             const arrayBuffer = await response.arrayBuffer();
             const textContent = await extractTextFromPdf(arrayBuffer);
-            const summaryResponse = await callSummarizeFlow(textContent);
+            const summaryResponse = await callSummarizeFlow(textContent,"meta");
             setSummary(summaryResponse);
         } catch (error) {
             console.error('Error generating summary:', error);
