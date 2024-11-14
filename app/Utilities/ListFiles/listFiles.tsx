@@ -513,7 +513,9 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                                                     handleDelete(file);
                                                 }}
                                             >
-                                                <MdDelete className='trashIcon'/>
+                                                <span className='trashIcon'>
+                                                    <MdDelete />
+                                                </span>
                                             </button>
                                         )}
                                     </td>

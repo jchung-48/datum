@@ -87,11 +87,16 @@ const MerchandisingDepartment = () => {
             companyId: COMPANYID,
             departmentId: DEPARTMENTID,
           },
+          // {
+          //   collectionType: 'Departments',
+          //   companyId: COMPANYID,
+          //   departmentId: DEPARTMENTID,
+          //   collectionName: 'records',
+          // },
           {
-            collectionType: 'Departments',
+            collectionType: 'Buyers',
             companyId: COMPANYID,
-            departmentId: DEPARTMENTID,
-            collectionName: 'records',
+            buyerId: '2O8Q5JECWE1BKVcE3aZ0',
           },
           fileId,
         );
@@ -270,7 +275,6 @@ const MerchandisingDepartment = () => {
         <FileList
           collectionPath={deptFilesPath}
           title=""
-          onSearch={() => {}}
           onFileSelect={handleFileSelect}
           display="horizontal"
           refreshTrigger={fileListUpdated}
@@ -288,7 +292,6 @@ const MerchandisingDepartment = () => {
           <FileList
             collectionPath={deptRecordsPath}
             title="Records"
-            onSearch={() => {}}
             refreshTrigger={fileListUpdated}
           />
         </div>

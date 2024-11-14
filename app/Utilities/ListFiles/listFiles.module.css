@@ -29,6 +29,12 @@
     padding: 10px 40px; /* Add padding for the scroll button overlap */
     width: 100%;
   }
+
+  .fileItemsHorizontal p {
+    font-family: "Darker Grotesque";
+    font-size: var(--main-font-size);
+    color: var(--text-color-light);
+  }
   
   .fileItemsDefault {
     display: block;
@@ -299,6 +305,8 @@
   
   .trashIcon {
     pointer-events: none; /* Ensure the icon doesn't capture click events */
+    margin: auto;
+    display: block;
   }
   
   /* Adjustments for the table cell */

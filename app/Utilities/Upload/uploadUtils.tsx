@@ -1,8 +1,9 @@
 // uploadUtils.ts
 
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject, uploadBytes } from "firebase/storage";
 import { doc, setDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { storage, db, auth } from "@/lib/firebaseClient";
+import { createTypeReferenceDirectiveResolutionCache } from "typescript";
 // import { FirestorePath} from 'app/types/uploadTypes';
 
 // Function to upload file to Firebase Storage and return the download URL
@@ -275,11 +276,19 @@ export const moveDocument = async (
     collectionName?: string;
   },
   documentId: string,
+  copy = false // default to moving the file
 ): Promise<void> => {
   try {
     // Get the document from the source path
-    const { collectionType, companyId, departmentId, buyerId, manufacturerId, collectionName } = sourcePath;
-    const sourceDocRef = getFirestoreRef(collectionType, companyId, documentId, departmentId, buyerId, manufacturerId, collectionName);
+    const sourceDocRef = getFirestoreRef(
+      sourcePath.collectionType,
+      sourcePath.companyId,
+      documentId,
+      sourcePath.departmentId,
+      sourcePath.buyerId,
+      sourcePath.manufacturerId,
+      sourcePath.collectionName
+    );
     const docSnapshot = await getDoc(sourceDocRef);
 
     if (!docSnapshot.exists()) {
@@ -287,6 +296,40 @@ export const moveDocument = async (
     }
 
     const documentData = docSnapshot.data();
+
+    // Check if moving within the same department/buyer/manufacturer
+    const isSameDirectory =
+      sourcePath.companyId === destinationPath.companyId &&
+      sourcePath.collectionType === destinationPath.collectionType &&
+      sourcePath.departmentId === destinationPath.departmentId &&
+      sourcePath.buyerId === destinationPath.buyerId &&
+      sourcePath.manufacturerId === destinationPath.manufacturerId;
+
+    if (!isSameDirectory) {
+      // Moving to a different collection, so we handle storage as well
+      const filePath = documentData.filePath;
+      const fileRef = ref(storage, filePath);
+      const fileURL = await getDownloadURL(fileRef);
+
+      // Copy file content to the destination
+      const response = await fetch(fileURL);
+      const fileBlob = await response.blob();
+
+      const newStoragePath = `Company/${destinationPath.collectionType}/${
+        destinationPath.departmentId || destinationPath.buyerId || destinationPath.manufacturerId
+      }/${documentId}`;
+
+      const destinationFileRef = ref(storage, newStoragePath);
+      await uploadBytes(destinationFileRef, fileBlob);
+
+      // Update document data for new storage location
+      documentData.filePath = newStoragePath;
+
+      // Optionally delete the original file in storage
+      if (!copy) {
+        await deleteObject(fileRef);
+      }
+    }
 
     // Set the document in the destination path
     const destinationDocRef = getFirestoreRef(
@@ -300,11 +343,15 @@ export const moveDocument = async (
     );
     await setDoc(destinationDocRef, documentData);
 
-    // Delete the document from the source path
-    await deleteDoc(sourceDocRef);
-    console.log(`Document ${documentId} moved successfully.`);
+    // Delete the document from the source path if moving
+    if (!copy) {
+      await deleteDoc(sourceDocRef);
+      console.log(`Document ${documentId} moved successfully.`);
+    } else {
+      console.log(`Document ${documentId} copied successfully.`);
+    }
   } catch (error) {
-    console.error("Error moving document:", error);
+    console.error("Error moving/copying document:", error);
     throw error;
   }
 };
