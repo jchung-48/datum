@@ -1,8 +1,7 @@
 html {
     height: 100%;
     margin: 0;
-    --background-color: #e3e3e3;
-    --heading-font-size: 35px;
+    
 }
 
 @font-face {
@@ -14,6 +13,8 @@ html {
 
 body {
     background-color: var(--background-color);
+    --background-color: #e3e3e3;
+    --heading-font-size: 35px;
 }
 
 .header {
@@ -123,6 +124,28 @@ body {
     border-radius: 5px;
 }
 
+.share-button {
+  background-color: var(--button-blue); /* Primary color */
+  color: var(--text-color-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5%;
+  font-family: "Darker Grotesque";
+  font-weight: 800;
+  font-size: 20px;
+  height: 40px;
+  width: 100px;
+  border-radius: 25px;
+  /* Other button styles here */
+}
+
+.share-button.disabled {
+  background-color: var(--hover-color-light); /* Gray for inactive state */
+  color: var(--text-color-light);
+  cursor: not-allowed;
+}
+
 /* Container for Buyers and Manufacturers lists */
 .contact-lists-container {
     display: flex;
@@ -215,7 +238,9 @@ body {
     font-size: 1.5rem;
     cursor: pointer;
     color: #999;
+    z-index: 1;
   }
+
   .close-button:hover {
     color: #333;
   }

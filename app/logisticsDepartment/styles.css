@@ -1,7 +1,15 @@
-html, body {
+html {
     height: 100%;
     margin: 0;
     background-color: #e3e3e3;
+}
+body {
+    background-color: #e3e3e3;
+    background-image: 
+        linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
+        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+    background-size: 100% 100%, 50px 50px, 50px 50px;
 }
 
 @font-face {
@@ -67,6 +75,7 @@ html, body {
 .upload-button:hover {
     background-color: #4b617b;
 }
+
 
 
 
