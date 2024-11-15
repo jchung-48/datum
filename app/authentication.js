@@ -110,6 +110,13 @@ export const verifyAndUpdatePhoneNumber = async (verificationCode, verificationI
     if (user) {
       await updatePhoneNumber(user, credential);
     }
+    console.log(user.phoneNumber);
+    const companyId = (await user.getIdTokenResult()).claims.companyId;
+    const docRef = doc(db, `/Company/${companyId}/Employees`, user.uid);
+    await updateDoc(docRef, {
+      phoneNumber: user.phoneNumber
+    });
+    alert("Phone number update");
   }  catch (error) {
     console.error("Error verifying OTP:", error);
   }
@@ -179,6 +186,7 @@ export const getEmployeeProfile = async (uid) => {
     }
 
     const employeeData = employeeSnap.data();
+    console.log(employeeData.phoneNumber);
     return {
       name: employeeSnap.data().name,
       companyName: employeeSnap.data().companyName,
