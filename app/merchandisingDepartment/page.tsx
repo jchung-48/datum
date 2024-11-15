@@ -289,7 +289,7 @@ const MerchandisingDepartment = () => {
           onClick={() => openShareModal(selectedFiles[0])} // Open share modal for the first selected file
           disabled={selectedFiles.length === 0} // Disable when no files are selected
         >
-          Share File
+          Share
         </button>
         <ShareFileModal
           companyId={COMPANYID}

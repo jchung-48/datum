@@ -324,11 +324,12 @@ export const moveDocument = async (
 
         if (departmentDocSnapshot.exists()) {
           departmentName = departmentDocSnapshot.data().name;
+          departmentName = departmentName.replace(' ', "");
         }
       }
 
       const newStoragePath = `Company/${destinationPath.collectionType}/${
-        departmentName.replace(/\s+/g, "") || destinationPath.buyerId || destinationPath.manufacturerId
+        departmentName || destinationPath.buyerId || destinationPath.manufacturerId
       }/${documentId}`;
 
       const destinationFileRef = ref(storage, newStoragePath);
