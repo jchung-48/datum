@@ -145,7 +145,7 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`
 
           {/* Content Display Area */}
           <div className="content-display">
-            <SpinnerDiamond className="throbber" enabled={!loading} color= "#617D9F"/>
+            <SpinnerDiamond className="throbber" enabled={loading} color= "#617D9F"/>
             <ReactMarkdown>{summaryContent}</ReactMarkdown>
           </div>
 
