@@ -151,7 +151,7 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
                     name: data.fileName, // Use fileName for displaying
                     downloadURL: data.download, // Use download field for URL
                     author: data.userDisplayName,
-                    uploadDate: data.uploadTimeStamp.toString(),
+                    uploadDate: data.uploadTimeStamp.toDate().toString(),
                     tags: data.tags,
                 });
             }
