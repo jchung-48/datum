@@ -107,10 +107,21 @@
     border-radius: 4px;        /* Rounded corners */
     margin-top: 10px;          /* Space above the content */
     max-height: 300px;         /* Adjust as needed for your design */
+    max-width: 380px;
     overflow-y: auto;          /* Enable vertical scrolling if content overflows */
     box-sizing: border-box;    /* Ensure padding and borders are included in the total width and height */
     flex-grow: 1; /* Allow the content area to expand and take available space */
     margin-bottom: 10px;
+    color: black;
+    position: relative; /* Add relative positioning */
+}
+
+.throbber {
+    height: 100%;
+    position: absolute; /* Position the throbber absolutely */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position to truly center */
 }
 
 /* Optional: Style Markdown Elements for Better Presentation */
