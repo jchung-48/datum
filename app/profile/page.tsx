@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getEmployeeProfile, getUserDepartmentsNew } from "../authentication"; 
+import { getEmployeeProfile, getUserDepartmentsNew, resetPassword, sendVerificationCode, verifyAndUpdatePhoneNumber } from "../authentication"; 
 import { auth } from "../../lib/firebaseClient.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,11 @@ export default function ProfilePage() {
     const [departments, setDepartments] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [verificationCode, setVerificationCode] = useState("");
+    const [verificationId, setVerificationId] = useState("");
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState("");
 
     type EmployeeData = {
         name: string;
@@ -25,6 +29,17 @@ export default function ProfilePage() {
         createdAt: string;
         departments?: string[];
     };
+
+    useEffect(() => {
+        if (errorMessage) {
+          const timer = setTimeout(() => {
+            setErrorMessage(""); // Clear error message after 3 seconds
+          }, 5000);
+    
+          return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
+        }
+        return undefined;
+      }, [errorMessage]);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -63,36 +78,13 @@ export default function ProfilePage() {
         return <p>No employee data available.</p>;
     }
 
-    const handleChangePhoneNumber = async () => {
-        const user = auth.currentUser;
-        if (!user) {
-            alert("User not authenticated. Please log in again.");
-            return;
+    const handleVerificationCode = async () => {
+        const verId = await sendVerificationCode(phoneNumber);
+        if (verId) {
+          setVerificationId(verId);
         }
-        const newPhoneNumber = prompt("Enter your new phone number:");
-        if (newPhoneNumber) {
-            try {
-                const employeeRef = doc(db, "Company/mh3VZ5IrZjubXUCZL381/Employees", user.uid);
-                await updateDoc(employeeRef, { phoneNumber: newPhoneNumber });
-                const updatedData = await getEmployeeProfile(user.uid);
-                setEmployeeData(updatedData);
-                alert("Phone number updated successfully!");
-            } catch (error) {
-                console.error("Error updating phone number:", error);
-                if (
-                    typeof error === 'object' &&
-                    error !== null &&
-                    'code' in error &&
-                    error.code === 'auth/requires-recent-login'
-                  ) {
-                    alert('Please log in again to continue.');
-                  } else {
-                    alert('An unexpected error occurred.');
-                  }
-            }
-        }
-    };
-
+      };
+      
     return (
         <div className="profile-container">
             <h1>{employeeData.name}</h1>
@@ -111,11 +103,41 @@ export default function ProfilePage() {
             ) : (
                 <p>No departments assigned.</p>
             )}
-            <button>Change Password</button>
-            <button onClick={handleChangePhoneNumber}>Change Phone Number</button>
+            <button onClick={() => resetPassword(employeeData.email)}>Change Password</button>
+            
             <Link href="/home">
             <button>Back to Home</button>
             </Link>
+            
+            <div>
+      <h1>Update Phone Number</h1>
+      <input
+        type="text"
+        placeholder="New Phone Number"
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+        style={{ color: 'black' }}
+      />
+      <button onClick={handleVerificationCode}>Send Verification Code</button>
+      
+      {verificationId && (
+        <>
+          <input
+            type="text"
+            placeholder="Enter verification code"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            style={{ color: 'black' }}
+          />
+          <button onClick={() => verifyAndUpdatePhoneNumber(verificationCode,verificationId)}>Verify and Update</button>
+        </>
+      )}
+      
+      <div id="recaptcha-container"></div>
+      {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>}
+    </div>
+            
         </div>
+        
     );
 }
