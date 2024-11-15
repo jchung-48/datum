@@ -6,6 +6,8 @@ import { FaArrowCircleUp  } from 'react-icons/fa';
 import { AiButtonProps, SummarySearchResult } from '../types';
 import ReactMarkdown from 'react-markdown';
 import * as pdfjsLib from 'pdfjs-dist';
+import { SpinnerDiamond } from 'spinners-react';
+
 // import { callSummarizeFlow } from './summarization';
 
 // Set the workerSrc for pdfjsLib
@@ -143,6 +145,7 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`
 
           {/* Content Display Area */}
           <div className="content-display">
+            <SpinnerDiamond className="throbber" enabled={!loading} color= "#617D9F"/>
             <ReactMarkdown>{summaryContent}</ReactMarkdown>
           </div>
 
