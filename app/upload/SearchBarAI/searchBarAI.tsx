@@ -8,8 +8,8 @@ import {
     QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
-import './searchBar.css';
-import {FileData, SearchResult, SearchBarProps} from '../../types';
+import styles from './SearchBarAI.module.css';
+import {FileData, SummarySearchResult, SearchBarAIProps} from '../../types';
 
 // Debounce function to limit search calls
 const debounce = (func: (...args: any[]) => void, delay: number) => {
@@ -22,11 +22,12 @@ const debounce = (func: (...args: any[]) => void, delay: number) => {
 
 const companyId = 'mh3VZ5IrZjubXUCZL381';
 
-const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
+const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
     const [queryText, setQueryText] = useState('');
-    const [results, setResults] = useState<SearchResult[]>([]);
+    const [results, setResults] = useState<SummarySearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [isResultsVisible, setIsResultsVisible] = useState(false);
+    const [fileSelectedForSummary, setFileSelectedForSummary] = useState<string | null>(null);
 
     const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -57,7 +58,7 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
         }
 
         setLoading(true);
-        const searchResults: SearchResult[] = [];
+        const searchResults: SummarySearchResult[] = [];
 
         try {
             const queryTextSplit = queryText.toLowerCase().split(' ');
@@ -129,14 +130,14 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
     // Helper function to fetch and filter documents
     const fetchAndFilterDocs = async (
         collectionRef: CollectionReference<FileData>,
-        searchResults: SearchResult[],
+        searchResults: SummarySearchResult[],
         queryTextSplit: string[],
     ) => {
         const docsSnap = await getDocs(collectionRef);
 
         docsSnap.forEach((doc: QueryDocumentSnapshot<FileData>) => {
             const data = doc.data();
-
+            
             // Use fileName instead of name
             const name = data.fileName?.toLowerCase();
 
@@ -149,6 +150,9 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
                 searchResults.push({
                     name: data.fileName, // Use fileName for displaying
                     downloadURL: data.download, // Use download field for URL
+                    author: data.userDisplayName,
+                    uploadDate: data.uploadTimeStamp.toString(),
+                    tags: data.tags,
                 });
             }
         });
@@ -160,10 +164,10 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
         paths,
     ]);
 
-    const handleEscapePress = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-            setIsResultsVisible(false);
-        }
+    const handleFileSelect = (file: SummarySearchResult): void => {
+        onFileSelect(file);
+        setIsResultsVisible(false);
+        setQueryText(file.name);    
     };
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -177,45 +181,40 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('keydown', handleEscapePress);
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('keydown', handleEscapePress);
         };
     }, []);
 
     return (
-        <div className="main-container">
-            <div className="search-bar">
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    value={queryText}
-                    onChange={e => {
-                        setQueryText(e.target.value);
-                        debouncedSearch();
-                    }}
-                    className="search-input"
-                />
+        <div className={styles.mainContainer}>
+        <div className={styles.searchBar}>
+            <input
+                type="text"
+                placeholder="Search..."
+                value={queryText}
+                onChange={e => {
+                    setQueryText(e.target.value);
+                    debouncedSearch();
+                }}
+                className={styles.searchInput}
+            />
 
-                {isResultsVisible && results.length > 0 && (
-                <div ref={resultsRef} className="search-results-card">
+            {isResultsVisible && results.length > 0 && (
+                <div ref={resultsRef} className={styles.searchResultsCard}>
                     <ul>
-                    {results.map((item, index) => (
-                        <li key={index} className="search-result-item">
-                        <a href={item.downloadURL} target="_blank" rel="noopener noreferrer">
-                            {item.name}
-                        </a>
-                        </li>
-                    ))}
+                        {results.map((item, index) => (
+                            <li key={index} className={styles.searchResultItem}
+                            onClick={() => handleFileSelect(item)}>
+                                    {item.name}
+                            </li>
+                        ))}
                     </ul>
                 </div>
-                )}
-
-            </div>
+            )}
         </div>
-    );
+    </div>
+);
 };
-
-export default SearchBar;
+export default SearchBarAI;
