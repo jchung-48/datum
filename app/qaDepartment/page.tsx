@@ -15,12 +15,13 @@ const qaDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; // Update to the QA department ID
-  const MANUDEPTID = 'ti7yNByDOzarVXoujOog' 
+  const MANUDEPTID = 'ti7yNByDOzarVXoujOog';
 
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [fileListUpdated, setFileListUpdated] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // State for toggling view mode
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,9 +102,21 @@ const qaDepartment = () => {
 
       <div className="files">
         <div className="file-section">
-          <div className="file-title">Department</div>
+          <div className="file-title">
+            Department
+            <button 
+              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+              className="view-toggle">
+              Toggle to {viewMode === 'grid' ? 'List' : 'Grid'} View
+            </button>
+          </div>
           <div className="file-box">
-            <FileList collectionPath={deptFilesPath} title='' display='grid' refreshTrigger={fileListUpdated}/>
+            <FileList 
+              collectionPath={deptFilesPath} 
+              title='' 
+              display={viewMode} 
+              refreshTrigger={fileListUpdated} 
+            />
           </div>
         </div>
         <div className="file-section">

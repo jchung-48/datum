@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import './styles.css';
+import './styles.modules.css';
 import SearchBarAI from "../upload/SearchBarAI/searchBarAI";
 import { FaArrowCircleUp  } from 'react-icons/fa';
 import { AiButtonProps, SummarySearchResult } from '../types';
