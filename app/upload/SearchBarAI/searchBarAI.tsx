@@ -8,7 +8,7 @@ import {
     QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
-import styles from './SearchBarAI.module.css';
+import styles from './searchBarAI.module.css';
 import {FileData, SummarySearchResult, SearchBarAIProps} from '../../types';
 
 // Debounce function to limit search calls
