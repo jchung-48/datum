@@ -5,17 +5,20 @@ import Link from 'next/link';
 import './styles.css';
 import {FileList} from '../Utilities/ListFiles/listFiles';
 import {LuCloudLightning} from 'react-icons/lu';
+import {FaUserCircle} from 'react-icons/fa';
+import { MdClose } from 'react-icons/md';
 import {
   uploadFileToStorage,
   updateFirestore,
   moveDocument,
 } from '../Utilities/Upload/uploadUtils';
-import {FaUserCircle} from 'react-icons/fa';
+
 import {fetchContacts} from '../editCompanyContacts/editContactUtils';
 import {Buyer, Manufacturer} from '../types';
 import UploadComponent from '../Utilities/Upload/uploadComponent';
 import AIButton from '../aiAddon/aiButton';
 import SearchBar from '../Utilities/SearchBar/searchBar';
+import ShareFileModal from '../Utilities/ShareFiles/shareFile';
 
 const MerchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -45,6 +48,13 @@ const MerchandisingDepartment = () => {
   const [selectedContactFilesPath, setSelectedContactFilesPath] = useState<
     string[]
   >([]);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [fileToShare, setFileToShare] = useState<string | null>(null);
+
+  const openShareModal = (fileId: string) => {
+    setFileToShare(fileId);
+    setIsShareModalOpen(true);
+  };
 
   // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,16 +97,11 @@ const MerchandisingDepartment = () => {
             companyId: COMPANYID,
             departmentId: DEPARTMENTID,
           },
-          // {
-          //   collectionType: 'Departments',
-          //   companyId: COMPANYID,
-          //   departmentId: DEPARTMENTID,
-          //   collectionName: 'records',
-          // },
           {
-            collectionType: 'Buyers',
+            collectionType: 'Departments',
             companyId: COMPANYID,
-            buyerId: '2O8Q5JECWE1BKVcE3aZ0',
+            departmentId: DEPARTMENTID,
+            collectionName: 'records',
           },
           fileId,
         );
@@ -279,15 +284,20 @@ const MerchandisingDepartment = () => {
           display="horizontal"
           refreshTrigger={fileListUpdated}
         />
-        {selectedFiles.length > 0 && (
-          <button
-            className="move-button"
-            onClick={handleMoveToRecords}
-            style={{marginTop: '10px'}}
-          >
-            Move to Records
-          </button>
-        )}
+        <button
+          className={`share-button ${selectedFiles.length === 0 ? "disabled" : ""}`}
+          onClick={() => openShareModal(selectedFiles[0])} // Open share modal for the first selected file
+          disabled={selectedFiles.length === 0} // Disable when no files are selected
+        >
+          Share File
+        </button>
+        <ShareFileModal
+          companyId={COMPANYID}
+          documentId={fileToShare || ''}
+          departmentId={DEPARTMENTID}
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+        />
         <div className="file-title">
           <FileList
             collectionPath={deptRecordsPath}
@@ -351,7 +361,7 @@ const MerchandisingDepartment = () => {
               className="close-button"
               onClick={() => setShowModal(false)}
             >
-              ✖
+              <MdClose />
             </button>
             {/* <h2>{modalTitle}</h2> */}
             <FileList

@@ -5,6 +5,22 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Colors */
+  --card-background-light: #c2c1c1;
+  --hover-color-light: #a3a3a3;
+  --file-card-selected-light: #858585;
+  --text-color-light: #333333;
+
+  --selected-color: #8Ab9ee;
+  
+  --card-background-dark: #333333;
+  --hover-color-dark: #616161;
+  --file-card-selected-dark: #717171;
+  --text-color-dark: #f5f5f5;
+
+  --button-blue: #1F3C53;
+  --button-blue-hover: #627D9F;
 }
 
 @media (prefers-color-scheme: dark) {

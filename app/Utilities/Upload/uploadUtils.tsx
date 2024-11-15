@@ -315,8 +315,20 @@ export const moveDocument = async (
       const response = await fetch(fileURL);
       const fileBlob = await response.blob();
 
+      let departmentName = undefined; // Default to using ID if name not found
+
+      if (destinationPath.collectionType === "Departments" && destinationPath.departmentId) {
+        // Fetch department name based on department ID
+        const departmentDocRef = doc(db, "Company", destinationPath.companyId, "Departments", destinationPath.departmentId);
+        const departmentDocSnapshot = await getDoc(departmentDocRef);
+
+        if (departmentDocSnapshot.exists()) {
+          departmentName = departmentDocSnapshot.data().name;
+        }
+      }
+
       const newStoragePath = `Company/${destinationPath.collectionType}/${
-        destinationPath.departmentId || destinationPath.buyerId || destinationPath.manufacturerId
+        departmentName.replace(/\s+/g, "") || destinationPath.buyerId || destinationPath.manufacturerId
       }/${documentId}`;
 
       const destinationFileRef = ref(storage, newStoragePath);
