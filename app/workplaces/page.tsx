@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 import { getCompanies } from "../authentication";
 import { auth, db } from '@/lib/firebaseClient'; 
 import { doc, getDoc } from "firebase/firestore";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import Link from 'next/link';
+import { LuCloudLightning } from 'react-icons/lu';
+import './styles.modules.css';
+import { useRouter } from "next/navigation";
+import { capitalize } from 'lodash';
 import React from 'react';
 
 interface Company {
@@ -14,7 +18,7 @@ interface Company {
 const Page = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState("");
-  const [loading, setLoading] = useState(true); // Loading state to track fetch status
+  const [loading, setLoading] = useState(true);
   const router = useRouter(); 
 
   useEffect(() => {
@@ -62,13 +66,19 @@ const Page = () => {
   }
 
   return (
-    <div>
-      <h1>Select a Workplace</h1>
+    <div className="container">
+      <Link href="/home">
+        <div className="home">
+          <LuCloudLightning className="cloud-icon"/>
+          DATUM
+        </div>
+      </Link>
+      <h1 className="title">Select a Workplace:</h1>
       <select value={selectedCompany} onChange={companySelect}>
-        <option value="" disabled>Select a Workplace</option>
+        <option value="" disabled>Unselected</option>
         {companies.map((company) => (
           <option key={company.id} value={company.id}>
-            {company.name} {/* Display company name */}
+            {capitalize(company.name)}
           </option>
         ))}
       </select>

@@ -2,7 +2,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
-import './styles.css';
+import './styles.modules.css';
 import { auth, db } from '@/lib/firebaseClient'; 
 import { signInUser, getUserDepartments, resetPassword } from "../authentication";
 import { doc, getDoc } from "firebase/firestore";

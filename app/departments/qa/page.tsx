@@ -1,5 +1,6 @@
 "use client"; // Mark as a Client Component
 
+import '../globals.css'
 import React, { useState } from 'react';
 import Link from 'next/link';
 import deptStyles from '../departments.module.css';
@@ -24,6 +25,7 @@ const qaDepartment = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [fileListUpdated, setFileListUpdated] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // State for toggling view mode
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
