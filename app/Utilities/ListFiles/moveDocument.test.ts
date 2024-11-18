@@ -46,7 +46,7 @@ describe("moveDocument", () => {
       data: () => documentData,
     });
 
-    await moveDocument(sourcePath, destinationPathSameCollection, documentId, { moveFile: true });
+    await moveDocument(sourcePath, destinationPathSameCollection, documentId, true);
 
     expect(setDoc).toHaveBeenCalledWith(expect.anything(), documentData);
     expect(deleteDoc).toHaveBeenCalledWith(expect.anything());
@@ -59,7 +59,7 @@ describe("moveDocument", () => {
       data: () => documentData,
     });
 
-    await moveDocument(sourcePath, destinationPathSameCollection, documentId, { moveFile: false });
+    await moveDocument(sourcePath, destinationPathSameCollection, documentId, false);
 
     expect(setDoc).toHaveBeenCalledWith(expect.anything(), documentData);
     expect(deleteDoc).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe("moveDocument", () => {
       data: () => documentData,
     });
 
-    await moveDocument(sourcePath, destinationPathDifferentCollection, documentId, { copy: true });
+    await moveDocument(sourcePath, destinationPathDifferentCollection, documentId, true);
 
     expect(setDoc).toHaveBeenCalledWith(expect.anything(), documentData);
     expect(deleteDoc).toHaveBeenCalledWith(expect.anything());
@@ -81,7 +81,7 @@ describe("moveDocument", () => {
     (getDoc as jest.Mock).mockResolvedValue({ exists: () => false });
 
     await expect(
-      moveDocument(sourcePath, destinationPathDifferentCollection, documentId, { moveFile: true })
+      moveDocument(sourcePath, destinationPathDifferentCollection, documentId, true)
     ).rejects.toThrow("Document does not exist in the source collection");
 
     expect(setDoc).not.toHaveBeenCalled();
