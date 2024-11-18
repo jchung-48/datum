@@ -14,6 +14,7 @@ type ShareFileModalProps = {
     departmentId: string;
     isOpen: boolean;
     onClose: () => void;
+    buttonRef: React.RefObject<HTMLButtonElement>;
 };
 
 const ShareFileModal: React.FC<ShareFileModalProps> = ({
@@ -22,6 +23,7 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     departmentId,
     isOpen,
     onClose,
+    buttonRef
 }) => {
     const [selectedCollectionType, setSelectedCollectionType] = useState< 
         'Departments' | 'Buyers' | 'Manufacturers' | ''
@@ -33,6 +35,18 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     const [collections, setCollections] = useState<string[]>([]);
     const [selectedCollectionName, setSelectedCollectionName] = useState('');
     const [isCopy, setIsCopy] = useState(false);
+    const [modalPosition, setModalPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+
+    useEffect(() => {
+        if (isOpen && buttonRef.current) {
+            // Get the button's position when modal is open
+            const buttonRect = buttonRef.current.getBoundingClientRect();
+            setModalPosition({
+                top: buttonRect.bottom + window.scrollY + 10, // Position below the button with some offset
+                left: buttonRect.left + window.scrollX, // Align modal left with the button
+            });
+        }
+    }, [isOpen, buttonRef]);
 
     useEffect(() => {
         if (isOpen) {
@@ -104,8 +118,15 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     };
 
     return isOpen ? (
-        <div className={styles.modalOverlay}>
-            <div className={styles.modal}>
+        <div className={styles.modalOverlay} onClick={onClose}>
+            <div
+                className={styles.modal}
+                style={{
+                    top: `${modalPosition.top}px`,
+                    left: `${modalPosition.left}px`,
+                    position: 'absolute',
+                }}
+            >
                 <button className={styles.closeButton} onClick={onClose}>
                     <MdClose />
                 </button>

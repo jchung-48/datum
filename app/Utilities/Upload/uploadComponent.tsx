@@ -1,7 +1,7 @@
 // UploadComponent.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { uploadFileToStorage, updateFirestore } from './uploadUtils';
-import './uploadComponent.css';
+import styles from './uploadComponent.module.css';
 import { FirestorePath, UploadComponentProps } from '../../types';
 
 
@@ -75,15 +75,15 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ companyId, department
     }, [showCard]);
   
     return (
-      <div className="upload-container">
+      <div className={styles.uploadContainer}>
         <button
-          className={`pill-upload-button ${showCard ? 'hidden-button' : ''}`}
+          className={`${styles.pillUploadButton} ${showCard ? 'hiddenButton' : ''}`}
           onClick={() => setShowCard(true)}
         >
           Upload
         </button>
         {showCard && (
-          <div className="upload-card" ref={cardRef}>
+          <div className={styles.uploadCard} ref={cardRef}>
             <input type="file" onChange={handleFileChange} />
             {collections && (
               <select value={selectedCollection} onChange={handleCollectionChange}>
