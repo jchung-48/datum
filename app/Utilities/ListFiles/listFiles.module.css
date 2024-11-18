@@ -244,6 +244,12 @@
     padding: 10px;
   }
 
+  .topButtons {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    align-items: center; /* Vertically center the buttons */
+  }
+
   /* Delete Button */
   .deleteButtonTop {
     margin-bottom: 10px;
@@ -252,17 +258,35 @@
     font-family: "Darker Grotesque";
     border: none;
     border-radius: 4px;
+    background-color: #e74c3c; /* Red */
+    color: white;
     cursor: pointer;
   }
   
-  .deleteButtonTop.disabled {
+  .deleteButtonTop:disabled {
     background-color: #ccc;
     color: #666;
     cursor: not-allowed;
   }
+
+  .shareButton {
+    background-color: var(--button-blue); /* Primary color */
+    color: var(--text-color-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5%;
+    font-family: "Darker Grotesque";
+    font-weight: 800;
+    font-size: 20px;
+    height: 40px;
+    width: 100px;
+    border-radius: 25px;
+    /* Other button styles here */
+  }
   
-  .deleteButtonTop.active {
-    background-color: #e74c3c; /* Red */
-    color: white;
-    cursor: pointer;
-  }  
+  .shareButton:disabled {
+    background-color: #ccc; /* Gray for inactive state */
+    color: #666;
+    cursor: not-allowed;
+  }

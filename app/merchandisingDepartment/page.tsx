@@ -18,7 +18,6 @@ import {Buyer, Manufacturer} from '../types';
 import UploadComponent from '../Utilities/Upload/uploadComponent';
 import AIButton from '../aiAddon/aiButton';
 import SearchBar from '../Utilities/SearchBar/searchBar';
-import ShareFileModal from '../Utilities/ShareFiles/shareFile';
 
 const MerchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -48,13 +47,6 @@ const MerchandisingDepartment = () => {
   const [selectedContactFilesPath, setSelectedContactFilesPath] = useState<
     string[]
   >([]);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [fileToShare, setFileToShare] = useState<string | null>(null);
-
-  const openShareModal = (fileId: string) => {
-    setFileToShare(fileId);
-    setIsShareModalOpen(true);
-  };
 
   // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -283,20 +275,7 @@ const MerchandisingDepartment = () => {
           onFileSelect={handleFileSelect}
           display="horizontal"
           refreshTrigger={fileListUpdated}
-        />
-        <button
-          className={`share-button ${selectedFiles.length === 0 ? "disabled" : ""}`}
-          onClick={() => openShareModal(selectedFiles[0])} // Open share modal for the first selected file
-          disabled={selectedFiles.length === 0} // Disable when no files are selected
-        >
-          Share
-        </button>
-        <ShareFileModal
-          companyId={COMPANYID}
-          documentId={fileToShare || ''}
-          departmentId={DEPARTMENTID}
-          isOpen={isShareModalOpen}
-          onClose={() => setIsShareModalOpen(false)}
+          enableShare={true}
         />
         <div className="file-title">
           <FileList

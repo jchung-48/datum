@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { moveDocument } from '../Upload/uploadUtils';
 import { fetchContacts } from '@/app/editCompanyContacts/editContactUtils';
-import { Buyer, Manufacturer } from '@/app/types';
+import { Buyer, Manufacturer, FileData } from '@/app/types';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from "@/lib/firebaseClient";
 import styles from './shareFile.module.css';
@@ -10,7 +10,7 @@ import { departmentCollectionsMap } from '../departmentCollectionsMap';
 
 type ShareFileModalProps = {
     companyId: string;
-    documentId: string;
+    filesToShare: FileData[]; // Accept an array of files
     departmentId: string;
     isOpen: boolean;
     onClose: () => void;
@@ -18,12 +18,12 @@ type ShareFileModalProps = {
 
 const ShareFileModal: React.FC<ShareFileModalProps> = ({
     companyId,
-    documentId,
+    filesToShare,
     departmentId,
     isOpen,
     onClose,
 }) => {
-    const [selectedCollectionType, setSelectedCollectionType] = useState<
+    const [selectedCollectionType, setSelectedCollectionType] = useState< 
         'Departments' | 'Buyers' | 'Manufacturers' | ''
     >('');
     const [destinationId, setDestinationId] = useState('');
@@ -58,7 +58,7 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
 
     const fetchCollections = (departmentId: string): string[] => {
         return departmentCollectionsMap[departmentId] || []; // Return an empty array if no collections are defined
-    };     
+    };
 
     useEffect(() => {
         if (selectedCollectionType === 'Departments' && destinationId) {
@@ -67,7 +67,7 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
         } else {
             setCollections([]);
         }
-    }, [selectedCollectionType, destinationId]);    
+    }, [selectedCollectionType, destinationId]);
 
     const handleMoveOrCopy = async () => {
         if (!selectedCollectionType || !destinationId || (selectedCollectionType === 'Departments' && !selectedCollectionName)) {
@@ -76,28 +76,30 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
         }
 
         try {
-            await moveDocument(
-                {
-                    collectionType: 'Departments',
-                    companyId,
-                    departmentId,
-                },
-                {
-                    collectionType: selectedCollectionType,
-                    companyId,
-                    departmentId: selectedCollectionType === 'Departments' ? destinationId : undefined,
-                    buyerId: selectedCollectionType === 'Buyers' ? destinationId : undefined,
-                    manufacturerId: selectedCollectionType === 'Manufacturers' ? destinationId : undefined,
-                    collectionName: selectedCollectionType === 'Departments' ? selectedCollectionName : undefined,
-                },
-                documentId,
-                isCopy,
-            );
-            alert(`File ${isCopy ? 'copied' : 'moved'} successfully!`);
+            for (const file of filesToShare) {
+                await moveDocument(
+                    {
+                        collectionType: 'Departments',
+                        companyId,
+                        departmentId,
+                    },
+                    {
+                        collectionType: selectedCollectionType,
+                        companyId,
+                        departmentId: selectedCollectionType === 'Departments' ? destinationId : undefined,
+                        buyerId: selectedCollectionType === 'Buyers' ? destinationId : undefined,
+                        manufacturerId: selectedCollectionType === 'Manufacturers' ? destinationId : undefined,
+                        collectionName: selectedCollectionType === 'Departments' ? selectedCollectionName : undefined,
+                    },
+                    file.id,
+                    isCopy,
+                );
+            }
+            alert(`Files ${isCopy ? 'copied' : 'moved'} successfully!`);
             onClose();
         } catch (error) {
-            console.error('Error moving/copying file:', error);
-            alert('Failed to move/copy file.');
+            console.error('Error moving/copying files:', error);
+            alert('Failed to move/copy some files.');
         }
     };
 
@@ -108,7 +110,10 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
                     <MdClose />
                 </button>
                 <div className={styles.modalContent}>
-                    <h2>Share File</h2>
+                    <h2>Share Files</h2>
+                    <p>
+                        {filesToShare.length} file{filesToShare.length > 1 ? 's' : ''} selected for sharing.
+                    </p>
                     <label>Choose Destination Type:</label>
                     <select
                         value={selectedCollectionType}
@@ -178,7 +183,7 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
                     </label>
 
                     <button className={`${styles.modal} ${styles.shareButton}`} onClick={handleMoveOrCopy}>
-                        {isCopy ? 'Copy' : 'Move'} File
+                        {isCopy ? 'Copy' : 'Move'} Files
                     </button>
                 </div>
             </div>

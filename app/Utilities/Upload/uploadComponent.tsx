@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { uploadFileToStorage, updateFirestore } from './uploadUtils';
 import './uploadComponent.css';
-import { UploadComponentProps } from '../../types';
+import { FirestorePath, UploadComponentProps } from '../../types';
 
 
 const UploadComponent: React.FC<UploadComponentProps> = ({ companyId, departmentId, departmentName, collections, onUploadSuccess }) => {
@@ -34,11 +34,11 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ companyId, department
       const storagePath = `Company/Departments/${departmentName}/${file.name}`;
       try {
         const downloadURL = await uploadFileToStorage(file, storagePath);
-        const firestorePath = {
+        const firestorePath: FirestorePath = {
           collectionType: 'Departments' as const,
           companyId: companyId,
           departmentId: departmentId,
-          customCollectionName: selectedCollection,
+          collectionName: selectedCollection,
         };
   
         await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
