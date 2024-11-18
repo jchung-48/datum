@@ -116,7 +116,12 @@ const qaDepartment = () => {
           <div className={styles.fileSection}>
             <div className={styles.fileTitle}>Inbox</div>
             <div className={styles.fileBox}>
-              <FileList collectionPath={inboxFilesPath} title='' refreshTrigger={fileListUpdated} />
+              <FileList
+                collectionPath={inboxFilesPath}
+                title=''
+                refreshTrigger={fileListUpdated}
+                enableShare={true}
+              />
             </div>
           </div>
         </div>

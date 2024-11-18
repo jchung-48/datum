@@ -135,6 +135,7 @@ const LogisticsDepartment: React.FC = () => {
                 onFileSelect={handleFileSelect}
                 horizontal
                 refreshTrigger={fileListUpdated}
+                enableShare={true}
           />
           <div className={styles.fileTitle}>Customs Files</div>
           <FileList 
@@ -143,6 +144,7 @@ const LogisticsDepartment: React.FC = () => {
                 onFileSelect={handleFileSelect}
                 horizontal
                 refreshTrigger={fileListUpdated}
+                enableShare={true}
           />
           <div className={styles.fileTitle}>Financial Files</div>
           <FileList 
@@ -151,6 +153,7 @@ const LogisticsDepartment: React.FC = () => {
                 onFileSelect={handleFileSelect}
                 horizontal
                 refreshTrigger={fileListUpdated}
+                enableShare={true}
           />
         </div>
 
