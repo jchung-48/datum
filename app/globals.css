@@ -20,6 +20,7 @@ body {
   overflow-x: hidden;
 }
 
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -33,6 +34,42 @@ body {
   padding: 0;
   margin: 0;
 }
+
+html {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: #e3e3e3;
+  background-image: 
+      linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+      linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+body.home-page {
+  background-color: #e3e3e3;
+  background-image: 
+      linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
+      linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+      linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+  background-size: 100% 100%, 50px 50px, 50px 50px;
+}
+
+select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  height: 30px;
+  padding-left: 7px;
+  background-color: #727779;
+  border-radius: 9px;
+  outline: none;
+  font-family: "Darker Grotesque Med";
+}
+
 
 a {
   color: inherit;

@@ -71,9 +71,6 @@ export default function Home() {
         <Link className={styles.faqButton} href="/faq">
           <div style={{ marginBottom: '20px' }}>FAQ</div>
         </Link>
-        <Link className={styles.aiButton} href="/pdfSummary">
-          <div style={{ marginBottom: '20px' }}>AI Summarizer</div>
-        </Link>
       </div>
     </div>
   );
