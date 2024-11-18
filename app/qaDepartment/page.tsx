@@ -1,8 +1,9 @@
 "use client"; // Mark as a Client Component
 
+import '../globals.css'
 import React, { useState } from 'react';
 import Link from 'next/link';
-import './styles.modules.css';
+import styles from './styles.module.css';
 import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
@@ -76,21 +77,20 @@ const qaDepartment = () => {
   ] as [string, ...string[]];
 
   return (
-    <div className="body">
-      <div className="header">
+    <div className={styles.body}>
+      <div className={styles.header}>
         <Link href="/home">
-          <div className="home">
-            <LuCloudLightning className="cloud-icon"/>
+          <div className={styles.home}>
+            <LuCloudLightning className={styles.cloudIcon}/>
             DATUM
           </div>
         </Link>
         <Link href="/profile">
-          <FaUserCircle className="profile" />
+          <FaUserCircle className={styles.profile} />
         </Link>
       </div>
       <div>
-        <div className="department">Quality Assurance</div>
-        {/* File upload section */}
+        <div className={styles.department}>Quality Assurance</div>
         <UploadComponent
               companyId={COMPANYID}
               departmentId={DEPARTMENTID}
@@ -100,9 +100,9 @@ const qaDepartment = () => {
         <SearchBar paths= {['Eq2IDInbEQB5nI5Ar6Vj','ti7yNByDOzarVXoujOog/records']}/>
       </div>
 
-      <div className="files">
-        <div className="file-section">
-          <div className="file-title">
+      <div className={styles.files}>
+        <div className={styles.fileSection}>
+          <div className={styles.fileTitle}>
             Department
             <button 
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
@@ -110,7 +110,7 @@ const qaDepartment = () => {
               Toggle to {viewMode === 'grid' ? 'List' : 'Grid'} View
             </button>
           </div>
-          <div className="file-box">
+          <div className={styles.fileBox}>
             <FileList 
               collectionPath={deptFilesPath} 
               title='' 
@@ -119,9 +119,9 @@ const qaDepartment = () => {
             />
           </div>
         </div>
-        <div className="file-section">
-          <div className="file-title">Inbox</div>
-          <div className="file-box">
+        <div className={styles.fileSection}>
+          <div className={styles.fileTitle}>Inbox</div>
+          <div className={styles.fileBox}>
             <FileList collectionPath={inboxFilesPath} title='' refreshTrigger={fileListUpdated}/>
           </div>
         </div>

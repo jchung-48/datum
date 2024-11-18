@@ -1,21 +1,8 @@
-html {
-    height: 100%;
-    margin: 0;
-}
-
 @font-face {
     font-family: 'Darker Grotesque';
     src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype'); /* Corrected format */
     font-weight: 800; /* Assuming ExtraBold is around 800 */
     font-style: normal;
-}
-
-body {
-    background-color: #e3e3e3;
-    background-image: 
-        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
-        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
-    background-size: 50px 50px;
 }
 
 .header {
@@ -37,7 +24,7 @@ body {
     font-size: 42px;
 }
 
-.cloud-icon {
+.cloudIcon {
     margin-right: 12px;
     height: 35px;
     width: 35px;
@@ -74,11 +61,11 @@ body {
     margin-top: 20px;
 }
 
-.file-section {
+.fileSection {
     flex: 1;
 }
 
-.file-title {
+.fileTitle {
     font-family: "Darker Grotesque";
     font-size: 35px;
     font-weight: bold;
@@ -87,12 +74,12 @@ body {
     text-align: center;
 }
 
-.file-items {
+.fileItems {
     display: flex; /* Use flexbox for layout */
     flex-direction: column; /* Stack files vertically */
 }
 
-.file-item {
+.fileItem {
     display: flex;
     align-items: center;
     background-color: #EBEBEB;
@@ -104,7 +91,7 @@ body {
     padding-left: 2%;
 }
 
-.file-box {
+.fileBox {
     padding: 10px;
     overflow-y: auto;
 }
