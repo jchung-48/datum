@@ -5,7 +5,6 @@
     
     --main-font-size: var(--default-font-size);
     --light-font-weight: 400;
-    padding-left: 10px;
   }
 
   .fileItemsHorizontal {
@@ -229,8 +228,6 @@
     text-align: center;
   }
   
-
-
   .search {
     font-size: var(--main-font-size);
     background-color: #e0e0e0;
@@ -261,15 +258,15 @@
     color: white;
     cursor: pointer;
   }
+
+  .deleteButtonTop:hover {
+    background-color: #cf301e;
+  }
   
   .deleteButtonTop:disabled {
     background-color: #ccc;
     color: #666;
     cursor: not-allowed;
-  }
-
-  .deleteButtonTop:hover {
-    background-color: #cf301e;
   }
 
   .shareButton {

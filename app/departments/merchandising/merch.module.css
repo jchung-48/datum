@@ -52,6 +52,8 @@
   .contactCard .contactDetails {
     font-size: 0.95rem;
     color: #555;
+    font-family: "Darker Grotesque";
+    font-size: var(--default-font-size);
   }
 
   /* Modal overlay */
