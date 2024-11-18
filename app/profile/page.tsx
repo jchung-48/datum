@@ -4,8 +4,6 @@ import { getEmployeeProfile, getUserDepartmentsNew, resetPassword, sendVerificat
 import { auth } from "../../lib/firebaseClient.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { updateDoc, doc } from "firebase/firestore";
-import { db } from "../../lib/firebaseClient.js";
 import './style.css';
 import Link from "next/link";
 import { logoutUser } from '../authentication';
