@@ -2,37 +2,40 @@ body {
     background-color: #e3e3e3;
     font-family: "Darker Grotesque", sans-serif;
     margin: 0;
+    font-size: 18px; /* Increase the base font size */
 }
 
 .profile-container {
-    padding: 20px;
+    padding: 30px; /* Increase padding for a more spacious layout */
     background: linear-gradient(10deg, #627D9F 20%, #1F3C53 74%);
     border-radius: 10px;
     color: #ffffff;
-    max-width: 800px;
-    margin: 40px auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1000px; /* Increase the max-width */
+    margin: 60px auto; /* Increase margin for more spacing */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Make shadow slightly larger */
 }
 
 h1, h2, h3 {
     color: #ffffff;
     font-weight: 800;
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* Increase margin */
+    font-size: 2.2em; /* Larger font size for headings */
 }
 
 ul {
     list-style: none;
     padding: 0;
-    margin: 10px 0;
+    margin: 15px 0; /* Increase margin for spacing */
 }
 
 li {
     background-color: #ffffff;
     color: #1F3C53;
-    padding: 10px;
+    padding: 15px; /* Increase padding for items */
     border-radius: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 10px; /* Increase margin */
     font-weight: 600;
+    font-size: 1.1em; /* Larger font size */
 }
 
 button {
@@ -41,10 +44,11 @@ button {
     color: #ffffff;
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 12px 24px; /* Increase padding for larger buttons */
+    font-size: 1.1em; /* Increase font size */
     cursor: pointer;
-    margin-right: 10px;
-    margin-top: 15px;
+    margin-right: 15px; /* Increase margin */
+    margin-top: 20px; /* Increase margin */
 }
 
 button:hover {

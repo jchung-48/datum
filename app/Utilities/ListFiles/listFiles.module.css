@@ -1,13 +1,11 @@
-
-
 .fileList {
     width: 100%;
     overflow: hidden;
     position: relative;
+    
+    --main-font-size: 18px;
+    --light-font-weight: 400;
   }
-  
-
-
 
   .fileItemsHorizontal {
     display: flex;
@@ -18,108 +16,40 @@
     padding: 10px 40px; /* Add padding for the scroll button overlap */
     width: 100%;
   }
+
+  .fileItemsHorizontal p {
+    font-family: "Darker Grotesque";
+    font-size: var(--main-font-size);
+    color: var(--text-color-light);
+  }
   
   .fileItemsDefault {
     display: block;
     list-style-type: none;
     padding: 0;
   }
-  
-  .fileItem {
-    position: relative;
-    flex: 0 0 120px; /* Fixed width to maintain size */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    background-color: #333333;
-    border-radius: 8px;
-    padding: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.2s;
-  }
+
 
   .fileItem img {
     border-radius: 6px;
   }
-  
-  /* Selected file with blue background */
-  .fileItem.selected {
-    background-color: #8Ab9ee !important; /* Light blue */
-    position: relative;
-  }
+
 
   .fileBlock {
     padding: 10px;
-    font-size: 14px;
-    text-align: center;
-    color: #555;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-  }
-  
-  .fileItem a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100px;
-    margin-top: 6px;
-  }
-
-  .fileItem p {
-    margin: 0;
-    margin-top: 4px;
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: default;
-    vertical-align: text-bottom;
-  }
-
-  .fileBlock {
-    padding: 10px;
-    font-size: 14px;
+    font-size: var(--main-font-size);
     text-align: center;
     color: #555;
     border: 1px solid #e0e0e0;
     border-radius: 4px;
   }
 
-  /* Checkbox styling */
-  .fileCheckbox {
-    transform: scale(1.2);
-    cursor: pointer;
-  }
 
   .checkboxContainer {
     position: absolute;
     top: 6px;
     right: 6px;
     z-index: 1;
-  }
-  
-  .fileThumbnail {
-    width: 100px;
-    min-height: 100px;
-    max-height: fit-content;
-    border-radius: 4px;
-    object-fit: cover;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-  }
-
-  /* Checkbox styling */
-  .fileCheckboxThumbnail {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    transform: scale(1.2);
-    cursor: pointer;
   }
 
   /* ====================================
@@ -133,6 +63,7 @@
     margin-top: 5px;
     margin-left: 20px;
     margin-right: 20px;
+    color: var(--text-color-light);
   }
   
   .fileTable th, .fileTable td {
@@ -141,10 +72,15 @@
   }
   
   .fileTable th {
-    background-color: #333333;
+    background-color: var(--card-background-light);
     font-weight: bold;
     min-width: 100px;
     height: 45px;
+    font-size: 22px;
+  }
+
+  .fileTable th a {
+    cursor: pointer;
   }
 
   .sortable-header {
@@ -162,7 +98,7 @@
   }
 
   .fileRow {
-    background-color: #333333;
+    background-color: var(--card-background-light);
     overflow: hidden; /* Prevent content from spilling */
     display: table-row;
     transition: background-color 0.2s;
@@ -176,17 +112,20 @@
   }
   
   .fileRow:hover {
-    background-color: #616161;
+    background-color: var(--hover-color-light);
   }
 
   .fileRow.selected {
-    background-color: #8Ab9ee !important;
+    background-color: var(--selected-color) !important;
   }
 
   .fileCell {
     padding: 5px 5px; /* Padding within each cell */
     border: none; /* No borders between cells */
     display: table-cell;
+    font-size: var(--main-font-size);
+    font-family: "Darker Grotesque";
+    cursor: default;
   }
 
   .fileCell.checkbox {
@@ -203,7 +142,7 @@
   /* Inset file name box in table entry */
   .fileNameBox {
     padding: 6px 8px;
-    background-color: #333333;
+    /* background-color: var(--card-background-light); */
     border-radius: 4px;
     display: inline-block;
     cursor: pointer;
@@ -211,11 +150,11 @@
   }
 
   .fileNameBox:hover {
-    background-color: #717171;
-    border-color: #333333;
+    background-color: var(--file-card-selected-light);
+    border-color: var(--card-background-light);
   }
 
-  .fileNameBox.selected {
+  .fileNameBox.selected:hover {
     background-color: #8ba5b1;
   }
   
@@ -279,26 +218,10 @@
     background: linear-gradient(to right, transparent, var(--edge-fade-color,rgba(0, 0, 0, 0.9)));
   }
   
-
-
-
-  .deleteButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #e74c3c; /* Red color */
-    font-size: 1.2em;
-    padding: 0;
-    margin-left: 10px;
-    transition: color 0.2s ease;
-  }
-  
-  .deleteButton:hover {
-    color: #c0392b; /* Darker red on hover */
-  }
-  
   .trashIcon {
     pointer-events: none; /* Ensure the icon doesn't capture click events */
+    margin: auto;
+    display: block;
   }
   
   /* Adjustments for the table cell */
@@ -306,12 +229,40 @@
     text-align: center;
   }
   
-  .fileItem {
-    position: relative;
+
+
+  .search {
+    font-size: var(--main-font-size);
+    background-color: #e0e0e0;
+    font-family: "Darker Grotesque";
+  }
+
+  .fileGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 15px;
+    padding: 10px;
+  }
+
+  /* Delete Button */
+  .deleteButtonTop {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    font-size: var(--main-font-size);
+    font-family: "Darker Grotesque";
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
   }
   
-  .fileItem .deleteButton {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+  .deleteButtonTop.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
   }
+  
+  .deleteButtonTop.active {
+    background-color: #e74c3c; /* Red */
+    color: white;
+    cursor: pointer;
+  }  

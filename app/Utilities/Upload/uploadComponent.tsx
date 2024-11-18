@@ -1,6 +1,6 @@
 // UploadComponent.tsx
 import React, { useState, useRef, useEffect } from 'react';
-import { uploadFileToStorage, updateFirestore } from '../uploadUtils';
+import { uploadFileToStorage, updateFirestore } from './uploadUtils';
 import './uploadComponent.css';
 import { UploadComponentProps } from '../../types';
 

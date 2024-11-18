@@ -1,15 +1,24 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import './styles.css';
-import { FileList } from '../upload/listFiles';
-import { LuCloudLightning } from 'react-icons/lu';
-import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils';
-import { FaUserCircle } from 'react-icons/fa';
-import { fetchContacts } from '../editCompanyContacts/editContactUtils';
-import { Buyer, Manufacturer } from '../types';
-import  UploadComponent  from '../upload/Upload/uploadComponent';
+import {FileList} from '../Utilities/ListFiles/listFiles';
+import {LuCloudLightning} from 'react-icons/lu';
+import {FaUserCircle} from 'react-icons/fa';
+import { MdClose } from 'react-icons/md';
+import {
+  uploadFileToStorage,
+  updateFirestore,
+  moveDocument,
+} from '../Utilities/Upload/uploadUtils';
+
+import {fetchContacts} from '../editCompanyContacts/editContactUtils';
+import {Buyer, Manufacturer} from '../types';
+import UploadComponent from '../Utilities/Upload/uploadComponent';
+import AIButton from '../aiAddon/aiButton';
+import SearchBar from '../Utilities/SearchBar/searchBar';
+import ShareFileModal from '../Utilities/ShareFiles/shareFile';
 
 const MerchandisingDepartment = () => {
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
@@ -17,15 +26,35 @@ const MerchandisingDepartment = () => {
 
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-  const [selectedCollections, setSelectedCollections] = useState<string[]>(['files']);
+  const [selectedCollections, setSelectedCollections] = useState<string[]>([
+    'files',
+  ]);
   const [buyers, setBuyers] = useState<Buyer[]>([]);
   const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
-  const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
-  const [selectedContactType, setSelectedContactType] = useState<'Buyer' | 'Manufacturer' | null>(null);
+  const [selectedContactId, setSelectedContactId] = useState<string | null>(
+    null,
+  );
+  const [selectedContactType, setSelectedContactType] = useState<
+    'Buyer' | 'Manufacturer' | null
+  >(null);
   const [contactFile, setContactFile] = useState<File | null>(null);
-  const [contactUploadStatus, setContactUploadStatus] = useState<string | null>(null);
+  const [contactUploadStatus, setContactUploadStatus] = useState<string | null>(
+    null,
+  );
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [fileListUpdated, setFileListUpdated] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [selectedContactFilesPath, setSelectedContactFilesPath] = useState<
+    string[]
+  >([]);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [fileToShare, setFileToShare] = useState<string | null>(null);
+
+  const openShareModal = (fileId: string) => {
+    setFileToShare(fileId);
+    setIsShareModalOpen(true);
+  };
 
   // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,44 +73,47 @@ const MerchandisingDepartment = () => {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSelectedCollections(prevSelected =>
-      e.target.checked ? [...prevSelected, value] : prevSelected.filter(item => item !== value)
+      e.target.checked
+        ? [...prevSelected, value]
+        : prevSelected.filter(item => item !== value),
     );
   };
 
   const handleFileSelect = (fileId: string) => {
-    setSelectedFiles((prevSelected) => 
-      prevSelected.includes(fileId) 
-        ? prevSelected.filter(id => id !== fileId) 
-        : [...prevSelected, fileId]
+    setSelectedFiles(prevSelected =>
+      prevSelected.includes(fileId)
+        ? prevSelected.filter(id => id !== fileId)
+        : [...prevSelected, fileId],
     );
   };
-  
+
   const handleMoveToRecords = async () => {
     try {
       // Loop over each file in selectedFiles
       for (const fileId of selectedFiles) {
-        const storagePath = `Company/Departments/Merchandising/${fileId}`;
-  
-        // Move file data to 'records' collection
-        await updateFirestore(
-          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, customCollectionName: 'records' },
-          '', fileId, storagePath
-        );
-  
-        // Remove file from 'files' collection
-        await updateFirestore(
-          { collectionType: 'Departments', companyId: COMPANYID, departmentId: DEPARTMENTID, customCollectionName: 'files' },
-          '', fileId, storagePath
+        await moveDocument(
+          {
+            collectionType: 'Departments',
+            companyId: COMPANYID,
+            departmentId: DEPARTMENTID,
+          },
+          {
+            collectionType: 'Departments',
+            companyId: COMPANYID,
+            departmentId: DEPARTMENTID,
+            collectionName: 'records',
+          },
+          fileId,
         );
       }
-  
-      alert("Selected files moved to records successfully!");
+
+      alert('Selected files moved to records successfully!');
       setSelectedFiles([]); // Clear selected files
     } catch (error) {
-      console.error("Error moving files to records:", error);
-      alert("Failed to move files.");
+      console.error('Error moving files to records:', error);
+      alert('Failed to move files.');
     }
-  };  
+  };
 
   // Upload for department files
   const handleUpload = async () => {
@@ -106,10 +138,17 @@ const MerchandisingDepartment = () => {
           customCollectionName: collectionName,
         };
 
-        await updateFirestore(firestorePath, downloadURL, file.name, storagePath);
+        await updateFirestore(
+          firestorePath,
+          downloadURL,
+          file.name,
+          storagePath,
+        );
       }
 
-      setUploadStatus('File uploaded successfully to all selected collections!');
+      setUploadStatus(
+        'File uploaded successfully to all selected collections!',
+      );
       setFile(null);
       setSelectedCollections([]);
     } catch (error) {
@@ -122,11 +161,14 @@ const MerchandisingDepartment = () => {
     const loadBuyersAndManufacturers = async () => {
       try {
         const buyersList = await fetchContacts(COMPANYID, 'Buyer');
-        const manufacturersList = await fetchContacts(COMPANYID, 'Manufacturer');
+        const manufacturersList = await fetchContacts(
+          COMPANYID,
+          'Manufacturer',
+        );
         setBuyers(buyersList as Buyer[]);
         setManufacturers(manufacturersList as Manufacturer[]);
       } catch (error) {
-        console.error("Error fetching contacts:", error);
+        console.error('Error fetching contacts:', error);
       }
     };
 
@@ -149,22 +191,10 @@ const MerchandisingDepartment = () => {
     'records',
   ] as [string, ...string[]];
 
-  const selectedContactFilesPath =
-    selectedContactType && selectedContactId
-      ? [
-          'Company',
-          COMPANYID,
-          selectedContactType === 'Buyer' ? 'Buyers' : 'Manufacturers',
-          selectedContactId,
-          (selectedContactType === 'Buyer' ? 'Quotes' : 'Products'),
-        ]
-      : null;
-
-
   // Handle contact-specific file upload
   const handleContactFileUpload = async () => {
     if (!contactFile || !selectedContactId || !selectedContactType) {
-      alert("Please select a file and a contact before uploading.");
+      alert('Please select a file and a contact before uploading.');
       return;
     }
 
@@ -173,13 +203,27 @@ const MerchandisingDepartment = () => {
       const downloadURL = await uploadFileToStorage(contactFile, storagePath);
 
       const firestorePath = {
-        collectionType: selectedContactType === 'Buyer' ? 'Buyers' as const : selectedContactType === 'Manufacturer' ? 'Manufacturers' as const : 'Departments' as const,
+        collectionType:
+          selectedContactType === 'Buyer'
+            ? ('Buyers' as const)
+            : selectedContactType === 'Manufacturer'
+              ? ('Manufacturers' as const)
+              : ('Departments' as const),
         companyId: COMPANYID,
-        buyerId: selectedContactType === 'Buyer' ? selectedContactId : undefined,
-        manufacturerId: selectedContactType === 'Manufacturer' ? selectedContactId : undefined,
+        buyerId:
+          selectedContactType === 'Buyer' ? selectedContactId : undefined,
+        manufacturerId:
+          selectedContactType === 'Manufacturer'
+            ? selectedContactId
+            : undefined,
       };
 
-      await updateFirestore(firestorePath, downloadURL, contactFile.name, storagePath);
+      await updateFirestore(
+        firestorePath,
+        downloadURL,
+        contactFile.name,
+        storagePath,
+      );
 
       setContactUploadStatus('File uploaded successfully to contact!');
       setContactFile(null);
@@ -189,12 +233,28 @@ const MerchandisingDepartment = () => {
     }
   };
 
+  const handleCardClick = (
+    type: 'Buyer' | 'Manufacturer',
+    id: string,
+    name: string,
+  ) => {
+    setSelectedContactFilesPath([
+      'Company',
+      COMPANYID,
+      type === 'Buyer' ? 'Buyers' : 'Manufacturers',
+      id,
+      type === 'Buyer' ? 'Quotes' : 'Products',
+    ]);
+    setModalTitle(`${name} - ${type} Files`);
+    setShowModal(true);
+  };
+
   return (
     <div className="body">
       <div className="header">
         <Link href="/home">
           <div className="home">
-            <LuCloudLightning className="cloud-icon"/>
+            <LuCloudLightning className="cloud-icon" />
             DATUM
           </div>
         </Link>
@@ -203,15 +263,16 @@ const MerchandisingDepartment = () => {
         </Link>
       </div>
       <div>
-      <div className="department">Merchandising</div>
+        <div className="department">Merchandising</div>
         <UploadComponent
           companyId={COMPANYID}
           departmentId={DEPARTMENTID}
           departmentName="Merchandising"
           collections={['files']}
-          onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
+          onUploadSuccess={() => setFileListUpdated(prev => !prev)}
+        />
 
-
+        <SearchBar paths={['ti7yNByDOzarVXoujOog']} />
       </div>
 
       <div className="files">
@@ -219,102 +280,99 @@ const MerchandisingDepartment = () => {
         <FileList
           collectionPath={deptFilesPath}
           title=""
-          onSearch={() => {}}
           onFileSelect={handleFileSelect}
-          display = 'horizontal'
+          display="horizontal"
           refreshTrigger={fileListUpdated}
         />
-        {selectedFiles.length > 0 && (
-          <button className="move-button" onClick={handleMoveToRecords} style={{ marginTop: '10px' }}>
-            Move to Records
-          </button>
-        )}
-        <div className="record-title">
-          <FileList 
+        <button
+          className={`share-button ${selectedFiles.length === 0 ? "disabled" : ""}`}
+          onClick={() => openShareModal(selectedFiles[0])} // Open share modal for the first selected file
+          disabled={selectedFiles.length === 0} // Disable when no files are selected
+        >
+          Share
+        </button>
+        <ShareFileModal
+          companyId={COMPANYID}
+          documentId={fileToShare || ''}
+          departmentId={DEPARTMENTID}
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+        />
+        <div className="file-title">
+          <FileList
             collectionPath={deptRecordsPath}
             title="Records"
-            onSearch={() => {}}
-
-          refreshTrigger={fileListUpdated}
+            refreshTrigger={fileListUpdated}
           />
         </div>
       </div>
 
-      {/* Buyers List */}
-      <div className="contact-list">
-        <h2>Buyers</h2>
-        {buyers.length === 0 ? (
-          <p>No buyers found.</p>
-        ) : (
-          <ul>
-            {buyers.map((buyer) =>
-              buyer.id ? (
-                <li
-                  key={buyer.id}
-                  onClick={() => {
-                    setSelectedContactId(buyer.id ? buyer.id : null);
-                    setSelectedContactType('Buyer');
-                  }}
-                  style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-                >
-                  {buyer.name} - {buyer.email} - {buyer.phone}
-                </li>
-              ) : null
-            )}
-          </ul>
-        )}
-        <Link href="/editCompanyContacts/crudBuyer">
-            <button style={{ marginBottom: '20px' }}>Add/Edit Buyers</button>
-        </Link>
+      <div className="contact-lists-container">
+        {/* Buyers List */}
+        <div className="contact-list">
+          <h2>Buyers</h2>
+          {buyers.map(buyer =>
+            buyer.id ? (
+              <div
+                key={buyer.id}
+                className="contact-card"
+                onClick={() =>
+                  handleCardClick('Buyer', buyer.id ? buyer.id : '', buyer.name)
+                }
+              >
+                <div className="contact-name">{buyer.name}</div>
+                <div className="contact-details">{buyer.email}</div>
+                <div className="contact-details">{buyer.phone}</div>
+              </div>
+            ) : null,
+          )}
+        </div>
+
+        {/* Manufacturers List */}
+        <div className="contact-list">
+          <h2>Manufacturers</h2>
+          {manufacturers.map(manufacturer =>
+            manufacturer.id ? (
+              <div
+                key={manufacturer.id}
+                className="contact-card"
+                onClick={() =>
+                  handleCardClick(
+                    'Manufacturer',
+                    manufacturer.id ? manufacturer.id : '',
+                    manufacturer.name,
+                  )
+                }
+              >
+                <div className="contact-name">{manufacturer.name}</div>
+                <div className="contact-details">{manufacturer.email}</div>
+                <div className="contact-details">{manufacturer.phone}</div>
+              </div>
+            ) : null,
+          )}
+        </div>
       </div>
 
-      {/* Manufacturers List */}
-      <div className="contact-list">
-        <h2>Manufacturers</h2>
-        {manufacturers.length === 0 ? (
-          <p>No manufacturers found.</p>
-        ) : (
-          <ul>
-            {manufacturers.map((manufacturer) =>
-              manufacturer.id ? (
-                <li
-                  key={manufacturer.id}
-                  onClick={() => {
-                    setSelectedContactId(manufacturer.id ? manufacturer.id : null);
-                    setSelectedContactType('Manufacturer');
-                  }}
-                  style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}
-                >
-                  {manufacturer.name} - {manufacturer.email} - {manufacturer.phone}
-                </li>
-              ) : null
-            )}
-          </ul>
-        )}
-        <Link href="/editCompanyContacts/crudManufacturer">
-          <button style={{ marginBottom: '20px' }}>Add/Edit Manufacturers</button>
-        </Link>
-      </div>
-
-      {/* Files for Selected Contact */}
-      {selectedContactFilesPath && (
-        <div className="files">
-          <FileList
-            collectionPath={selectedContactFilesPath as [string, ...string[]]}
-            title={`${selectedContactType} Files`}
-            onSearch={() => {}}
-
-            refreshTrigger={fileListUpdated}
-          />
-
-          {/* File upload for selected contact */}
-          <div style={{ marginTop: '20px' }}>
-            <input type="file" onChange={handleContactFileChange} />
-            <button onClick={handleContactFileUpload}>Upload File to {selectedContactType}</button>
-            {contactUploadStatus && <p>{contactUploadStatus}</p>}
+      {/* File List Modal */}
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <button
+              className="close-button"
+              onClick={() => setShowModal(false)}
+            >
+              <MdClose />
+            </button>
+            {/* <h2>{modalTitle}</h2> */}
+            <FileList
+              collectionPath={selectedContactFilesPath as [string, ...string[]]}
+              title={modalTitle}
+              display="grid"
+            />
           </div>
         </div>
       )}
+      <AIButton paths={['ti7yNByDOzarVXoujOog']} />
     </div>
   );
 };
