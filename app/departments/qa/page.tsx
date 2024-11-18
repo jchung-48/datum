@@ -2,20 +2,23 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import './styles.css';
-import { FileList } from '../Utilities/ListFiles/listFiles'; // Adjust the path accordingly
+import deptStyles from '../departments.module.css';
+import qaStyles from './qa.module.css';
+import { FileList } from '@/app/Utilities/ListFiles/listFiles'; // Adjust the path accordingly
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import { uploadFileToStorage, updateFirestore } from '../Utilities/Upload/uploadUtils'; // Import the utility function
-import UploadComponent from '../Utilities/Upload/uploadComponent'; // Import the UploadComponent
-import AIButton from "../aiAddon/aiButton";
-import SearchBar from "../Utilities/SearchBar/searchBar";
+import { uploadFileToStorage, updateFirestore } from '@/app/Utilities/Upload/uploadUtils'; // Import the utility function
+import UploadComponent from '@/app/Utilities/Upload/uploadComponent'; // Import the UploadComponent
+import AIButton from "@/app/aiAddon/aiButton";
+import SearchBar from "@/app/Utilities/SearchBar/searchBar";
+import '@/app/globals.css';
 
 const qaDepartment = () => {
+  const styles = { ...deptStyles, ...qaStyles };
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; // Update to the QA department ID
-  const MANUDEPTID = 'ti7yNByDOzarVXoujOog' 
+  const MANUDEPTID = 'ti7yNByDOzarVXoujOog';
 
   // States for uploading files
   const [file, setFile] = useState<File | null>(null);
@@ -75,45 +78,50 @@ const qaDepartment = () => {
   ] as [string, ...string[]];
 
   return (
-    <div className="body">
-      <div className="header">
+    <div className={styles.page}>
+      <div className={styles.header}>
         <Link href="/home">
-          <div className="home">
-            <LuCloudLightning className="cloud-icon"/>
+          <div className={styles.home}>
+            <LuCloudLightning className="cloudIcon" />
             DATUM
           </div>
         </Link>
-        <Link href="/profile">
-          <FaUserCircle className="profile" />
-        </Link>
+        <div className={styles.department}>Quality Assurance</div>
+        <div className={styles.profile}>
+          <Link href="/profile">
+            <FaUserCircle className={styles.profileIcon}/>
+          </Link>
+        </div>
       </div>
-      <div>
-        <div className="department">Quality Assurance</div>
-        {/* File upload section */}
-        <UploadComponent
-              companyId={COMPANYID}
-              departmentId={DEPARTMENTID}
-              departmentName="QualityAssurance"
-              collections={['files']}
-              onUploadSuccess={() => setFileListUpdated(!fileListUpdated)}/>
-        <SearchBar paths= {['Eq2IDInbEQB5nI5Ar6Vj','ti7yNByDOzarVXoujOog/records']}/>
-      </div>
+      <div className={styles.body}>
+        <div className={styles.topComponentContainer}>
+          {/* File upload section */}
+          <UploadComponent
+            companyId={COMPANYID}
+            departmentId={DEPARTMENTID}
+            departmentName="QualityAssurance"
+            collections={['files']}
+            onUploadSuccess={() => setFileListUpdated(!fileListUpdated)}
+          />
+          <SearchBar paths={['Eq2IDInbEQB5nI5Ar6Vj', 'ti7yNByDOzarVXoujOog/records']} />
+        </div>
 
-      <div className="files">
-        <div className="file-section">
-          <div className="file-title">Department</div>
-          <div className="file-box">
-            <FileList collectionPath={deptFilesPath} title='' display='grid' refreshTrigger={fileListUpdated}/>
+        <div className={styles.files}>
+          <div className={styles.fileSection}>
+            <div className={styles.fileTitle}>Department</div>
+            <div className={styles.fileBox}>
+              <FileList collectionPath={deptFilesPath} title='' display='grid' refreshTrigger={fileListUpdated} />
+            </div>
+          </div>
+          <div className={styles.fileSection}>
+            <div className={styles.fileTitle}>Inbox</div>
+            <div className={styles.fileBox}>
+              <FileList collectionPath={inboxFilesPath} title='' refreshTrigger={fileListUpdated} />
+            </div>
           </div>
         </div>
-        <div className="file-section">
-          <div className="file-title">Inbox</div>
-          <div className="file-box">
-            <FileList collectionPath={inboxFilesPath} title='' refreshTrigger={fileListUpdated}/>
-          </div>
-        </div>
+        <AIButton paths={['Eq2IDInbEQB5nI5Ar6Vj', 'ti7yNByDOzarVXoujOog/records']} />
       </div>
-      <AIButton paths={['Eq2IDInbEQB5nI5Ar6Vj','ti7yNByDOzarVXoujOog/records']}/>
     </div>
   );
 };

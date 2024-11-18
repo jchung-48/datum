@@ -37,10 +37,10 @@
   font-family: 'Darker Grotesque';
   font-weight: 800;
   font-size: 45px;
+  gap: 12px;
 }
 
 .cloudIcon {
-  margin-right: 12px;
   height: 35px;
   width: 35px;
 }
@@ -77,4 +77,16 @@
   left: 50%;
   max-width: 600px;
   height: 30px;
+}
+
+.file {
+  display: flex;
+}
+
+.fileTitle {
+  font-family: "Darker Grotesque";
+  font-size: var(--heading-font-size);
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #1F3C53;
 }
