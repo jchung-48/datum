@@ -1,0 +1,108 @@
+/* Modal overlay for background dimming */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Main modal styling */
+  .modal {
+    --main-font-size: 18px;
+    background-color: #e3e3e3;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 400px;
+    padding: 20px 25px;
+    position: relative;
+    font-family: "Darker Grotesque";
+    font-size: var(--main-font-size);
+    color: var(--text-color-light);
+  }
+
+  .modal h2 {
+    font-family: "Darker Grotesque";
+    font-size: 28px;
+    font-weight: bold;
+    color: #1F3C53;
+  }
+  
+  /* Modal content organization */
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  /* Modal title
+  .modal h2 {
+    font-size: 1.25em;
+    color: #3d4d63;
+    margin: 0 0 15px;
+  } */
+  
+  /* Dropdown label and styling */
+  .modal label {
+    font-size: 1.1em;
+    color: var(--text-color-light);
+    margin-bottom: 5px;
+  }
+  
+  .modal select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #cdd4df;
+    font-size: 0.9em;
+    background-color: #f7f9fc;
+    color: #3d4d63;
+  }
+  
+  /* Checkbox and action toggle */
+  .modal input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .modal .checkbox-label {
+    font-size: 0.9em;
+    color: #627d9f;
+  }
+
+  /* Close button in modal */
+  .modal .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+    z-index: 1;
+  }
+  
+  .modal .closeButton:hover {
+    color: #333;
+  }
+  
+  .modal .shareButton {
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+  }
+  
+  .modal .shareButton:hover {
+    background-color: #429944;
+  }
+  

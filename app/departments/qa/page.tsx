@@ -3,16 +3,19 @@
 import '../globals.css'
 import React, { useState } from 'react';
 import Link from 'next/link';
-import styles from './styles.module.css';
-import { FileList } from '../upload/listFiles'; // Adjust the path accordingly
+import deptStyles from '../departments.module.css';
+import qaStyles from './qa.module.css';
+import { FileList } from '@/app/Utilities/ListFiles/listFiles'; // Adjust the path accordingly
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import { uploadFileToStorage, updateFirestore } from '../upload/uploadUtils'; // Import the utility function
-import UploadComponent from '../upload/Upload/uploadComponent'; // Import the UploadComponent
-import AIButton from "../aiAddon/aiButton";
-import SearchBar from "../upload/SearchBar/searchBar";
+import { uploadFileToStorage, updateFirestore } from '@/app/Utilities/Upload/uploadUtils'; // Import the utility function
+import UploadComponent from '@/app/Utilities/Upload/uploadComponent'; // Import the UploadComponent
+import AIButton from "@/app/aiAddon/aiButton";
+import SearchBar from "@/app/Utilities/SearchBar/searchBar";
+import '@/app/globals.css';
 
 const qaDepartment = () => {
+  const styles = { ...deptStyles, ...qaStyles };
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj'; // Update to the QA department ID
@@ -77,56 +80,55 @@ const qaDepartment = () => {
   ] as [string, ...string[]];
 
   return (
-    <div className={styles.body}>
+    <div className={styles.page}>
       <div className={styles.header}>
         <Link href="/home">
           <div className={styles.home}>
-            <LuCloudLightning className={styles.cloudIcon}/>
+            <LuCloudLightning className="cloudIcon" />
             DATUM
           </div>
         </Link>
-        <Link href="/profile">
-          <FaUserCircle className={styles.profile} />
-        </Link>
-      </div>
-      <div>
         <div className={styles.department}>Quality Assurance</div>
-        <UploadComponent
-              companyId={COMPANYID}
-              departmentId={DEPARTMENTID}
-              departmentName="QualityAssurance"
-              collections={['files']}
-              onUploadSuccess={() => setFileListUpdated(!fileListUpdated)}/>
-        <SearchBar paths= {['Eq2IDInbEQB5nI5Ar6Vj','ti7yNByDOzarVXoujOog/records']}/>
+        <div className={styles.profile}>
+          <Link href="/profile">
+            <FaUserCircle className={styles.profileIcon}/>
+          </Link>
+        </div>
       </div>
+      <div className={styles.body}>
+        <div className={styles.topComponentContainer}>
+          {/* File upload section */}
+          <UploadComponent
+            companyId={COMPANYID}
+            departmentId={DEPARTMENTID}
+            departmentName="QualityAssurance"
+            collections={['files']}
+            onUploadSuccess={() => setFileListUpdated(!fileListUpdated)}
+          />
+          <SearchBar paths={['Eq2IDInbEQB5nI5Ar6Vj', 'ti7yNByDOzarVXoujOog/records']} />
+        </div>
 
-      <div className={styles.files}>
-        <div className={styles.fileSection}>
-          <div className={styles.fileTitle}>
-            Department
-            <button 
-              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              className="view-toggle">
-              Toggle to {viewMode === 'grid' ? 'List' : 'Grid'} View
-            </button>
+        <div className={styles.files}>
+          <div className={styles.fileSection}>
+            <div className={styles.fileTitle}>Department</div>
+            <div className={styles.fileBox}>
+              <FileList collectionPath={deptFilesPath} title='' display='grid' refreshTrigger={fileListUpdated} />
+            </div>
           </div>
-          <div className={styles.fileBox}>
-            <FileList 
-              collectionPath={deptFilesPath} 
-              title='' 
-              display={viewMode} 
-              refreshTrigger={fileListUpdated} 
-            />
-          </div>
-        </div>
-        <div className={styles.fileSection}>
-          <div className={styles.fileTitle}>Inbox</div>
-          <div className={styles.fileBox}>
-            <FileList collectionPath={inboxFilesPath} title='' refreshTrigger={fileListUpdated}/>
+          <div className={styles.fileSection}>
+            <div className={styles.fileTitle}>Inbox</div>
+            <div className={styles.fileBox}>
+              <FileList
+                collectionPath={inboxFilesPath}
+                title=''
+                refreshTrigger={fileListUpdated}
+                enableShare={true}
+              />
+            </div>
           </div>
         </div>
+        <AIButton paths={['Eq2IDInbEQB5nI5Ar6Vj', 'ti7yNByDOzarVXoujOog/records']} />
       </div>
-      <AIButton paths={['Eq2IDInbEQB5nI5Ar6Vj','ti7yNByDOzarVXoujOog/records']}/>
     </div>
   );
 };

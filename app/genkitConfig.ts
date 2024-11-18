@@ -7,7 +7,8 @@ import {
 // Import other necessary plugins if any
 
 // Optionally, use environment variables for sensitive configurations
-const ollamaServerAddress = 'http://127.0.0.1:11434';
+//const ollamaServerAddress = 'http://127.0.0.1:11434';
+const ollamaServerAddress = 'http://ryan.familyking.org:25315'
 
 
 
@@ -21,7 +22,7 @@ configureGenkit({
         // The address of your Ollama API server. This is often a different host
         // from your app backend (which runs Genkit), in order to run Ollama on
         // a GPU-accelerated machine.
-        serverAddress: 'http://127.0.0.1:11434',
+        serverAddress: ollamaServerAddress,
       }),
       vertexAI(),
        // the local vector store requires an embedder to translate from text to vector

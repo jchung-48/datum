@@ -37,21 +37,21 @@ export default function Home() {
         <div className={styles.home}>
           <LuCloudLightning className={styles.cloudIcon}/>
         </div>
-        <Link href="/qaDepartment">
-          <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Quality Assurance</div>
-        </Link>
-        <Link href="/hrDepartment">
-          <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Human Resources</div>
-        </Link>
-        <Link href="/logisticsDepartment">
-          <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Logistics</div>
-        </Link>
-        <Link href="/merchandisingDepartment">
-          <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Merchandising</div>
-        </Link>
-        <Link className={styles.userContainer} href="/createUser">
-          <div className={styles.createUser} style={{ marginBottom: '20px' }}>Create Employee</div>
-        </Link>
+          <Link href="/departments/qa">
+            <div className="top-buttons" style={{ marginBottom: '20px' }}>Quality Assurance</div>
+          </Link>
+          <Link href="/departments/hr">
+            <div className="top-buttons" style={{ marginBottom: '20px' }}>Human Resources</div>
+          </Link>
+          <Link href="/departments/logistics">
+            <div className="top-buttons" style={{ marginBottom: '20px' }}>Logistics</div>
+          </Link>
+          <Link href="/departments/merchandising">
+            <div className="top-buttons" style={{ marginBottom: '20px' }}>Merchandising</div>
+          </Link>
+          <Link className="user-container" href="/createUser">
+            <div className="create-user"style={{ marginBottom: '20px' }}>Create Employee</div>
+          </Link>
 
         {isSignedIn && (
           <button onClick={handleSignOut} style={{ marginTop: '20px' }}>

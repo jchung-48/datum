@@ -3,21 +3,9 @@
     overflow: hidden;
     position: relative;
     
-    --main-font-size: 18px;
+    --main-font-size: var(--default-font-size);
     --light-font-weight: 400;
-
-    /* Colors */
-    --card-background-light: #c2c1c1;
-    --hover-color-light: #a3a3a3;
-    --file-card-selected-light: #858585;
-    --text-color-light: #333333;
-
-    --selected-color: #8Ab9ee;
-    
-    --card-background-dark: #333333;
-    --hover-color-dark: #616161;
-    --file-card-selected-dark: #717171;
-    --text-color-dark: #f5f5f5;
+    padding-left: 10px;
   }
 
   .fileItemsHorizontal {
@@ -29,38 +17,24 @@
     padding: 10px 40px; /* Add padding for the scroll button overlap */
     width: 100%;
   }
+
+  .fileItemsHorizontal p {
+    font-family: "Darker Grotesque";
+    font-size: var(--main-font-size);
+    color: var(--text-color-light);
+  }
   
   .fileItemsDefault {
     display: block;
     list-style-type: none;
     padding: 0;
   }
-  
-  .fileItem {
-    position: relative;
-    flex: 0 0 120px; /* Fixed width to maintain size */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    background-color: var(--card-background-light);
-    border-radius: 8px;
-    padding: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.2s;
-    font-family: "Darker Grotesque";
-  }
+
 
   .fileItem img {
     border-radius: 6px;
   }
-  
-  /* Selected file with blue background */
-  .fileItem.selected {
-    background-color: var(--selected-color) !important; /* Light blue */
-    position: relative;
-  }
+
 
   .fileBlock {
     padding: 10px;
@@ -71,49 +45,12 @@
     border-radius: 4px;
   }
 
-  .fileItem p {
-    margin: 0;
-    margin-top: 4px;
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: default;
-    vertical-align: text-bottom;
-    font-size: var(--main-font-size);
-    color: var(--text-color-light);
-  }
-
-  /* Checkbox styling */
-  .fileCheckbox {
-    transform: scale(1.2);
-    cursor: pointer;
-  }
 
   .checkboxContainer {
     position: absolute;
     top: 6px;
     right: 6px;
     z-index: 1;
-  }
-  
-  .fileThumbnail {
-    width: 100px;
-    min-height: 100px;
-    max-height: fit-content;
-    border-radius: 4px;
-    object-fit: cover;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-  }
-
-  /* Checkbox styling */
-  .fileCheckboxThumbnail {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    transform: scale(1.2);
-    cursor: pointer;
   }
 
   /* ====================================
@@ -143,6 +80,10 @@
     font-size: 22px;
   }
 
+  .fileTable th a {
+    cursor: pointer;
+  }
+
   .sortable-header {
     display: flex;
     align-items: center;
@@ -166,11 +107,6 @@
     position: relative;
   }
   
-  .fileCell:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-  
   .fileRow:hover {
     background-color: var(--hover-color-light);
   }
@@ -188,10 +124,14 @@
     cursor: default;
   }
 
-  .fileCell.checkbox {
+  .fileCell:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    width: 10px; /* Adjust as needed */
+  }
+  
+  .fileCell:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
   }
   
   /* .userDisplayName,
@@ -277,24 +217,11 @@
     right: 0;
     background: linear-gradient(to right, transparent, var(--edge-fade-color,rgba(0, 0, 0, 0.9)));
   }
-
-  .deleteButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #e74c3c; /* Red color */
-    font-size: 1.2em;
-    padding: 0;
-    margin-left: 10px;
-    transition: color 0.2s ease;
-  }
-  
-  .deleteButton:hover {
-    color: #c0392b; /* Darker red on hover */
-  }
   
   .trashIcon {
     pointer-events: none; /* Ensure the icon doesn't capture click events */
+    margin: auto;
+    display: block;
   }
   
   /* Adjustments for the table cell */
@@ -302,16 +229,13 @@
     text-align: center;
   }
   
-  .fileItem .deleteButton {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-  }
+
 
   .search {
     font-size: var(--main-font-size);
     background-color: #e0e0e0;
     font-family: "Darker Grotesque";
+    padding: 10px 16px;
   }
 
   .fileGrid {
@@ -319,4 +243,57 @@
     grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
     gap: 15px;
     padding: 10px;
+  }
+
+  .topButtons {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    align-items: center; /* Vertically center the buttons */
+  }
+
+  /* Delete Button */
+  .deleteButtonTop {
+    padding: 8px 12px 8px 12px;
+    font-size: 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #e74c3c; /* Red */
+    color: white;
+    cursor: pointer;
+  }
+  
+  .deleteButtonTop:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+
+  .deleteButtonTop:hover {
+    background-color: #cf301e;
+  }
+
+  .shareButton {
+    background-color: var(--button-blue); /* Primary color */
+    color: var(--text-color-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5%;
+    font-family: "Darker Grotesque";
+    font-weight: 800;
+    font-size: 20px;
+    height: 40px;
+    width: 100px;
+    border-radius: 25px;
+    /* Other button styles here */
+  }
+
+  .shareButton:hover {
+    background-color: var(--button-blue-hover);
+  }
+  
+  .shareButton:disabled {
+    background-color: #ccc; /* Gray for inactive state */
+    color: #666;
+    cursor: not-allowed;
   }
