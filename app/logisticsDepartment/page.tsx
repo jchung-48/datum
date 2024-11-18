@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { FileList } from '../Utilities/ListFiles/listFiles';
 import { uploadFileToStorage, updateFirestore } from '../Utilities/Upload/uploadUtils';
-import './styles.css';
+import styles from './logistics.module.css';
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
 import AIButton from "../aiAddon/aiButton";
@@ -95,22 +95,22 @@ const LogisticsDepartment: React.FC = () => {
   ] as [string, ...string[]];
 
   return (
-    <div className="body">
-      <div className="header">
+    <div className={styles.body}>
+      <div className={styles.header}>
         <Link href="/home">
-          <div className="home">
-            <LuCloudLightning className="cloud-icon"/>
+          <div className={styles.home}>
+            <LuCloudLightning className={styles['cloud-icon']}/>
             DATUM
           </div>
         </Link>
+        <div className={styles.department}>Logistics</div>
         <Link href="/profile">
-          <FaUserCircle className="profile" />
+          <FaUserCircle className={styles.profile} />
         </Link>
       </div>
 
-      <div className="department">Logistics</div>
 
-      <div className="upload-search-container">
+      <div className={styles['upload-search-container']}>
 
         <UploadComponent 
               companyId={COMPANYID} 
@@ -120,16 +120,16 @@ const LogisticsDepartment: React.FC = () => {
               onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
 
 
-        <div className="search">
-        <SearchBar 
-                paths={["KZm56fUOuTobsTRCfknJ"]} 
-        />
+        <div className={styles.search}>
+          <SearchBar 
+                  paths={["KZm56fUOuTobsTRCfknJ"]} 
+          />
         </div>
       </div>
       
 
-      <div className="files">
-      <div className="file-title">Transportation Files</div>
+      <div className={styles.files}>
+        <div className={styles['file-title']}>Transportation Files</div>
         <FileList 
               collectionPath={transportationFilesPath} 
               title="" 
@@ -138,7 +138,7 @@ const LogisticsDepartment: React.FC = () => {
               horizontal
               refreshTrigger={fileListUpdated}
         />
-        <div className="file-title">Customs Files</div>
+        <div className={styles['file-title']}>Customs Files</div>
         <FileList 
               collectionPath={customsFilesPath} 
               title="" 
@@ -147,7 +147,7 @@ const LogisticsDepartment: React.FC = () => {
               horizontal
               refreshTrigger={fileListUpdated}
         />
-        <div className="file-title">Financial Files</div>
+        <div className={styles['file-title']}>Financial Files</div>
         <FileList 
               collectionPath={financialFilesPath} 
               title="" 
@@ -157,7 +157,7 @@ const LogisticsDepartment: React.FC = () => {
               refreshTrigger={fileListUpdated}
         />
       </div>
-      <div className="ai-features">
+      <div className={styles['ai-features']}>
         <AIButton paths={['KZm56fUOuTobsTRCfknJ']}/>
       </div>
     </div>

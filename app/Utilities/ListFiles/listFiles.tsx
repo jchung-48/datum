@@ -456,7 +456,6 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
         <table className={styles.fileTable}>
           <thead>
             <tr>
-              <th></th> {/* Checkbox column */}
               <th>
                 <a
                   className="sortable-header"
@@ -528,13 +527,6 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                     }
                   }}
                 >
-                  <td className={`${styles.fileCell} ${styles.checkbox}`}>
-                    <input
-                      type="checkbox"
-                      onChange={() => handleFileSelect(file.id)}
-                      checked={selectedFiles.has(file.id)}
-                    />
-                  </td>
                   <td className={styles.fileCell}>
                     <div
                       className={`${styles.fileNameBox} ${

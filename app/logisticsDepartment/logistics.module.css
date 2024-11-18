@@ -1,0 +1,112 @@
+@font-face {
+    font-family: 'Darker Grotesque';
+    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+.header {
+    display: flex;
+    position: relative;
+    align-items: center;
+    background: #1F3C53;
+    justify-content: space-between;
+    height: 66px;
+    padding-left: 2%;
+    padding-right: 2%;
+    margin-bottom: 1%;
+}
+
+.home {
+    display: flex;
+    align-items: center;
+    font-family: "Darker Grotesque";
+    font-weight: 800;
+    font-size: 45px;
+    color: white;
+}
+
+.cloud-icon {
+    margin-right: 12px;
+    height: 35px;
+    width: 35px;
+}
+
+.department {
+    position: absolute; /* Position absolutely within .header */
+    left: 50%;          /* Move to the horizontal center */
+    transform: translateX(-50%); /* Adjust position to truly center */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically center the text if necessary */
+    font-family: "Darker Grotesque";
+    font-weight: 800;
+    font-size: 40px;
+    color: white;
+}
+
+.profile {
+    display: flex;
+    justify-content: right;
+    height: 25px;
+    width: 25px;
+    color: white;
+}
+
+.upload-button {
+    font-weight: 800;
+    background-color: #627D9F;
+    border: none;
+    height: 25px;
+    width: 75px;
+    color: #ffffff;
+}
+
+.upload-button:hover {
+    background-color: #4b617b;
+}
+
+.files {
+    margin-top: 20px;
+    font-family: "Darker Grotesque";
+}
+
+.file-title {
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1F3C53;
+    padding-left: 10px;
+}
+
+.upload-search-container {
+    position: relative; /* Needed for absolute positioning of SearchBar */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the start (left) */
+    padding: 20px; /* Optional: Add padding for spacing */
+  }
+
+.uploadButton {
+    /* Existing styles */
+    padding: 10px 20px;
+    background-color: #627D9F;
+    border: none;
+    border-radius: 4px;
+    color: #ffffff;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+  
+.uploadButton:hover {
+    background-color: #4b617b;
+}
+
+.search {
+    position: absolute; /* Position absolutely within the container */
+    left: 50%;          /* Move to the horizontal center */
+    transform: translateX(-50%); /* Adjust to center */
+    width: 100%;         /* Optional: Set a width for the search bar */
+    max-width: 400px;   /* Optional: Maximum width */
+}
