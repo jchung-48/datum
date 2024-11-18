@@ -8,6 +8,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebaseClient.js";
 import './style.css';
 import Link from "next/link";
+import { logoutUser } from '../authentication';
 
 export default function ProfilePage() {
     const [employeeData, setEmployeeData] = useState<EmployeeData | null>(null);
@@ -19,6 +20,7 @@ export default function ProfilePage() {
     const [verificationId, setVerificationId] = useState("");
     const router = useRouter();
     const [errorMessage, setErrorMessage] = useState("");
+    const [isSignedIn, setIsSignedIn] = useState(false);
 
     type EmployeeData = {
         name: string;
@@ -30,6 +32,18 @@ export default function ProfilePage() {
         departments?: string[];
     };
 
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(async user => {
+          setIsSignedIn(Boolean(user));
+        });
+        return () => unsubscribe();
+      }, []);
+    
+      const handleSignOut = async () => {
+        await logoutUser();
+        router.push("/workplaces");
+      }
+      
     useEffect(() => {
         if (errorMessage) {
           const timer = setTimeout(() => {
@@ -108,6 +122,12 @@ export default function ProfilePage() {
             <Link href="/home">
             <button>Back to Home</button>
             </Link>
+
+            {isSignedIn && (
+          <button onClick={handleSignOut} style={{ marginTop: '20px' }}>
+            Sign Out
+          </button>
+        )}
             
             <div>
       <h1>Update Phone Number</h1>
