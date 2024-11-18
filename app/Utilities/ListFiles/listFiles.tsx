@@ -45,7 +45,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [fileToShare, setFileToShare] = useState<FileData | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -370,6 +370,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
               className={styles.shareButton}
               onClick={openShareModal}
               disabled={selectedFiles.size === 0}
+              ref = {buttonRef}
             >
               Share
             </button>
@@ -383,6 +384,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
               departmentId={collectionPath[3] || ""}
               isOpen={isShareModalOpen}
               onClose={() => setIsShareModalOpen(false)}
+              buttonRef={buttonRef}
             />
           </>
         )}
@@ -456,7 +458,6 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
         <table className={styles.fileTable}>
           <thead>
             <tr>
-              <th></th> {/* Checkbox column */}
               <th>
                 <a
                   className="sortable-header"
@@ -528,13 +529,6 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                     }
                   }}
                 >
-                  <td className={`${styles.fileCell} ${styles.checkbox}`}>
-                    <input
-                      type="checkbox"
-                      onChange={() => handleFileSelect(file.id)}
-                      checked={selectedFiles.has(file.id)}
-                    />
-                  </td>
                   <td className={styles.fileCell}>
                     <div
                       className={`${styles.fileNameBox} ${

@@ -1,11 +1,11 @@
 /* Modal overlay for background dimming */
-.modal-overlay {
+.modalOverlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +15,7 @@
   /* Main modal styling */
   .modal {
     --main-font-size: 18px;
-    background-color: var(--background-color-light);
+    background-color: #e3e3e3;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     width: 90%;

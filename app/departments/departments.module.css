@@ -1,0 +1,80 @@
+@font-face {
+  font-family: 'Darker Grotesque';
+  src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype'); /* Corrected format */
+  font-weight: 800; /* Assuming ExtraBold is around 800 */
+  font-style: normal;
+}
+
+.body {
+  background-color: #e3e3e3;
+  background-image: linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
+    linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+    linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    50px 50px,
+    50px 50px;
+  --heading-font-size: 35px;
+  padding: 20px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* Create 3 columns: 1st and 3rd for spacing, middle for centering */
+  align-items: center; /* Vertically center the items in each grid cell */
+  width: 100%; /* Ensure the header spans the full width of the page */
+  align-items: center;
+  background: linear-gradient(to right, #627d9f 10%, #1f3c53 100%);
+  justify-content: space-between;
+  height: 70px;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.home {
+  display: flex;
+  align-items: center;
+  font-family: 'Darker Grotesque';
+  font-weight: 800;
+  font-size: 45px;
+}
+
+.cloudIcon {
+  margin-right: 12px;
+  height: 35px;
+  width: 35px;
+}
+
+.department {
+  text-align: center;
+  font-family: 'Darker Grotesque';
+  font-weight: 800;
+  font-size: 40px;
+  color: var(--text-color-dark); /* Light color to contrast with the gradient */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Adds shadow for depth */
+}
+
+.profile {
+  justify-self: end;
+}
+
+.profileIcon {
+  height: 25px;
+  width: 25px;
+}
+
+.topComponentContainer {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  justify-content: center; 
+  align-items: center; 
+  gap: 20px;
+  width: 100%;
+}
+
+.topComponentContainer .search {
+  justify-self: center;
+  left: 50%;
+  max-width: 600px;
+  height: 30px;
+}

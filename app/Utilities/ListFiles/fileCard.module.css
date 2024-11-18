@@ -15,6 +15,10 @@
     font-family: "Darker Grotesque";
   }
 
+  .fileItem:hover {
+    background-color: var(--hover-color-light);
+  }
+
   .fileItem p {
     margin: 0;
     margin-top: 4px;

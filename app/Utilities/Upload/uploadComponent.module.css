@@ -1,0 +1,70 @@
+/* uploadComponentStyles.css */
+
+.uploadContainer {
+  position: relative;
+  display: inline-block;
+  padding-left: 5%;
+}
+
+.pillUploadButton {
+  padding: 10px 20px;
+  border-radius: 50px;
+  background-color: var(--button-blue); /* Match modal button color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: "Darker Grotesque";
+  font-size: 20px; /* Adjust font size */
+}
+
+.pillUploadButton:hover {
+  background-color: var(--button-blue-hover); /* Darker hover effect */
+}
+
+/* New class to hide the button visually but keep its space */
+.hiddenButton {
+  visibility: hidden; /* Hides the button but keeps the space occupied */
+}
+
+.uploadCard {
+  position: absolute;
+  top: 0; /* Adjust as needed to position over the button */
+  left: 0;
+  margin-top: 0;
+  padding: 20px 25px; /* Add more padding for consistency with modal */
+  background-color: #e3e3e3; /* Match modal background color */
+  border: 1px solid #cdd4df; /* Lighter border */
+  border-radius: 8px;
+  width: 300px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Same shadow effect as modal */
+  font-family: "Darker Grotesque", sans-serif; /* Match modal font */
+  font-size: var(--default-font-size); /* Adjust font size for consistency */
+  color: #3d4d63; /* Dark text color */
+}
+
+/* Apply consistent styling for form elements inside the upload card */
+.uploadCard input[type="file"],
+.uploadCard select,
+.uploadCard button {
+  background-color: #f7f9fc; /* Lighter background */
+  color: #3d4d63; /* Dark text */
+  padding: 8px 16px;
+  border: 1px solid #cdd4df; /* Light border for inputs */
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  width: 100%; /* Full-width inputs */
+  font-size: 0.9em;
+}
+
+.uploadCard button {
+  background-color: #4caf50; /* Match modal button color */
+  color: white;
+  font-size: 1em;
+}
+
+.uploadCard button:hover {
+  background-color: #429944; /* Darker hover effect */
+}

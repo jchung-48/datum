@@ -29,16 +29,16 @@ export default function Home() {
         <div className="home">
           <LuCloudLightning className="cloud-icon"/>
         </div>
-          <Link href="/qaDepartment">
+          <Link href="/departments/qa">
             <div className="top-buttons" style={{ marginBottom: '20px' }}>Quality Assurance</div>
           </Link>
-          <Link href="/hrDepartment">
+          <Link href="/departments/hr">
             <div className="top-buttons" style={{ marginBottom: '20px' }}>Human Resources</div>
           </Link>
-          <Link href="/logisticsDepartment">
+          <Link href="/departments/logistics">
             <div className="top-buttons" style={{ marginBottom: '20px' }}>Logistics</div>
           </Link>
-          <Link href="/merchandisingDepartment">
+          <Link href="/departments/merchandising">
             <div className="top-buttons" style={{ marginBottom: '20px' }}>Merchandising</div>
           </Link>
           <Link className="user-container" href="/createUser">
