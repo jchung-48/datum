@@ -253,10 +253,8 @@
 
   /* Delete Button */
   .deleteButtonTop {
-    margin-bottom: 10px;
     padding: 8px 12px 8px 12px;
-    font-size: var(--main-font-size);
-    font-family: "Darker Grotesque";
+    font-size: 20px;
     border: none;
     border-radius: 4px;
     background-color: #e74c3c; /* Red */
