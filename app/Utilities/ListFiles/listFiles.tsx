@@ -6,7 +6,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {collection, getDocs, Timestamp} from 'firebase/firestore';
 import {getDownloadURL, ref} from 'firebase/storage';
 import {db, storage, auth} from '@/lib/firebaseClient';
-import {FileData, FileListProps} from '../../types';
+import {FileData, FileListProps, FirestorePath} from '../../types';
 import {handleFileDelete} from '../Upload/uploadUtils';
 import * as pdfjsLib from 'pdfjs-dist';
 import styles from './listFiles.module.css';
@@ -14,6 +14,7 @@ import {onAuthStateChanged} from 'firebase/auth';
 import {s} from '@genkit-ai/core/lib/action-CnIb9v86';
 import {MdDelete} from 'react-icons/md';
 import FileCard from './fileCard';
+import ShareFileModal from '../ShareFiles/shareFile';
 
 import { F } from '@genkit-ai/flow/lib/flow-DR52DKjZ';
 
@@ -27,6 +28,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   onFileSelect,
   display = 'list' as const,
   refreshTrigger,
+  enableShare = false
 }) => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
@@ -42,6 +44,8 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -271,103 +275,120 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
     if (onFileSelect) onFileSelect(fileId);
   };
 
-  const handleDelete = async (file: FileData) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${file.fileName}?`,
-    );
-    if (!confirmDelete) return;
+  const handleDelete = async (fileId?: string) => {
+    const deletableFiles = fileId ? [fileId] :
+      Array.from(selectedFiles).filter(id =>
+        files.find(
+          file => file.id === id && file.uploadedBy === currentUserUid,
+        ),
+      );
 
-    try {
-      await handleFileDelete(file.filePath, {
-        collectionType: 'Departments',
-        companyId: collectionPath[1],
-        departmentId: collectionPath[3],
-        collectionName: collectionPath[4],
-      });
-
-      // After deletion, refresh the file list
-      setFiles(prevFiles => prevFiles.filter(f => f.id !== file.id));
-      setFilteredFiles(prevFiles => prevFiles.filter(f => f.id !== file.id));
-    } catch (error) {
-      console.error('Error deleting file:', error);
-      alert('Failed to delete the file.');
+    const firestorePath: FirestorePath = {
+      collectionType: 
+        collectionPath[2] == "Buyers" ? "Buyers" :
+        collectionPath[2] == "Manufacturers" ? "Manufacturers":
+        "Departments",
+      companyId: collectionPath[1],
+      departmentId: collectionPath[2] == "Departments" ? collectionPath[3] : undefined,
+      buyerId: collectionPath[2] == "Buyers" ? collectionPath[3] : undefined,
+      manufacturerId: collectionPath[2] == "Manufacturers" ? collectionPath[3] : undefined,
+      collectionName: collectionPath[4]
     }
+
+    if (deletableFiles.length > 0) {
+      const confirmDelete = window.confirm(
+        `Are you sure you want to delete ${deletableFiles.length} file(s)?`,
+      );
+
+      if (confirmDelete) {
+        try {
+          for (const id of deletableFiles) {
+            const file = files.find(file => file.id === id);
+            if (file) {
+              console.log(firestorePath);
+              await handleFileDelete(file.filePath, firestorePath);
+
+              setFiles(prevFiles =>
+                prevFiles.filter(f => f.id !== file.id),
+              );
+              setFilteredFiles(prevFiles =>
+                prevFiles.filter(f => f.id !== file.id),
+              );
+              setSelectedFiles(prevSelected => {
+                const newSelected = new Set(prevSelected);
+                newSelected.delete(id);
+                return newSelected;
+              });
+            }
+          }
+          alert('Files deleted successfully.');
+        } catch (error) {
+          console.error('Error deleting files:', error);
+          alert('Failed to delete some files.');
+        }
+      }
+    }
+
   };
+
+  const openShareModal = () => {
+    if (selectedFiles.size === 0) {
+      alert("No files selected for sharing.");
+      return;
+    }
+    setIsShareModalOpen(true);
+  };  
 
   return (
     <div className={styles.fileList}>
       <h2>{title}</h2>
 
-      {/* Top Delete Button */}
-      <button
-        className={`${styles.deleteButtonTop} ${
-          selectedFiles.size > 0 &&
-          Array.from(selectedFiles).every(id =>
-            files.find(
-              file => file.id === id && file.uploadedBy === currentUserUid,
-            ),
-          )
-            ? styles.active
-            : styles.disabled
-        }`}
-        onClick={async () => {
-          const deletableFiles = Array.from(selectedFiles).filter(id =>
-            files.find(
-              file => file.id === id && file.uploadedBy === currentUserUid,
-            ),
-          );
-
-          if (deletableFiles.length > 0) {
-            const confirmDelete = window.confirm(
-              `Are you sure you want to delete ${deletableFiles.length} file(s)?`,
-            );
-
-            if (confirmDelete) {
-              try {
-                for (const id of deletableFiles) {
-                  const file = files.find(file => file.id === id);
-                  if (file) {
-                    await handleFileDelete(file.filePath, {
-                      collectionType: 'Departments',
-                      companyId: collectionPath[1],
-                      departmentId: collectionPath[3],
-                      collectionName: collectionPath[4],
-                    });
-
-                    setFiles(prevFiles =>
-                      prevFiles.filter(f => f.id !== file.id),
-                    );
-                    setFilteredFiles(prevFiles =>
-                      prevFiles.filter(f => f.id !== file.id),
-                    );
-                    setSelectedFiles(prevSelected => {
-                      const newSelected = new Set(prevSelected);
-                      newSelected.delete(id);
-                      return newSelected;
-                    });
-                  }
-                }
-                alert('Files deleted successfully.');
-              } catch (error) {
-                console.error('Error deleting files:', error);
-                alert('Failed to delete some files.');
-              }
-            }
-          }
-        }}
-        disabled={
-          !(
-            selectedFiles.size > 0 &&
-            Array.from(selectedFiles).every(id =>
-              files.find(
-                file => file.id === id && file.uploadedBy === currentUserUid,
-              ),
+      <div className={styles.topButtons}>
+        {/* Top Delete Button */}
+        <button
+          className={styles.deleteButtonTop}
+          onClick={async () => {
+            handleDelete();
+          }}
+          disabled={
+            !(
+              selectedFiles.size > 0 &&
+              Array.from(selectedFiles).every(id =>
+                files.find(
+                  file => file.id === id && file.uploadedBy === currentUserUid,
+                ),
+              )
             )
-          )
-        }
-      >
-        <MdDelete /> Delete Selected Files   
-      </button>
+          }
+        >
+          <MdDelete />
+        </button>
+
+        {enableShare && (
+          <>
+            <button
+              className={styles.shareButton}
+              onClick={openShareModal}
+              disabled={selectedFiles.size === 0}
+              ref = {buttonRef}
+            >
+              Share
+            </button>
+            <ShareFileModal
+              companyId={collectionPath[1]}
+              filesToShare={
+                Array.from(selectedFiles)
+                .map(fileId => files.find(file => file.id === fileId))
+                .filter(Boolean) as FileData[]
+              } // Pass the selected files as an array
+              departmentId={collectionPath[3] || ""}
+              isOpen={isShareModalOpen}
+              onClose={() => setIsShareModalOpen(false)}
+              buttonRef={buttonRef}
+            />
+          </>
+        )}
+      </div>
 
       {onSearch && (
         <input
@@ -437,7 +458,6 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
         <table className={styles.fileTable}>
           <thead>
             <tr>
-              <th></th> {/* Checkbox column */}
               <th>
                 <a
                   className="sortable-header"
@@ -509,13 +529,6 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                     }
                   }}
                 >
-                  <td className={`${styles.fileCell} ${styles.checkbox}`}>
-                    <input
-                      type="checkbox"
-                      onChange={() => handleFileSelect(file.id)}
-                      checked={selectedFiles.has(file.id)}
-                    />
-                  </td>
                   <td className={styles.fileCell}>
                     <div
                       className={`${styles.fileNameBox} ${
@@ -547,7 +560,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                         className={styles.deleteButton}
                         onClick={e => {
                           e.stopPropagation();
-                          handleDelete(file);
+                          handleDelete(file.id);
                         }}
                       >
                         <span className="trashIcon">

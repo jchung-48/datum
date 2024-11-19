@@ -4,6 +4,7 @@ import { ref, uploadBytesResumable, getDownloadURL, deleteObject, uploadBytes } 
 import { doc, setDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { storage, db, auth } from "@/lib/firebaseClient";
 import { createTypeReferenceDirectiveResolutionCache } from "typescript";
+import { FirestorePath } from "@/app/types";
 // import { FirestorePath} from 'app/types/uploadTypes';
 
 // Function to upload file to Firebase Storage and return the download URL
@@ -65,14 +66,7 @@ export const uploadFileToStorage = async (
 
 // Function to update Firestore based on the uploaded file
 export const updateFirestore = async (
-  firestorePath: {
-    collectionType: "Departments" | "Buyers" | "Manufacturers";
-    companyId: string;
-    departmentId?: string;
-    customCollectionName?: string; // Custom collection name
-    buyerId?: string;
-    manufacturerId?: string;
-  },
+  firestorePath: FirestorePath,
   downloadURL: string,
   fileName: string,
   storagePath: string
@@ -81,9 +75,9 @@ export const updateFirestore = async (
     collectionType,
     companyId,
     departmentId,
-    customCollectionName,
     buyerId,
     manufacturerId,
+    collectionName,
   } = firestorePath;
 
   const user = auth.currentUser;
@@ -95,14 +89,13 @@ export const updateFirestore = async (
 
   if (collectionType === "Departments" && departmentId) {
     // Use custom collection name if provided, otherwise default to "files"
-    const collectionName = customCollectionName ? customCollectionName : "files";
     const filesDocRef = doc(
       db,
       "Company",
       companyId,
       "Departments",
       departmentId,
-      collectionName,
+      collectionName ? collectionName : "files",
       fileName
     );
     await setDoc(filesDocRef, {
@@ -164,14 +157,7 @@ export const updateFirestore = async (
 // Function to delete a file from Firebase Storage and Firestore
 export const handleFileDelete = async (
   fileFullPath: string,
-  firestorePath: {
-    collectionType: "Departments" | "Buyers" | "Manufacturers";
-    companyId: string;
-    departmentId?: string;
-    collectionName?: string;
-    buyerId?: string;
-    manufacturerId?: string;
-  }
+  firestorePath: FirestorePath
 ): Promise<void> => {
   try {
     // Delete the file from Firebase Storage
@@ -259,22 +245,8 @@ const getFirestoreRef = (
 };
 
 export const moveDocument = async (
-  sourcePath: {
-    collectionType: "Departments" | "Buyers" | "Manufacturers";
-    companyId: string;
-    departmentId?: string;
-    buyerId?: string;
-    manufacturerId?: string;
-    collectionName?: string;
-  },
-  destinationPath: {
-    collectionType: "Departments" | "Buyers" | "Manufacturers";
-    companyId: string;
-    departmentId?: string;
-    buyerId?: string;
-    manufacturerId?: string;
-    collectionName?: string;
-  },
+  sourcePath: FirestorePath,
+  destinationPath: FirestorePath,
   documentId: string,
   copy = false // default to moving the file
 ): Promise<void> => {
