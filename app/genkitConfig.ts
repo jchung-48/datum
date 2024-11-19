@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import { configureGenkit } from '@genkit-ai/core';
 import { ollama } from 'genkitx-ollama';
 import { textEmbeddingGecko, vertexAI } from '@genkit-ai/vertexai';
@@ -5,12 +6,14 @@ import {
     devLocalVectorstore,
   } from '@genkit-ai/dev-local-vectorstore';
 // Import other necessary plugins if any
-
+dotenv.config(); // config environment variables
 // Optionally, use environment variables for sensitive configurations
 //const ollamaServerAddress = 'http://127.0.0.1:11434';
-const ollamaServerAddress = 'http://ryan.familyking.org:11434'
 
-
+const ollamaServerAddress = process.env.OLLAMA_SERVER_ADDRESS;
+if (!ollamaServerAddress) {
+  throw new Error("Missing Ollama server address");
+}
 
 configureGenkit({
     plugins: [
