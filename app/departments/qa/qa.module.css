@@ -1,0 +1,41 @@
+.fileUpload {
+    font-family: "Darker Grotesque";
+    font-weight: 400;
+    color: black;
+    padding-left: 4%;
+}
+
+.files {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.fileItems {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack files vertically */
+}
+
+.fileItem {
+    display: flex;
+    align-items: center;
+    background-color: #EBEBEB;
+    border: 2px solid #ffffff;
+    font-family: "Darker Grotesque";
+    font-size: 15px;
+    color: #000000;
+    height: 35px;
+    padding-left: 2%;
+}
+
+.fileBox {
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.fileSection {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex: 1;
+}

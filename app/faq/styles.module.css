@@ -1,0 +1,112 @@
+@font-face {
+    font-family: 'Darker Grotesque';
+    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Darker Grotesque Med';
+    src: url('../fonts/DarkerGrotesque-Medium.ttf') format('truetype');
+    font-style: normal;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height to center content */
+}
+
+.home {
+    position: absolute; 
+    top: 10px;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    font-family: "Darker Grotesque";
+    color: #1F3C53;
+    font-weight: 800;
+    font-size: 42px;
+}
+
+.home:hover, .searchButton:hover {
+    color: #627D9F;
+}
+
+.cloudIcon {
+    margin-right: 12px;
+    height: 35px;
+    width: 35px;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    padding-top: 2%;
+    font-family: "Darker Grotesque";
+    color: #1F3C53;
+    font-weight: 800;
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.role {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1%;
+}
+
+.roleTitle {
+    font-family: "Darker Grotesque Med";
+    color: #1F3C53;
+    font-weight: 800;
+    font-size: 30px;
+    padding-right: 2%;
+    margin-left: 3%;
+}
+
+.roleSelect {
+    margin-top: 6px;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    margin-top: 3%;
+}
+
+.searchButton {
+    font-family: "Darker Grotesque Med";
+    font-size: 25px;
+    background-color: #1F3C53;
+    width: 120px;
+    height: 50px;
+    border-radius: 13px;
+    margin-bottom: 3%
+}
+
+.searchButton:hover {
+    background-color: #627D9F;
+    color: #ffffff;
+}
+
+.prompt {
+    color: #000000;
+    font-family: "Darker Grotesque Med";
+    font-weight: 400;
+    font-size: 30px;
+    margin-bottom: 3%;
+    margin-left: 2%;
+}
+
+.response {
+    display: flex;
+    font-family: "Darker Grotesque Med";
+    font-size: 25px;
+    color: #1F3C53;
+    background-color: #e3e3e3;
+    padding-left: 2%;
+    margin-top: 5%;
+    border-radius: 5px;
+}
