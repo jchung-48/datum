@@ -369,7 +369,16 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
             <button
               className={styles.shareButton}
               onClick={openShareModal}
-              disabled={selectedFiles.size === 0}
+              disabled={
+                !(
+                  selectedFiles.size > 0 &&
+                  Array.from(selectedFiles).every(id =>
+                    files.find(
+                      file => file.id === id && file.uploadedBy === currentUserUid,
+                    ),
+                  )
+                )
+              }
               ref = {buttonRef}
             >
               Share

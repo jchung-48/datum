@@ -112,7 +112,12 @@ const qaDepartment = () => {
           <div className={styles.fileSection}>
             <div className={styles.fileTitle}>Department</div>
             <div className={styles.fileBox}>
-              <FileList collectionPath={deptFilesPath} title='' display='grid' refreshTrigger={fileListUpdated} />
+              <FileList
+                collectionPath={deptFilesPath}
+                title='' display='grid'
+                refreshTrigger={fileListUpdated}
+                enableShare={true}
+              />
             </div>
           </div>
           <div className={styles.fileSection}>
@@ -122,7 +127,6 @@ const qaDepartment = () => {
                 collectionPath={inboxFilesPath}
                 title=''
                 refreshTrigger={fileListUpdated}
-                enableShare={true}
               />
             </div>
           </div>
