@@ -8,7 +8,7 @@ import {
 
 // Optionally, use environment variables for sensitive configurations
 //const ollamaServerAddress = 'http://127.0.0.1:11434';
-const ollamaServerAddress = 'http://ryan.familyking.org:25315'
+const ollamaServerAddress = 'http://ryan.familyking.org:11434'
 
 
 
