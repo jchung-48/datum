@@ -118,7 +118,7 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     };
 
     return isOpen ? (
-        <div className={styles.modalOverlay} onClick={onClose}>
+        <div className={styles.modalOverlay}>
             <div
                 className={styles.modal}
                 style={{
