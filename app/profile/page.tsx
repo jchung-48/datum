@@ -9,6 +9,9 @@ import { db } from "../../lib/firebaseClient.js";
 import './style.modules.css';
 import Link from "next/link";
 import { logoutUser } from '../authentication';
+import { LuCloudLightning } from 'react-icons/lu';
+import deptStyles from '../departments/departments.module.css';
+import logStyles from '../departments/logistics/logistics.module.css';
 
 export default function ProfilePage() {
     const [employeeData, setEmployeeData] = useState<EmployeeData | null>(null);
@@ -21,7 +24,7 @@ export default function ProfilePage() {
     const router = useRouter();
     const [errorMessage, setErrorMessage] = useState("");
     const [isSignedIn, setIsSignedIn] = useState(false);
-
+    const styles = { ...deptStyles, ...logStyles };
     type EmployeeData = {
         name: string;
         companyName: string;
@@ -100,46 +103,62 @@ export default function ProfilePage() {
       };
       
     return (
-        <div className="profile-container">
-            <h1>{employeeData.name}</h1>
-            <h2>Employee at Datum since {employeeData.createdAt}</h2>
-            <h3>Additional Information:</h3>
-            <ul>
-                <li>Email: {employeeData.email}</li>
-                <li>Phone Number: {employeeData.phoneNumber}</li>
-                <li>Role: {employeeData.role}</li>
-            </ul>
-            <h3>Authorized Departments</h3>
-            {departments.length > 0 ? (
-                <ul>
-                    {departments.map((dept, index) => <li key={index}>{dept}</li>)}
-                </ul>
-            ) : (
-                <p>No departments assigned.</p>
-            )}
-            <button onClick={() => resetPassword(employeeData.email)}>Change Password</button>
-            
-            <Link href="/home">
-            <button>Back to Home</button>
-            </Link>
+        <div>
+  {/* Header */}
+  <div className={styles.header}>
+        <Link href="/home">
+          <div className={styles.home}>
+            <LuCloudLightning className="cloud-icon" />
+            DATUM
+          </div>
+        </Link>
+        </div>
+  
 
-            {isSignedIn && (
-          <button onClick={handleSignOut} style={{ marginTop: '20px' }}>
-            Sign Out
-          </button>
-        )}
-            
-            <div>
+  {/* Profile Content */}
+  <div className="profile-container">
+    <h1>{employeeData.name}</h1>
+    <h2>Employee at Datum since {employeeData.createdAt}</h2>
+    <h3>Additional Information:</h3>
+    <ul>
+      <li>Email: {employeeData.email}</li>
+      <li>Phone Number: {employeeData.phoneNumber}</li>
+      <li>Role: {employeeData.role}</li>
+    </ul>
+    <h3>Authorized Departments</h3>
+    {departments.length > 0 ? (
+      <ul>
+        {departments.map((dept, index) => (
+          <li key={index}>{dept}</li>
+        ))}
+      </ul>
+    ) : (
+      <p>No departments assigned.</p>
+    )}
+    <button onClick={() => resetPassword(employeeData.email)}>
+      Change Password
+    </button>
+
+    
+
+    {isSignedIn && (
+      <button onClick={handleSignOut} style={{ marginTop: "20px" }}>
+        Sign Out
+      </button>
+    )}
+
+    {/* Update Phone Number Section */}
+    <div>
       <h1>Update Phone Number</h1>
       <input
         type="text"
         placeholder="New Phone Number"
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
-        style={{ color: 'black' }}
+        style={{ color: "black" }}
       />
       <button onClick={handleVerificationCode}>Send Verification Code</button>
-      
+
       {verificationId && (
         <>
           <input
@@ -147,17 +166,25 @@ export default function ProfilePage() {
             placeholder="Enter verification code"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
-            style={{ color: 'black' }}
+            style={{ color: "black" }}
           />
-          <button onClick={() => verifyAndUpdatePhoneNumber(verificationCode,verificationId)}>Verify and Update</button>
+          <button
+            onClick={() =>
+              verifyAndUpdatePhoneNumber(verificationCode, verificationId)
+            }
+          >
+            Verify and Update
+          </button>
         </>
       )}
-      
+
       <div id="recaptcha-container"></div>
-      {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>}
+      {errorMessage && (
+        <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>
+      )}
     </div>
-            
-        </div>
-        
+  </div>
+</div>
+
     );
 }
