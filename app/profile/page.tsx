@@ -12,6 +12,7 @@ import { logoutUser } from '../authentication';
 import { LuCloudLightning } from 'react-icons/lu';
 import deptStyles from '../departments/departments.module.css';
 import logStyles from '../departments/logistics/logistics.module.css';
+import Header from '@/app/Utilities/Header/header';
 
 export default function ProfilePage() {
     const [employeeData, setEmployeeData] = useState<EmployeeData | null>(null);
@@ -105,14 +106,7 @@ export default function ProfilePage() {
     return (
         <div>
   {/* Header */}
-  <div className={styles.header}>
-        <Link href="/home">
-          <div className={styles.home}>
-            <LuCloudLightning className="cloud-icon" />
-            DATUM
-          </div>
-        </Link>
-        </div>
+  <Header isProfile={true} />
   
 
   {/* Profile Content */}
