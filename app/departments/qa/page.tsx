@@ -12,6 +12,7 @@ import { uploadFileToStorage, updateFirestore } from '@/app/Utilities/Upload/upl
 import UploadComponent from '@/app/Utilities/Upload/uploadComponent'; // Import the UploadComponent
 import AIButton from "@/app/aiAddon/aiButton";
 import SearchBar from "@/app/Utilities/SearchBar/searchBar";
+import Header from '@/app/Utilities/Header/header';
 import '@/app/globals.css';
 
 const qaDepartment = () => {
@@ -81,20 +82,7 @@ const qaDepartment = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <Link href="/home">
-          <div className={styles.home}>
-            <LuCloudLightning className="cloudIcon" />
-            DATUM
-          </div>
-        </Link>
-        <div className={styles.department}>Quality Assurance</div>
-        <div className={styles.profile}>
-          <Link href="/profile">
-            <FaUserCircle className={styles.profileIcon}/>
-          </Link>
-        </div>
-      </div>
+      <Header department="Quality Assurance" isProfile={false} />
       <div className={styles.body}>
         <div className={styles.topComponentContainer}>
           {/* File upload section */}

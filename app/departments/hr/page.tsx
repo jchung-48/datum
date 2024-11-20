@@ -8,6 +8,7 @@ import { uploadFileToStorage, updateFirestore } from '@/app/Utilities/Upload/upl
 import UploadComponent from '@/app/Utilities/Upload/uploadComponent';
 import AIButton from "@/app/aiAddon/aiButton";
 import SearchBar from "@/app/Utilities/SearchBar/searchBar";
+import Header from '@/app/Utilities/Header/header';
 
 const hrDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore
@@ -83,15 +84,22 @@ const hrDepartment = () => {
 
   return (
     <div>
-      <div className="header">
+      <Header department="Human Resources" isProfile={false} />
+      
+    <AIButton paths={['NpaV1QtwGZ2MDNOGAlXa']}/>
+  </div>
+  );
+};
+
+export default hrDepartment;
+
+{/* <div className="header">
         <Link href="/home">
           <button style={{ marginBottom: '20px' }}>Home</button>
         </Link>
 
         <h1>Welcome to Human Resources!</h1>
         <p>These are the HR files.</p>
-
-        {/* File upload section */}
         <UploadComponent
           companyId={COMPANYID}
           departmentId={DEPARTMENTID}
@@ -106,10 +114,4 @@ const hrDepartment = () => {
         <div className="file-title">Incident Files</div>
         <FileList collectionPath={incidentFilesPath} title="" onSearch={() => {}} onFileSelect={handleFileSelect} horizontal refreshTrigger={fileListUpdated} />
       </div>
-    </div>
-    <AIButton paths={['NpaV1QtwGZ2MDNOGAlXa']}/>
-  </div>
-  );
-};
-
-export default hrDepartment;
+    </div> */}
