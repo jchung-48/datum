@@ -11,6 +11,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import AIButton from "@/app/aiAddon/aiButton";
 import SearchBar from "@/app/Utilities/SearchBar/searchBar";
 import UploadComponent from '@/app/Utilities/Upload/uploadComponent';
+import Header from '@/app/Utilities/Header/header';
 
 const LogisticsDepartment: React.FC = () => {
   const styles = { ...deptStyles, ...logStyles };
@@ -98,20 +99,7 @@ const LogisticsDepartment: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <Link href="/home">
-          <div className={styles.home}>
-            <LuCloudLightning className="cloud-icon" />
-            DATUM
-          </div>
-        </Link>
-        <div className={styles.department}>Logistics</div>
-        <div className={styles.profile}>
-          <Link href="/profile">
-            <FaUserCircle className={styles.profileIcon}/>
-          </Link>
-        </div>
-      </div>
+      <Header department="Logistics" isProfile={false} />
       <div className={styles.body}>
 
         <div className={styles.topComponentContainer}>

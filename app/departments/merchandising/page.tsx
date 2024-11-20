@@ -19,6 +19,7 @@ import {Buyer, Manufacturer} from '../../types';
 import UploadComponent from '../../Utilities/Upload/uploadComponent';
 import AIButton from '../../aiAddon/aiButton';
 import SearchBar from '../../Utilities/SearchBar/searchBar';
+import Header from '@/app/Utilities/Header/header';
 
 const MerchandisingDepartment = () => {
   const styles = { ...deptStyles, ...merchStyles };
@@ -133,20 +134,8 @@ const MerchandisingDepartment = () => {
 
   return (
     <div className='Page'>
-      <div className={styles.header}>
-        <Link href="/home">
-          <div className={styles.home}>
-            <LuCloudLightning className="cloudIcon" />
-            DATUM
-          </div>
-        </Link>
-        <div className={styles.department}>Merchandising</div>
-        <div className={styles.profile}>
-          <Link href="/profile">
-            <FaUserCircle className={styles.profileIcon}/>
-          </Link>
-        </div>
-      </div>
+      <Header department="Merchandising" isProfile={false} />
+
       <div className={styles.body}>
         <div className={styles.topComponentContainer}>
           <UploadComponent
