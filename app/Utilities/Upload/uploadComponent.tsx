@@ -84,7 +84,7 @@ const UploadComponent: React.FC<UploadComponentProps> = ({ companyId, department
         </button>
         {showCard && (
           <div className={styles.uploadCard} ref={cardRef}>
-            <input type="file" onChange={handleFileChange} />
+            <input type="file" onChange={handleFileChange} accept="application/pdf" />
             {collections && (
               <select value={selectedCollection} onChange={handleCollectionChange}>
                 {collections.map((collection) => (

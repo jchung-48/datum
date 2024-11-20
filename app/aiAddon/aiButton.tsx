@@ -1,4 +1,4 @@
-
+"use client"
 import React, { useState, useEffect } from 'react';
 import './styles.modules.css';
 import SearchBarAI from "../Utilities/SearchBarAI/searchBarAI";
