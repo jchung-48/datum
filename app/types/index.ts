@@ -5,3 +5,4 @@ export * from './uploadTypes';
 export * from './searchTypes';
 export * from './searchAITypes';
 export * from './aiButtonTypes';
+export * from './departmentPageTypes';

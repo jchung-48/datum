@@ -10,11 +10,11 @@ import AIButton from "@/app/aiAddon/aiButton";
 import SearchBar from "@/app/Utilities/SearchBar/searchBar";
 import Header from '@/app/Utilities/Header/header';
 import deptStyles from '../departments.module.css';
-import hrStyles from './hr.module.css';
+import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 
 const hrDepartment: React.FC = () => {
 
-  const styles = { ...deptStyles, ...hrStyles };
+  const styles = { ...deptStyles };
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'NpaV1QtwGZ2MDNOGAlXa'; // Correct HR department ID
@@ -103,7 +103,7 @@ const hrDepartment: React.FC = () => {
           </div>
         </div>
         <div className={styles.files}>
-          <div className={styles.fileTitle}>Department Files</div>
+          <FileTitle title="Department Files" />
           <FileList
             collectionPath={deptFilesPath}
             title=""
@@ -113,7 +113,7 @@ const hrDepartment: React.FC = () => {
             refreshTrigger={fileListUpdated}
             enableShare={true}
           />
-          <div className={styles.fileTitle}>Incident Files</div>
+          <FileTitle title="Incident Files" />
           <FileList
             collectionPath={incidentFilesPath}
             title=""

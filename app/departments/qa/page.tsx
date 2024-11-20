@@ -13,6 +13,7 @@ import AIButton from "@/app/aiAddon/aiButton";
 import SearchBar from "@/app/Utilities/SearchBar/searchBar";
 import Header from '@/app/Utilities/Header/header';
 import '@/app/globals.css';
+import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 
 const qaDepartment = () => {
   const styles = { ...deptStyles, ...qaStyles };
@@ -97,7 +98,7 @@ const qaDepartment = () => {
 
         <div className={styles.files}>
           <div className={styles.fileSection}>
-            <div className={styles.fileTitle}>Department</div>
+            <FileTitle title="Department Files" />
             <div className={styles.fileBox}>
               <FileList
                 collectionPath={deptFilesPath}
@@ -108,7 +109,7 @@ const qaDepartment = () => {
             </div>
           </div>
           <div className={styles.fileSection}>
-            <div className={styles.fileTitle}>Inbox</div>
+            <FileTitle title="Inbox" />
             <div className={styles.fileBox}>
               <FileList
                 collectionPath={inboxFilesPath}

@@ -20,6 +20,7 @@ import UploadComponent from '../../Utilities/Upload/uploadComponent';
 import AIButton from '../../aiAddon/aiButton';
 import SearchBar from '../../Utilities/SearchBar/searchBar';
 import Header from '@/app/Utilities/Header/header';
+import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 
 const MerchandisingDepartment = () => {
   const styles = { ...deptStyles, ...merchStyles };
@@ -151,7 +152,7 @@ const MerchandisingDepartment = () => {
         </div>
 
         <div className={styles.files}>
-          <div className={styles.fileTitle}>Department</div>
+          <FileTitle title="Department Files" />
           <FileList
             collectionPath={deptFilesPath}
             title=""
@@ -160,13 +161,12 @@ const MerchandisingDepartment = () => {
             refreshTrigger={fileListUpdated}
             enableShare={true}
           />
-          <div className={styles.fileTitle}>
+          <FileTitle title="Records" />
             <FileList
               collectionPath={deptRecordsPath}
-              title="Records"
+              title=""
               refreshTrigger={fileListUpdated}
             />
-          </div>
         </div>
 
         <div className={styles.contactListsContainer}>

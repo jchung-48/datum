@@ -5,12 +5,7 @@ import Link from 'next/link';
 import styles from './header.module.css'; // Ensure the correct path
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import { useRouter } from 'next/router';
-
-interface HeaderProps {
-  department?: string;
-  isProfile?: boolean;
-}
+import { HeaderProps } from '../../types';
 
 const Header: React.FC<HeaderProps> = ({ department, isProfile }) => {
 
