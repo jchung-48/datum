@@ -1,10 +1,10 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LogisticsDepartment from "./page"; // Adjust the path
-import { uploadFileToStorage, updateFirestore } from "../upload/uploadUtils";
-import { FileList } from "../upload/listFiles";
-import UploadComponent from "../upload/Upload/uploadComponent";
-import AIButton from "../aiAddon/aiButton";
-import SearchBar from "../upload/SearchBar/searchBar";
+import { uploadFileToStorage, updateFirestore } from "@/app/Utilities/Upload/uploadUtils";
+import { FileList } from "@/app/Utilities/ListFiles/listFiles";
+import UploadComponent from "@/app/Utilities/Upload/uploadComponent";
+import AIButton from "@/app/aiAddon/aiButton";
+import SearchBar from "@/app/Utilities/SearchBar/searchBar";
 
 jest.mock("@/upload/uploadUtils", () => ({
   uploadFileToStorage: jest.fn(),
