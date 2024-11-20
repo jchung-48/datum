@@ -9,8 +9,12 @@ import UploadComponent from '@/app/Utilities/Upload/uploadComponent';
 import AIButton from "@/app/aiAddon/aiButton";
 import SearchBar from "@/app/Utilities/SearchBar/searchBar";
 import Header from '@/app/Utilities/Header/header';
+import deptStyles from '../departments.module.css';
+import hrStyles from './hr.module.css';
 
-const hrDepartment = () => {
+const hrDepartment: React.FC = () => {
+
+  const styles = { ...deptStyles, ...hrStyles };
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'NpaV1QtwGZ2MDNOGAlXa'; // Correct HR department ID
@@ -83,10 +87,49 @@ const hrDepartment = () => {
   ] as [string, ...string[]];
 
   return (
-    <div>
+    <div className={styles.page}>
       <Header department="Human Resources" isProfile={false} />
-      
-    <AIButton paths={['NpaV1QtwGZ2MDNOGAlXa']}/>
+      <div className={styles.body}>
+        <div className={styles.topComponentContainer}>
+          <UploadComponent
+            companyId={COMPANYID}
+            departmentId={DEPARTMENTID}
+            departmentName="HumanResources"
+            collections={['files', 'incident']}
+            onUploadSuccess={() => setFileListUpdated(prev => !prev)}
+            />
+          <div className={styles.search}>
+            <SearchBar paths={['NpaV1QtwGZ2MDNOGAlXa']} />
+          </div>
+        </div>
+        <div className={styles.files}>
+          <div className={styles.fileTitle}>Department Files</div>
+          <FileList
+            collectionPath={deptFilesPath}
+            title=""
+            onSearch={() => {}}
+            onFileSelect={handleFileSelect}
+            horizontal
+            refreshTrigger={fileListUpdated}
+            enableShare={true}
+          />
+          <div className={styles.fileTitle}>Incident Files</div>
+          <FileList
+            collectionPath={incidentFilesPath}
+            title=""
+            onSearch={() => {}}
+            onFileSelect={handleFileSelect}
+            horizontal
+            refreshTrigger={fileListUpdated}
+            enableShare={true}
+          />
+        </div>
+        <div className={styles.aiFeatures}>
+          <AIButton paths={['NpaV1QtwGZ2MDNOGAlXa']}/>
+        </div>
+      </div>
+
+    
   </div>
   );
 };

@@ -145,8 +145,17 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`
 
           {/* Content Display Area */}
           <div className="content-display">
-            <SpinnerDiamond className="throbber" enabled={loading} color= "#617D9F"/>
-            <ReactMarkdown>{summaryContent}</ReactMarkdown>
+            {mode === 'summarize' ? (
+              <>
+                <SpinnerDiamond className="throbber" enabled={loading} color= "#617D9F"/>
+                <ReactMarkdown>{summaryContent}</ReactMarkdown>
+              </>
+            ) : (
+              <>
+                <ReactMarkdown/>
+              </>
+            )}
+            
           </div>
 
           {/* Input Area */}
