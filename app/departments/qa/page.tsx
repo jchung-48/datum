@@ -1,6 +1,5 @@
 "use client"; // Mark as a Client Component
 
-import '../globals.css'
 import React, { useState } from 'react';
 import Link from 'next/link';
 import deptStyles from '../departments.module.css';
