@@ -12,6 +12,7 @@
     "jest.setup.ts",
     "lib/*.ts",
     "lib/*.js",
+    "app/api/*.js",
   ],
   "compilerOptions": {
     "module": "commonjs",
@@ -25,8 +26,7 @@
     "lib": ["DOM"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@/lib/*": ["./lib/*"]
+      "@/*": ["*"],
     },
     "rootDir": ".",
     "allowJs": true,
@@ -36,6 +36,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
     "types": [
       "jest",
       "@testing-library/jest-dom"
@@ -46,16 +47,4 @@
       }
     ]
   },
-  "include": [
-    "app/**/*.tsx",
-    "app/**/*.ts",
-    "app/*.js",
-    "app/api/*.js",
-    "src/**/*.ts",
-    "test/**/*.ts",
-    ".next/types/**/*.ts",
-    "lib/*.ts",
-    "lib/*.js",
-    "jest.setup.ts"
-  ]
 }
