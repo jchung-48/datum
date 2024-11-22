@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 //import './styles.css'; // Ensure this import is correct
-import { FileList } from '../Utilities/ListFiles/listFiles'; // Adjust path if needed
-import { uploadFileToStorage, updateFirestore } from '../Utilities/Upload/uploadUtils';
-import UploadComponent from '../Utilities/Upload/uploadComponent';
-import AIButton from "../aiAddon/aiButton";
-import SearchBar from "../Utilities/SearchBar/searchBar";
+import { FileList } from '@/app/Utilities/ListFiles/listFiles'; // Adjust path if needed
+import { uploadFileToStorage, updateFirestore } from '@/app/Utilities/Upload/uploadUtils';
+import UploadComponent from '@/app/Utilities/Upload/uploadComponent';
+import AIButton from "@/app/aiAddon/aiButton";
+import SearchBar from "@/app/Utilities/SearchBar/searchBar";
 
 const hrDepartment = () => {
   // Constants for the companyId and departmentId used for Firestore

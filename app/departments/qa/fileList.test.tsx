@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { FileList } from './qualityAssurance';
-import { FileListProps } from '../types';
+import { FileList } from '@/app/Utilities/ListFiles/listFiles';
+import { FileListProps } from '@/app/types';
 
 // Mock Firebase functions
 jest.mock('firebase/firestore', () => ({
