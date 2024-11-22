@@ -1,28 +1,23 @@
 // jest.config.ts
-import nextJest from 'next/jest';
+import type { Config } from '@jest/types';
 
-const createJestConfig = nextJest({
-  dir: './',
-});
-
-const customJestConfig = {
+const config: Config.InitialOptions = {
+  preset: 'ts-jest/presets/default-esm', // Use ts-jest with ESM support
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   moduleNameMapper: {
-    '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
-    '^.+\\.(css|sass|scss)$': '<rootDir>/__mocks__/styleMock.ts',
-    '^.+\\.(png|jpg|jpeg|gif|webp|avif|svg)$': '<rootDir>/__mocks__/fileMock.ts',
-    "^@/(.*)$": "<rootDir>/$1",
+    // Handle path aliases (e.g., "@/app/types")
+    '^@/(.*)$': '<rootDir>/$1',
+    // Mock static assets if any
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
-};
-
-module.exports = {
-  preset: "ts-jest", // Use ts-jest preset for TypeScript support
-  testEnvironment: "node", // Ensure the test environment is node
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest", // Process TypeScript files with ts-jest
+    '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: 'tsconfig.json' }],
   },
-  moduleFileExtensions: ["ts", "tsx", "js", "json", "node"],
+  transformIgnorePatterns: [
+    'node_modules/(?!(firebase)/)', // Add other ESM packages if needed
+  ],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 };
 
-export default createJestConfig(customJestConfig);
+export default config;

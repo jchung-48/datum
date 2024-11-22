@@ -2,10 +2,9 @@
 
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject, uploadBytes } from "firebase/storage";
 import { doc, setDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
-import { storage, db, auth } from "../../../lib/firebaseClient";
+import { storage, db, auth } from "@/lib/firebaseClient";
 import { createTypeReferenceDirectiveResolutionCache } from "typescript";
 import { FirestorePath } from "@/app/types";
-// import { FirestorePath} from 'app/types/uploadTypes';
 
 // Function to upload file to Firebase Storage and return the download URL
 export const uploadFileToStorage = async (
@@ -14,6 +13,13 @@ export const uploadFileToStorage = async (
 ): Promise<string> => {
   if (!file) throw new Error("No file provided.");
   console.log("upload storage path", storagePath);
+
+  // Include metadata with uploadedBy
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("User not authenticated.");
+  }
+
   const storageRef = ref(storage, storagePath);
 
   // Check if a file with the same name exists
@@ -31,12 +37,6 @@ export const uploadFileToStorage = async (
     if (!confirmReplace) throw new Error("Upload cancelled by user"); // Cancel upload if not confirmed
 
     await deleteObject(storageRef); // Delete existing file
-  }
-
-  // Include metadata with uploadedBy
-  const user = auth.currentUser;
-  if (!user) {
-    throw new Error("User not authenticated.");
   }
 
   const metadata = {
