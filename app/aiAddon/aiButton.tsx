@@ -1,6 +1,6 @@
-
+"use client"
 import React, { useState, useEffect } from 'react';
-import './styles.css';
+import './styles.modules.css';
 import SearchBarAI from "../Utilities/SearchBarAI/searchBarAI";
 import { FaArrowCircleUp  } from 'react-icons/fa';
 import { AiButtonProps, SummarySearchResult } from '../types';
@@ -145,8 +145,17 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`
 
           {/* Content Display Area */}
           <div className="content-display">
-            <SpinnerDiamond className="throbber" enabled={loading} color= "#617D9F"/>
-            <ReactMarkdown>{summaryContent}</ReactMarkdown>
+            {mode === 'summarize' ? (
+              <>
+                <SpinnerDiamond className="throbber" enabled={loading} color= "#617D9F"/>
+                <ReactMarkdown>{summaryContent}</ReactMarkdown>
+              </>
+            ) : (
+              <>
+                <ReactMarkdown/>
+              </>
+            )}
+            
           </div>
 
           {/* Input Area */}

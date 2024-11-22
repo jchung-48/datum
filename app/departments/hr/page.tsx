@@ -3,13 +3,18 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 //import './styles.css'; // Ensure this import is correct
-import { FileList } from '../Utilities/ListFiles/listFiles'; // Adjust path if needed
-import { uploadFileToStorage, updateFirestore } from '../Utilities/Upload/uploadUtils';
-import UploadComponent from '../Utilities/Upload/uploadComponent';
-import AIButton from "../aiAddon/aiButton";
-import SearchBar from "../Utilities/SearchBar/searchBar";
+import { FileList } from '@/app/Utilities/ListFiles/listFiles'; // Adjust path if needed
+import { uploadFileToStorage, updateFirestore } from '@/app/Utilities/Upload/uploadUtils';
+import UploadComponent from '@/app/Utilities/Upload/uploadComponent';
+import AIButton from "@/app/aiAddon/aiButton";
+import SearchBar from "@/app/Utilities/SearchBar/searchBar";
+import Header from '@/app/Utilities/Header/header';
+import deptStyles from '../departments.module.css';
+import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 
-const hrDepartment = () => {
+const hrDepartment: React.FC = () => {
+
+  const styles = { ...deptStyles };
   // Constants for the companyId and departmentId used for Firestore
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'NpaV1QtwGZ2MDNOGAlXa'; // Correct HR department ID
@@ -82,16 +87,62 @@ const hrDepartment = () => {
   ] as [string, ...string[]];
 
   return (
-    <div>
-      <div className="header">
+    <div className={styles.page}>
+      <Header department="Human Resources" isProfile={false} />
+      <div className={styles.body}>
+        <div className={styles.topComponentContainer}>
+          <UploadComponent
+            companyId={COMPANYID}
+            departmentId={DEPARTMENTID}
+            departmentName="HumanResources"
+            collections={['files', 'incident']}
+            onUploadSuccess={() => setFileListUpdated(prev => !prev)}
+            />
+          <div className={styles.search}>
+            <SearchBar paths={['NpaV1QtwGZ2MDNOGAlXa']} />
+          </div>
+        </div>
+        <div className={styles.files}>
+          <FileTitle title="Department Files" />
+          <FileList
+            collectionPath={deptFilesPath}
+            title=""
+            onSearch={() => {}}
+            onFileSelect={handleFileSelect}
+            horizontal
+            refreshTrigger={fileListUpdated}
+            enableShare={true}
+          />
+          <FileTitle title="Incident Files" />
+          <FileList
+            collectionPath={incidentFilesPath}
+            title=""
+            onSearch={() => {}}
+            onFileSelect={handleFileSelect}
+            horizontal
+            refreshTrigger={fileListUpdated}
+            enableShare={true}
+          />
+        </div>
+        <div className={styles.aiFeatures}>
+          <AIButton paths={['NpaV1QtwGZ2MDNOGAlXa']}/>
+        </div>
+      </div>
+
+    
+  </div>
+  );
+};
+
+export default hrDepartment;
+
+{/* <div className="header">
         <Link href="/home">
           <button style={{ marginBottom: '20px' }}>Home</button>
         </Link>
 
         <h1>Welcome to Human Resources!</h1>
         <p>These are the HR files.</p>
-
-        {/* File upload section */}
         <UploadComponent
           companyId={COMPANYID}
           departmentId={DEPARTMENTID}
@@ -106,10 +157,4 @@ const hrDepartment = () => {
         <div className="file-title">Incident Files</div>
         <FileList collectionPath={incidentFilesPath} title="" onSearch={() => {}} onFileSelect={handleFileSelect} horizontal refreshTrigger={fileListUpdated} />
       </div>
-    </div>
-    <AIButton paths={['NpaV1QtwGZ2MDNOGAlXa']}/>
-  </div>
-  );
-};
-
-export default hrDepartment;
+    </div> */}

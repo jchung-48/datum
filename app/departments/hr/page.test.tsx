@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import QaDepartment from './page'; // Use the corrected component name
+import QaDepartment from './page';
 
 describe('QaDepartment Component', () => {
   it('renders correctly', () => {

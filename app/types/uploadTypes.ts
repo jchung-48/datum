@@ -1,6 +1,15 @@
 import { Timestamp } from "firebase/firestore";
 import { arrayOutputType } from "zod";
 
+export type FirestorePath = {
+    collectionType: "Departments" | "Buyers" | "Manufacturers";
+    companyId: string;
+    departmentId?: string;
+    buyerId?: string;
+    manufacturerId?: string;
+    collectionName?: string;
+}
+
 export type FileData = {
     id: string;
     fileName: string;
@@ -20,6 +29,7 @@ export type FileListProps = {
     onFileSelect?: (fileId: string) => void;
     display?: "list" | "horizontal" | "grid";
     refreshTrigger?: boolean;
+    enableShare?: boolean;
 };
 
 export type UploadComponentProps = {
@@ -30,11 +40,3 @@ export type UploadComponentProps = {
     onUploadSuccess?: () => void;
 };
 
-// export type FirestorePath = {
-//     collectionType: "Departments" | "Buyers" | "Manufacturers";
-//     companyId: string;
-//     departmentId?: string;
-//     collectionName?: string;
-//     buyerId?: string;
-//     manufacturerId?: string;
-// }

@@ -2,16 +2,20 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FileList } from '../Utilities/ListFiles/listFiles';
-import { uploadFileToStorage, updateFirestore } from '../Utilities/Upload/uploadUtils';
-import './styles.css';
+import { FileList } from '@/app/Utilities/ListFiles/listFiles';
+import { uploadFileToStorage, updateFirestore } from '@/app/Utilities/Upload/uploadUtils';
+import deptStyles from '../departments.module.css';
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import AIButton from "../aiAddon/aiButton";
-import SearchBar from "../Utilities/SearchBar/searchBar";
-import UploadComponent from '../Utilities/Upload/uploadComponent';
+import AIButton from "@/app/aiAddon/aiButton";
+import SearchBar from "@/app/Utilities/SearchBar/searchBar";
+import UploadComponent from '@/app/Utilities/Upload/uploadComponent';
+import Header from '@/app/Utilities/Header/header';
+import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 
 const LogisticsDepartment: React.FC = () => {
+  const styles = { ...deptStyles };
+
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'KZm56fUOuTobsTRCfknJ'; // Update to the Logistics department ID
 
@@ -21,6 +25,7 @@ const LogisticsDepartment: React.FC = () => {
   const [selectedCollection, setSelectedCollection] = useState<string>('transportationFiles'); // Default collection
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [fileListUpdated, setFileListUpdated] = useState(false);
+
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -47,8 +52,6 @@ const LogisticsDepartment: React.FC = () => {
       alert('Please select a file before uploading.');
       return;
     }
-
-    //console.log("current user:",auth.currentUser);
 
     const storagePath = `Company/Departments/Logistics/${file.name}`;
     const downloadURL = await uploadFileToStorage(file, storagePath);
@@ -95,70 +98,56 @@ const LogisticsDepartment: React.FC = () => {
   ] as [string, ...string[]];
 
   return (
-    <div className="body">
-      <div className="header">
-        <Link href="/home">
-          <div className="home">
-            <LuCloudLightning className="cloud-icon"/>
-            DATUM
+    <div className={styles.page}>
+      <Header department="Logistics" isProfile={false} />
+      <div className={styles.body}>
+
+        <div className={styles.topComponentContainer}>
+          <UploadComponent 
+            companyId={COMPANYID} 
+            departmentId={DEPARTMENTID} 
+            departmentName="Logistics"
+            collections={['transportationFiles', 'customsFiles', 'financialFiles']}
+            onUploadSuccess={() => setFileListUpdated(prev => !prev)}
+          />
+          <div className={styles.search}>
+            <SearchBar paths={["KZm56fUOuTobsTRCfknJ"]} />
           </div>
-        </Link>
-        <Link href="/profile">
-          <FaUserCircle className="profile" />
-        </Link>
-      </div>
-
-      <div className="department">Logistics</div>
-
-      <div className="upload-search-container">
-
-        <UploadComponent 
-              companyId={COMPANYID} 
-              departmentId={DEPARTMENTID} 
-              departmentName="Logistics"
-              collections={['transportationFiles', 'customsFiles', 'financialFiles']}
-              onUploadSuccess={() => setFileListUpdated(prev => !prev)}/>
-
-
-        <div className="search">
-        <SearchBar 
-                paths={["KZm56fUOuTobsTRCfknJ"]} 
-        />
         </div>
-      </div>
-      
 
-      <div className="files">
-      <div className="file-title">Transportation Files</div>
-        <FileList 
-              collectionPath={transportationFilesPath} 
-              title="" 
-              onSearch={() => {}}
-              onFileSelect={handleFileSelect}
-              horizontal
-              refreshTrigger={fileListUpdated}
-        />
-        <div className="file-title">Customs Files</div>
-        <FileList 
-              collectionPath={customsFilesPath} 
-              title="" 
-              onSearch={() => {}}
-              onFileSelect={handleFileSelect}
-              horizontal
-              refreshTrigger={fileListUpdated}
-        />
-        <div className="file-title">Financial Files</div>
-        <FileList 
-              collectionPath={financialFilesPath} 
-              title="" 
-              onSearch={() => {}}
-              onFileSelect={handleFileSelect}
-              horizontal
-              refreshTrigger={fileListUpdated}
-        />
-      </div>
-      <div className="ai-features">
-        <AIButton paths={['KZm56fUOuTobsTRCfknJ']}/>
+        <div className={styles.files}>
+          <FileTitle title="Transportation Files" />
+          <FileList 
+                collectionPath={transportationFilesPath} 
+                title=""
+                onFileSelect={handleFileSelect}
+                horizontal
+                refreshTrigger={fileListUpdated}
+                enableShare={true}
+          />
+          <FileTitle title="Customs Files" />
+          <FileList 
+                collectionPath={customsFilesPath} 
+                title=""
+                onFileSelect={handleFileSelect}
+                horizontal
+                refreshTrigger={fileListUpdated}
+                enableShare={true}
+          />
+          <FileTitle title="Financial Files" />
+          <FileList 
+                collectionPath={financialFilesPath} 
+                title=""
+                onFileSelect={handleFileSelect}
+                horizontal
+                refreshTrigger={fileListUpdated}
+                enableShare={true}
+          />
+        </div>
+
+        <div className={styles.aiFeatures}>
+          <AIButton paths={['KZm56fUOuTobsTRCfknJ']}/>
+        </div>
       </div>
     </div>
   );
