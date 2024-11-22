@@ -2,7 +2,7 @@
 
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject, uploadBytes } from "firebase/storage";
 import { doc, setDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
-import { storage, db, auth } from "@/lib/firebaseClient";
+import { storage, db, auth } from "../../../lib/firebaseClient";
 import { createTypeReferenceDirectiveResolutionCache } from "typescript";
 import { FirestorePath } from "@/app/types";
 // import { FirestorePath} from 'app/types/uploadTypes';
@@ -151,8 +151,6 @@ export const updateFirestore = async (
 
   console.log(`File added to Firestore: ${fileName}`);
 };
-
-
 
 // Function to delete a file from Firebase Storage and Firestore
 export const handleFileDelete = async (

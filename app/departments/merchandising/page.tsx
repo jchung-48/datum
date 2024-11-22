@@ -136,7 +136,7 @@ const MerchandisingDepartment = () => {
       <div className={styles.header}>
         <Link href="/home">
           <div className={styles.home}>
-            <LuCloudLightning className="cloud-icon" />
+            <LuCloudLightning className="cloudIcon" />
             DATUM
           </div>
         </Link>

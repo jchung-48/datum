@@ -1,21 +1,7 @@
-html {
-    height: 100%;
-    margin: 0;
-}
-
 @font-face {
     font-family: 'Darker Grotesque';
     src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
     font-style: normal;
-}
-
-body {
-    background-color: #e3e3e3;
-    background-image: 
-        linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
-        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
-        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
-    background-size: 100% 100%, 50px 50px, 50px 50px;
 }
 
 .header {
@@ -36,13 +22,13 @@ body {
     font-size: 40px;
 }
 
-.cloud-icon {
+.cloudIcon {
     margin-right: 12px;
     height: 35px;
     width: 35px;
 }
 
-.top-buttons {
+.topButtons {
     display: flex;
     justify-content: center;
     padding-top: 15px;
@@ -53,14 +39,14 @@ body {
     color: #1F3C53;
 }
 
-.top-buttons:hover {
+.topButtons:hover {
     color: #627D9F;
 }
 
-.user-container {
+.userContainer {
     padding-top: 15px;;
 }
-.create-user {
+.createUser {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -73,7 +59,7 @@ body {
     border-radius: 25px;
 }
 
-.create-user:hover, .faq-button:hover, .ai-button:hover {
+.createUser:hover, .faqButton:hover, .aiButton:hover {
     background-color: #627D9F;
 }
 
@@ -93,13 +79,13 @@ body {
     padding-top: 1%;
 }
 
-.bottom-buttons {
+.bottomButtons {
     display: flex;
     padding-left: 7%;
     padding-top: 5%;
 }
 
-.faq-button {
+.faqButton {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -114,7 +100,7 @@ body {
     border-radius: 25px;
 }
 
-.ai-button {
+.aiButton {
     display: flex;
     justify-content: center;
     align-items: center;
