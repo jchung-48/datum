@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './FileTitle.module.css';
+import styles from './fileTitle.module.css';
 import { FileTitleProps } from '../../types';
 
 const FileTitle: React.FC<FileTitleProps> = ({ title }) => {
