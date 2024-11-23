@@ -11,7 +11,6 @@ import Link from "next/link";
 import { logoutUser } from '../authentication';
 import { LuCloudLightning } from 'react-icons/lu';
 import deptStyles from '../departments/departments.module.css';
-import logStyles from '../departments/logistics/logistics.module.css';
 import Header from '@/app/Utilities/Header/header';
 
 export default function ProfilePage() {
@@ -25,7 +24,7 @@ export default function ProfilePage() {
     const router = useRouter();
     const [errorMessage, setErrorMessage] = useState("");
     const [isSignedIn, setIsSignedIn] = useState(false);
-    const styles = { ...deptStyles, ...logStyles };
+    const styles = { ...deptStyles };
     type EmployeeData = {
         name: string;
         companyName: string;

@@ -5,7 +5,12 @@
   font-style: normal;
 }
 
+.page {
+  min-height: 100vh;
+}
+
 .body {
+  min-height: 92vh;
   background-color: #e3e3e3;
   background-image: linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
     linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
