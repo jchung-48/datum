@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import './styles.modules.css';
+import './styles.module.css';
 import SearchBarAI from "../Utilities/SearchBarAI/searchBarAI";
 import { FaArrowCircleUp  } from 'react-icons/fa';
 import { AiButtonProps, SummarySearchResult } from '../types';
