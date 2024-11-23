@@ -1,5 +1,7 @@
+/* styles.module.css */
+
 /* Circle Button */
-.circle-button {
+.circleButton {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -19,11 +21,11 @@
     z-index: 1000;
 }
 
-.circle-button:hover {
+.circleButton:hover {
     background-color: #4b617b;
 }
 
-.ai-logo {
+.aiLogo {
     width: 60%;
     height: auto;
     object-fit: cover;
@@ -49,7 +51,7 @@
 }
 
 /* Close Button in the Card */
-.card-close-button {
+.cardCloseButton {
     background: none;
     border: none;
     font-size: 24px;
@@ -58,12 +60,12 @@
     transition: color 0.3s;
 }
 
-.card-close-button:hover {
+.cardCloseButton:hover {
     color: red;
 }
 
 /* Close Button Wrapper */
-.tab-options {
+.tabOptions {
     display: flex;
     justify-content: flex-end;
     padding: 0px 5px 0;
@@ -71,14 +73,14 @@
 }
 
 /* Tab Button Styles */
-.mode-toggle {
+.modeToggle {
     display: flex;
     justify-content: space-around;
     width: 100%;
     margin-bottom: 15px;
 }
 
-.tab-button {
+.tabButton {
     flex: 1;
     padding: 10px;
     font-size: 16px;
@@ -89,18 +91,18 @@
     transition: background-color 0.3s;
 }
 
-.tab-button.active {
+.tabButton.active {
     background-color: #627D9F;
     color: #ffffff;
     font-weight: bold;
     border-radius: 5px;
 }
 
-.tab-button:not(.active):hover {
+.tabButton:not(.active):hover {
     background-color: #e0e0e0;
 }
 
-.content-display {
+.contentDisplay {
     padding: 15px;
     background-color: #f9f9f9; /* Light background for better readability */
     border: 1px solid #ddd;    /* Subtle border to distinguish the area */
@@ -125,33 +127,33 @@
 }
 
 /* Optional: Style Markdown Elements for Better Presentation */
-.content-display h1,
-.content-display h2,
-.content-display h3 {
+.contentDisplay h1,
+.contentDisplay h2,
+.contentDisplay h3 {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.content-display p {
+.contentDisplay p {
     margin-bottom: 10px;
     line-height: 1.6; /* Improve readability */
 }
 
-.content-display ul {
+.contentDisplay ul {
     padding-left: 20px;
     margin-bottom: 10px;
 }
 
-.content-display a {
+.contentDisplay a {
     color: #0070f3;
     text-decoration: none;
 }
 
-.content-display a:hover {
+.contentDisplay a:hover {
     text-decoration: underline;
 }
 
-.input-area {
+.inputArea {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -159,8 +161,8 @@
     box-sizing: border-box;
 }
 
-.input-area input[type="text"],
-.input-area input[type="file"] {
+.inputArea input[type="text"],
+.inputArea input[type="file"] {
     flex: 1;
     padding: 8px;
     border: 1px solid #ccc;
@@ -170,7 +172,7 @@
     font-size: 14px;
 }
 
-.action-button {
+.actionButton {
     padding: 8px 12px;
     background-color: #627D9F;
     color: #ffffff;
@@ -184,6 +186,33 @@
     box-sizing: border-box;
 }
 
-.action-button:hover {
+.actionButton:hover {
     background-color: #4b617b;
+}
+
+.chatInput {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: black;
+    background-color: white;
+    font-size: 14px;
+}
+
+.chatHistory {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.chatMessage {
+    margin-bottom: 10px;
+}
+
+.userMessage {
+    text-align: right;
+}
+
+.botMessage {
+    text-align: left;
 }

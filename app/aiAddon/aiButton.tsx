@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './styles.module.css';
+import styles from './styles.module.css';
 import SearchBarAI from "../Utilities/SearchBarAI/searchBarAI";
 import { FaArrowCircleUp } from "react-icons/fa";
 import { AiButtonProps, SummarySearchResult } from "../types";
@@ -148,55 +148,54 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
     <div>
       {/* Circle Button in the bottom right */}
       {!isCardVisible && (
-        <button className="circle-button" onClick={toggleCard}>
-          <img className="ai-logo" src="/images/ollamaLogo.png" />
+        <button className={styles.circleButton} onClick={toggleCard}>
+          <img className={styles.aiLogo} src="/images/ollamaLogo.png" alt="AI Logo" />
         </button>
       )}
 
       {/* Card */}
       {isCardVisible && (
-        <div className="card">
+        <div className={styles.card}>
           {/* Close Button */}
-          <div className="tab-options">
-            <button className="card-close-button" onClick={toggleCard}>
+          <div className={styles.tabOptions}>
+            <button className={styles.cardCloseButton} onClick={toggleCard}>
               ×
             </button>
           </div>
           {/* Tab Buttons */}
-          <div className="mode-toggle">
+          <div className={styles.modeToggle}>
             <button
-              className={`tab-button ${mode === "summarize" ? "active" : ""}`}
-              onClick={() => handleModeToggle("summarize")}
+              className={`${styles.tabButton} ${mode === 'summarize' ? styles.active : ''}`}
+              onClick={() => handleModeToggle('summarize')}
             >
               Summarize
             </button>
             <button
-              className={`tab-button ${mode === "chat" ? "active" : ""}`}
-              onClick={() => handleModeToggle("chat")}
+              className={`${styles.tabButton} ${mode === 'chat' ? styles.active : ''}`}
+              onClick={() => handleModeToggle('chat')}
             >
               Chat
             </button>
           </div>
 
           {/* Content Display Area */}
-          <div className="content-display">
-            {mode === "summarize" ? (
+          <div className={styles.contentDisplay}>
+            {mode === 'summarize' ? (
               <>
-                <SpinnerDiamond className="throbber" enabled={loading} color="#617D9F" />
+                <SpinnerDiamond className={styles.throbber} enabled={loading} color="#617D9F" />
                 <ReactMarkdown>{summaryContent}</ReactMarkdown>
               </>
             ) : (
               <>
-                <div className="chat-history">
+                <div className={styles.chatHistory}>
                   {chatHistory.map((entry, index) => (
                     <div
                       key={index}
-                      className={`chat-message ${
-                        entry.sender === "user" ? "user-message" : "bot-message"
+                      className={`${styles.chatMessage} ${
+                        entry.sender === 'user' ? styles.userMessage : styles.botMessage
                       }`}
                     >
-                      <strong>{entry.sender === "user" ? "You" : "AI"}:</strong>{" "}
-                      {entry.message}
+                      <strong>{entry.sender === 'user' ? 'You' : 'AI'}:</strong> {entry.message}
                     </div>
                   ))}
                 </div>
@@ -205,11 +204,11 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
           </div>
 
           {/* Input Area */}
-          <div className="input-area">
-            {mode === "summarize" ? (
+          <div className={styles.inputArea}>
+            {mode === 'summarize' ? (
               <>
                 <SearchBarAI paths={paths} onFileSelect={handleFileSelect} />
-                <button className="action-button" onClick={handleSummarizeClick}>
+                <button className={styles.actionButton} onClick={handleSummarizeClick}>
                   <FaArrowCircleUp />
                 </button>
               </>
@@ -220,8 +219,9 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
                   placeholder="Chat with the LLM"
                   value={inputValue}
                   onChange={handleInputChange}
+                  className={styles.chatInput} // Add this class in your CSS if needed
                 />
-                <button className="action-button" onClick={handleChat}>
+                <button className={styles.actionButton} onClick={handleChat}>
                   Send
                 </button>
               </>
