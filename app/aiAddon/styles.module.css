@@ -102,6 +102,7 @@
     background-color: #e0e0e0;
 }
 
+/* Content Display Area */
 .contentDisplay {
     padding: 15px;
     background-color: #f9f9f9; /* Light background for better readability */
@@ -112,17 +113,18 @@
     max-width: 380px;
     overflow-y: auto;          /* Enable vertical scrolling if content overflows */
     box-sizing: border-box;    /* Ensure padding and borders are included in the total width and height */
-    flex-grow: 1; /* Allow the content area to expand and take available space */
+    flex-grow: 1;              /* Allow the content area to expand and take available space */
     margin-bottom: 10px;
     color: black;
-    position: relative; /* Add relative positioning */
+    position: relative;        /* Add relative positioning */
 }
 
+/* Throbber (Loading Spinner) */
 .throbber {
     height: 100%;
     position: absolute; /* Position the throbber absolutely */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
+    top: 50%;           /* Center vertically */
+    left: 50%;          /* Center horizontally */
     transform: translate(-50%, -50%); /* Adjust position to truly center */
 }
 
@@ -155,25 +157,31 @@
 
 .inputArea {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: center; /* Align items in the center */
+    justify-content: space-between; /* Adjust spacing */
+    gap: 10px; /* Add space between input and button */
     width: 100%;
+    padding: 0; /* Ensure no extra padding */
     box-sizing: border-box;
 }
 
-.inputArea input[type="text"],
-.inputArea input[type="file"] {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* Chat Input (inherits sharedInput styles) */
+.chatInput,
+.sharedInput {
+    flex: 1; /* Let the input take remaining space */
+    padding: 6px; /* Match padding with Summarize input */
+    font-size: 14px;
     color: black;
     background-color: white;
-    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in width */
+    height: 38px;
 }
 
+/* Chat Action Button (adjust for alignment) */
 .actionButton {
-    padding: 8px 12px;
+    padding: 8px 12px; /* Match Summarize button padding */
     background-color: #627D9F;
     color: #ffffff;
     border: none;
@@ -182,33 +190,44 @@
     font-size: 14px;
     transition: background-color 0.3s;
     width: auto;
-    max-width: 50px;
-    box-sizing: border-box;
+    height: 38px; /* Ensure it matches the input height */
+    box-sizing: border-box; /* Include border and padding in width */
+    display: flex; /* Center content */
+    align-items: center;
+    justify-content: center;
 }
 
 .actionButton:hover {
     background-color: #4b617b;
 }
 
-.chatInput {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    color: black;
-    background-color: white;
-    font-size: 14px;
-}
-
+/* Chat History */
 .chatHistory {
-    max-height: 200px;
+    max-height: 300px;
     overflow-y: auto;
+}
+/* Content Display Area */
+.contentDisplay {
+    padding: 15px;
+    background-color: #f9f9f9; /* Light background for better readability */
+    border: 1px solid #ddd;    /* Subtle border to distinguish the area */
+    border-radius: 4px;        /* Rounded corners */
+    margin-top: 10px;          /* Space above the content */
+    max-height: 300px;         /* Adjust as needed for your design */
+    max-width: 380px;
+    overflow-y: auto;          /* Enable vertical scrolling if content overflows */
+    box-sizing: border-box;    /* Ensure padding and borders are included in the total width and height */
+    flex-grow: 1;              /* Allow the content area to expand and take available space */
+    margin-bottom: 10px;
+    color: black;
+    position: relative;        /* Add relative positioning */
 }
 
 .chatMessage {
     margin-bottom: 10px;
 }
 
+/* User and Bot Messages */
 .userMessage {
     text-align: right;
 }

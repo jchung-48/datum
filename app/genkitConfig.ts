@@ -8,9 +8,9 @@ import {
 // Import other necessary plugins if any
 dotenv.config(); // config environment variables
 // Optionally, use environment variables for sensitive configurations
-//const ollamaServerAddress = 'http://127.0.0.1:11434';
+const ollamaServerAddress = 'http://127.0.0.1:11434';
 
-const ollamaServerAddress = process.env.OLLAMA_SERVER_ADDRESS;
+//const ollamaServerAddress = process.env.OLLAMA_SERVER_ADDRESS;
 if (!ollamaServerAddress) {
   throw new Error("Missing Ollama server address");
 }

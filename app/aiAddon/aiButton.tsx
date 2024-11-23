@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './styles.module.css';
 import SearchBarAI from "../Utilities/SearchBarAI/searchBarAI";
 import { FaArrowCircleUp } from "react-icons/fa";
@@ -21,6 +21,7 @@ const AiButton: React.FC<AiButtonProps> = ({ paths }) => {
   const [chatHistory, setChatHistory] = useState<
     { sender: "user" | "bot"; message: string }[]
   >([]);
+  const chatHistoryRef = useRef<HTMLDivElement>(null);
 
   // Toggle card visibility
   const toggleCard = () => {
@@ -58,22 +59,24 @@ const AiButton: React.FC<AiButtonProps> = ({ paths }) => {
   };
 
   // Function to handle chat request
-  const handleChat = async () => {
-    if (!inputValue.trim()) return;
-
+  const handleChat = async (text?: string) => {
+    const inputText = text?.trim() || inputValue.trim(); // Use `text` if provided, otherwise fallback to `inputValue`
+  
+    if (!inputText) return; // Return if the input is empty
+  
     // Add user's message to chat history
-    setChatHistory((prev) => [...prev, { sender: "user", message: inputValue }]);
-    setInputValue(""); // Clear input field
-
+    setChatHistory((prev) => [...prev, { sender: "user", message: inputText }]);
+    setInputValue(""); // Clear the input field
+  
     try {
       const response = await fetch("/api/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: inputValue }),
+        body: JSON.stringify({ message: inputText }),
       });
-
+  
       const data = await response.json();
-
+  
       // Add bot's response to chat history
       setChatHistory((prev) => [
         ...prev,
@@ -87,6 +90,7 @@ const AiButton: React.FC<AiButtonProps> = ({ paths }) => {
       ]);
     }
   };
+  
 
   const handleSummarizeClick = async () => {
     if (!fileSelectedForSummary) {
@@ -134,15 +138,47 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
       }
     };
 
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        const summarizeTab = document.getElementById("summarizeTab");
+        const chatTab = document.getElementById("chatTab");
+  
+        const chatInput = document.querySelector(`.${styles.chatInput}`);
+
+        const text = chatInput ? (chatInput as HTMLInputElement).value : "";
+
+    
+        // Check if the "summarize" tab is active
+        if (summarizeTab?.classList.contains(styles.active)) {
+          handleSummarizeClick();
+        } 
+        // Otherwise, check if the "chat" tab is active
+        else if (chatTab?.classList.contains(styles.active)) {
+          handleChat(text);
+        } else {
+          console.error("No active tab found!");
+        }
+      }
+    };
+    
+
     if (isCardVisible) {
       window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", handleKeyUp);
     }
 
     // Cleanup
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
   }, [isCardVisible]);
+
+  useEffect(() => {
+    if (chatHistoryRef.current) {
+      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+    }
+  }, [chatHistory]); 
 
   return (
     <div>
@@ -165,12 +201,14 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
           {/* Tab Buttons */}
           <div className={styles.modeToggle}>
             <button
+              id= "summarizeTab"
               className={`${styles.tabButton} ${mode === 'summarize' ? styles.active : ''}`}
               onClick={() => handleModeToggle('summarize')}
             >
               Summarize
             </button>
             <button
+              id= "chatTab"
               className={`${styles.tabButton} ${mode === 'chat' ? styles.active : ''}`}
               onClick={() => handleModeToggle('chat')}
             >
@@ -221,8 +259,8 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
                   onChange={handleInputChange}
                   className={styles.chatInput} // Add this class in your CSS if needed
                 />
-                <button className={styles.actionButton} onClick={handleChat}>
-                  Send
+                <button className={styles.actionButton} onClick={() => handleChat()}>
+                  <FaArrowCircleUp />
                 </button>
               </>
             )}
