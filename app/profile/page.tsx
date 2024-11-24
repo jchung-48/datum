@@ -6,7 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebaseClient.js";
-import './style.module.css';
+import './style.modules.css';
 import Link from "next/link";
 import { logoutUser } from '../authentication';
 import { LuCloudLightning } from 'react-icons/lu';
