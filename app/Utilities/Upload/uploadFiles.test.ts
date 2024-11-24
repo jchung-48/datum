@@ -46,6 +46,10 @@ describe("File Upload and Firestore Update", () => {
     (auth.currentUser as any) = { uid: "test-user-id", displayName: "Test User" };
   });
 
+  /*
+  FULL UPLOAD TESTS
+  */
+
   it("uploads a file and updates Firestore with the correct download URL", async () => {
     // Mock Firebase methods
     const mockStorageRef = {};
@@ -131,4 +135,132 @@ describe("File Upload and Firestore Update", () => {
     await expect(uploadFileToStorage(mockFile, storagePath)).rejects.toThrow("Upload cancelled by user");
     expect(deleteObject).not.toHaveBeenCalled();
   });
+
+  /* ============
+  Firestore Tests
+  ============ */
+
+  it("updates Firestore for Departments collection type", async () => {
+    const mockDocRef = {};
+    (doc as jest.Mock).mockReturnValue(mockDocRef);
+    (setDoc as jest.Mock).mockResolvedValue({});
+
+    await updateFirestore(firestorePath, downloadURL, fileName, storagePath);
+
+    // Check that the doc and setDoc were called correctly
+    expect(doc).toHaveBeenCalledWith(
+      db,
+      "Company",
+      firestorePath.companyId,
+      "Departments",
+      firestorePath.departmentId,
+      firestorePath.collectionName,
+      fileName
+    );
+    expect(setDoc).toHaveBeenCalledWith(mockDocRef, expect.objectContaining({
+      fileName,
+      download: downloadURL,
+      filePath: storagePath,
+      uploadedBy: "test-user-id",
+      userDisplayName: "Test User",
+      uploadTimeStamp: "mock-timestamp",
+      tags: [],
+    }));
+  });
+
+  it("updates Firestore for Buyers collection type", async () => {
+    // Update firestorePath for Buyers collection type
+    const buyersPath = { ...firestorePath, collectionType: "Buyers" as const, buyerId: "buyerId123", departmentId: "" };
+    const mockDocRef = {};
+    (doc as jest.Mock).mockReturnValue(mockDocRef);
+    (setDoc as jest.Mock).mockResolvedValue({});
+
+    await updateFirestore(buyersPath, downloadURL, fileName, storagePath);
+
+    // Check that the doc and setDoc were called correctly
+    expect(doc).toHaveBeenCalledWith(
+      db,
+      "Company",
+      buyersPath.companyId,
+      "Buyers",
+      buyersPath.buyerId,
+      "Quotes",
+      fileName
+    );
+    expect(setDoc).toHaveBeenCalledWith(mockDocRef, expect.objectContaining({
+      fileName,
+      download: downloadURL,
+      filePath: storagePath,
+      uploadedBy: "test-user-id",
+      userDisplayName: "Test User",
+      uploadTimeStamp: "mock-timestamp",
+      tags: [],
+    }));
+  });
+
+  it("updates Firestore for Manufacturers collection type", async () => {
+    // Update firestorePath for Manufacturers collection type
+    const manufacturersPath = { ...firestorePath, collectionType: "Manufacturers" as const, manufacturerId: "manufacturerId123", departmentId: "" };
+    const mockDocRef = {};
+    (doc as jest.Mock).mockReturnValue(mockDocRef);
+    (setDoc as jest.Mock).mockResolvedValue({});
+
+    await updateFirestore(manufacturersPath, downloadURL, fileName, storagePath);
+
+    // Check that the doc and setDoc were called correctly
+    expect(doc).toHaveBeenCalledWith(
+      db,
+      "Company",
+      manufacturersPath.companyId,
+      "Manufacturers",
+      manufacturersPath.manufacturerId,
+      "Products",
+      fileName
+    );
+    expect(setDoc).toHaveBeenCalledWith(mockDocRef, expect.objectContaining({
+      fileName,
+      download: downloadURL,
+      filePath: storagePath,
+      uploadedBy: "test-user-id",
+      userDisplayName: "Test User",
+      uploadTimeStamp: "mock-timestamp",
+      tags: [],
+    }));
+  });
+
+  it("throws an error if collectionType is invalid", async () => {
+    const invalidPath = {
+        ...firestorePath,
+        collectionType: "InvalidType" as "Departments" | "Manufacturers" | "Buyers",
+    };
+
+    await expect(
+      updateFirestore(invalidPath, downloadURL, fileName, storagePath)
+    ).rejects.toThrow("Invalid Firestore path provided.");
+  });
+
+  /* ==========
+  Storage Tests
+  ========== */
+
+  it("throws an error if no file is provided", async () => {
+    await expect(uploadFileToStorage(null as unknown as File, storagePath)).rejects.toThrow("No file provided.");
+  });
+
+  it("prompts the user to replace an existing file", async () => {
+    const mockStorageRef = {};
+    const mockDownloadURL = "https://example.com/testFile.txt";
+    (ref as jest.Mock).mockReturnValue(mockStorageRef);
+    (getDownloadURL as jest.Mock).mockResolvedValue(mockDownloadURL);
+    (global.confirm as jest.Mock).mockReturnValue(true);
+    (deleteObject as jest.Mock).mockResolvedValue({});
+
+    const result = await uploadFileToStorage(mockFile, storagePath);
+    expect(global.confirm).toHaveBeenCalledWith(
+      `A file named "testFile.txt" already exists. Do you want to replace it?`
+    );
+    expect(deleteObject).toHaveBeenCalledWith(mockStorageRef);
+    expect(result).toBe(mockDownloadURL);
+  });
+
 });
