@@ -1,20 +1,20 @@
 "use client";
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { auth, db } from '@/lib/firebaseClient';
-import { doc, getDoc } from 'firebase/firestore';
-import { useRouter } from 'next/navigation';
-import { logoutUser } from '../authentication';
-import { LuCloudLightning } from 'react-icons/lu';
-import styles from './styles.module.css'; // Correct import for CSS Modules
-import { getEmployeeProfile } from '../authentication'; // Adjust the import path if needed
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { auth, db } from "@/lib/firebaseClient";
+import { doc, getDoc, DocumentReference } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { logoutUser } from "../authentication";
+import { LuCloudLightning } from "react-icons/lu";
+import styles from "./styles.module.css"; // Correct import for CSS Modules
+import { getEmployeeProfile } from "../authentication"; // Adjust the import path if needed
 
 export default function Home() {
   const router = useRouter();
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [userDepartments, setUserDepartments] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false); // New state for admin status
 
-  // Map department names to Firestore document IDs (or other identifiers)
   const departmentMapping = {
     qa: "Eq2IDInbEQB5nI5Ar6Vj",
     hr: "NpaV1QtwGZ2MDNOGAlXa",
@@ -23,26 +23,71 @@ export default function Home() {
   };
 
   useEffect(() => {
-    document.body.classList.add('home-page');
+    const fetchAdmins = async () => {
+      try {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            const employeeProfile = await getEmployeeProfile(user.uid);
+            const employeeName = employeeProfile?.name;
+            console.log("Signed-in employee name:", employeeName);
+
+            const companyDocRef = doc(db, "Company", "mh3VZ5IrZjubXUCZL381");
+            const companyDocSnap = await getDoc(companyDocRef);
+
+            if (companyDocSnap.exists()) {
+              const companyData = companyDocSnap.data();
+              const admins: DocumentReference[] = companyData?.admins || [];
+            
+              const adminNames = await Promise.all(
+                admins.map(async (ref: DocumentReference) => {
+                  const adminSnap = await getDoc(ref);
+                  return adminSnap.exists() ? adminSnap.data()?.name : null; 
+                })
+              );
+
+              console.log("Admin Names:", adminNames);
+
+              const isEmployeeAdmin = adminNames.includes(employeeName);
+              setIsAdmin(isEmployeeAdmin); // Update admin status
+              console.log(
+                isEmployeeAdmin
+                  ? "Employee is an admin."
+                  : "Employee is NOT an admin."
+              );
+            }
+          }
+        });
+
+        return unsubscribe;
+      } catch (error) {
+        console.error("Error fetching admins:", error);
+      }
+    };
+
+    fetchAdmins();
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.add("home-page");
+
+    //const [userDepartments, setUserDepartments] = useState<string[]>([]);
 
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         setIsSignedIn(true);
-
+    
         try {
-          // Fetch the user's profile info
-          const profile = await getEmployeeProfile(user.uid);
-
-          // Resolve department references to their IDs/names
+          const profile: { departments: DocumentReference[] } = await getEmployeeProfile(user.uid);
+    
           const resolvedDepartments = await Promise.all(
-            profile.departments.map(async (ref) => {
-              const departmentSnap = await getDoc(ref); // Resolve reference to document
-              return departmentSnap.id; // Or departmentSnap.data() if needed
+            profile.departments.map(async (ref: DocumentReference) => {
+              const departmentSnap = await getDoc(ref);
+              return departmentSnap.id; // departmentSnap.id is a string
             })
           );
-
-          setUserDepartments(resolvedDepartments);
-        } catch (error) {
+    
+          setUserDepartments(resolvedDepartments); // resolvedDepartments is string[]
+        }catch (error) {
           console.error("Error fetching profile info:", error);
         }
       } else {
@@ -51,7 +96,7 @@ export default function Home() {
     });
 
     return () => {
-      document.body.classList.remove('home-page');
+      document.body.classList.remove("home-page");
       unsubscribe();
     };
   }, []);
@@ -61,10 +106,8 @@ export default function Home() {
     router.push("/workplaces");
   };
 
-  // Check if a department is in the user's list
-  const isDepartmentEnabled = (departmentKey) => {
+  const isDepartmentEnabled = (departmentKey: keyof typeof departmentMapping): boolean => {
     const departmentId = departmentMapping[departmentKey];
-    //console.log(userDepartments.includes(departmentId))
     return userDepartments.includes(departmentId);
   };
 
@@ -75,7 +118,7 @@ export default function Home() {
           <LuCloudLightning className={styles.cloudIcon} />
         </div>
         
-        {isDepartmentEnabled("qa") ? (
+        {isDepartmentEnabled("qa") || isAdmin ? (
   <Link href="/departments/qa">
     <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
       Quality Assurance
@@ -96,7 +139,7 @@ export default function Home() {
   </div>
 )}
 
-{isDepartmentEnabled("hr") ? (
+{isDepartmentEnabled("hr")  || isAdmin ? (
   <Link href="/departments/hr">
     <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
       Human Resources
@@ -116,7 +159,7 @@ export default function Home() {
     Human Resources
   </div>
 )}
-        {isDepartmentEnabled("logistics") ? (
+        {isDepartmentEnabled("logistics")  || isAdmin ? (
   <Link href="/departments/logistics">
     <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
     Logistics
@@ -137,7 +180,7 @@ export default function Home() {
   </div>
 )}
 
-{isDepartmentEnabled("merchandising") ? (
+{isDepartmentEnabled("merchandising")  || isAdmin ? (
   <Link href="/departments/merchandising">
     <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
     Merchandising
@@ -158,18 +201,37 @@ export default function Home() {
   </div>
 )}
 
-        <Link className="user-container" href="/createUser">
-          <div className="create-user" style={{ marginBottom: '20px' }}>Create Employee</div>
-        </Link>
+        {/* Lock Create Employee Button */}
+        {isAdmin ? (
+          <Link href="/createUser">
+            <div className="create-user" style={{ marginBottom: "20px", opacity: 1 }}>
+              Create Employee
+            </div>
+          </Link>
+        ) : (
+          <div
+            className="create-user"
+            style={{
+              marginBottom: "20px",
+              opacity: 0.5,
+              cursor: "not-allowed",
+            }}
+            role="button"
+            aria-disabled="true"
+          >
+            Create Employee
+          </div>
+        )}
 
         {isSignedIn && (
-          <button onClick={handleSignOut} style={{ marginTop: '20px' }}>
+          <button onClick={handleSignOut} style={{ marginTop: "20px" }}>
             Sign Out
           </button>
         )}
       </div>
       <div className={styles.motto}>
-        Knowledge<br />
+        Knowledge
+        <br />
         is Power
       </div>
       <div className={styles.description}>
@@ -178,7 +240,7 @@ export default function Home() {
       </div>
       <div className={styles.bottomButtons}>
         <Link className={styles.faqButton} href="/faq">
-          <div style={{ marginBottom: '20px' }}>FAQ</div>
+          <div style={{ marginBottom: "20px" }}>FAQ</div>
         </Link>
       </div>
     </div>
