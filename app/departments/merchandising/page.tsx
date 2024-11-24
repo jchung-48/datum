@@ -217,7 +217,7 @@ const MerchandisingDepartment = () => {
 
         {/* File List Modal */}
         {showModal && (
-          <div className={styles.modal} onClick={() => setShowModal(false)}>
+          <div className={styles.modal}>
             <div className={styles.modalContent}>
               <button
                 className={styles.closeButton}
