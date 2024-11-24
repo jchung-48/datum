@@ -28,7 +28,7 @@
 /* Search results card directly above the search bar */
 .searchResultsCard {
     position: absolute;
-    top: 100%; /* Position below the search bar */
+    bottom: 100%; /* Position below the search bar */
     left: 0;
     width: 100%; /* Match the width of the search bar */
     background-color: #ffffff;
@@ -41,6 +41,7 @@
     z-index: 10;
     max-height: 200px; /* Scrollable results if content overflows */
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* Styling for search result items */
