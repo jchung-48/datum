@@ -5,7 +5,8 @@ import { auth, db } from '@/lib/firebaseClient';
 import { useRouter } from 'next/navigation';
 import { logoutUser } from '../authentication';
 import { LuCloudLightning } from 'react-icons/lu';
-import styles from './styles.module.css';  // Correct import for CSS Modules
+import styles from './styles.module.css'; 
+import { FaUserCircle } from 'react-icons/fa';
 
 export default function Home() {
   const router = useRouter();
@@ -26,10 +27,10 @@ export default function Home() {
     };
   }, []);
 
-  const handleSignOut = async () => {
-    await logoutUser();
-    router.push("/workplaces");
-  }
+  // const handleSignOut = async () => {
+  //   await logoutUser();
+  //   router.push("/workplaces");
+  // }
 
   return (
     <div>
@@ -38,26 +39,32 @@ export default function Home() {
           <LuCloudLightning className={styles.cloudIcon}/>
         </div>
           <Link href="/departments/qa">
-            <div className="top-buttons" style={{ marginBottom: '20px' }}>Quality Assurance</div>
+            <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Quality Assurance</div>
           </Link>
           <Link href="/departments/hr">
-            <div className="top-buttons" style={{ marginBottom: '20px' }}>Human Resources</div>
+            <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Human Resources</div>
           </Link>
           <Link href="/departments/logistics">
-            <div className="top-buttons" style={{ marginBottom: '20px' }}>Logistics</div>
+            <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Logistics</div>
           </Link>
           <Link href="/departments/merchandising">
-            <div className="top-buttons" style={{ marginBottom: '20px' }}>Merchandising</div>
+            <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Merchandising</div>
           </Link>
-          <Link className="user-container" href="/createUser">
-            <div className="create-user"style={{ marginBottom: '20px' }}>Create Employee</div>
+          <Link className={styles.userContainer} href="/createUser">
+            <div className={styles.createUser}style={{ marginBottom: '20px' }}>Create Employee</div>
           </Link>
-
         {isSignedIn && (
-          <button onClick={handleSignOut} style={{ marginTop: '20px' }}>
+          <div className={styles.profileHome}>
+            <Link href="/profile">
+              <FaUserCircle className={styles.profileIconHome} />
+            </Link>
+          </div>
+        )}
+        {/* {isSignedIn && (
+          <button className={styles.signOut} onClick={handleSignOut}>
             Sign Out
           </button>
-        )}
+        )} */}
       </div>
       <div className={styles.motto}>
         Knowledge<br />
