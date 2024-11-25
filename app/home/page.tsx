@@ -35,9 +35,11 @@ export default function Home() {
   return (
     <div>
       <div className={styles.header}>
-        <div className={styles.home}>
-          <LuCloudLightning className={styles.cloudIcon}/>
-        </div>
+        <Link href="/home">
+          <div className={styles.home}>
+            <LuCloudLightning className={styles.cloudIcon}/>
+          </div>
+        </Link>
           <Link href="/departments/qa">
             <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Quality Assurance</div>
           </Link>
