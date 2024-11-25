@@ -61,6 +61,52 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   }, []);
 
   useEffect(() => {
+    const fetchAdmins = async () => {
+      try {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            const employeeProfile = await getEmployeeProfile(user.uid);
+            const employeeName = employeeProfile?.name;
+            console.log("Signed-in employee name:", employeeName);
+
+            const companyDocRef = doc(db, "Company", "mh3VZ5IrZjubXUCZL381");
+            const companyDocSnap = await getDoc(companyDocRef);
+
+            if (companyDocSnap.exists()) {
+              const companyData = companyDocSnap.data();
+              const admins: DocumentReference[] = companyData?.admins || [];
+            
+              const adminNames = await Promise.all(
+                admins.map(async (ref: DocumentReference) => {
+                  const adminSnap = await getDoc(ref);
+                  return adminSnap.exists() ? adminSnap.data()?.name : null; 
+                })
+              );
+
+              console.log("Admin Names:", adminNames);
+
+              const isEmployeeAdmin = adminNames.includes(employeeName);
+              setIsAdmin(isEmployeeAdmin); // Update admin status
+              console.log(
+                isEmployeeAdmin
+                  ? "Employee is an admin."
+                  : "Employee is NOT an admin."
+              );
+            }
+          }
+        });
+
+        return unsubscribe;
+      } catch (error) {
+        console.error("Error fetching admins:", error);
+        return null;
+      }
+    };
+
+    fetchAdmins();
+  }, []);
+
+  useEffect(() => {
     const fetchFiles = async () => {
       setLoading(true);
       try {
@@ -280,10 +326,11 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
     const deletableFiles = fileId ? [fileId] :
       Array.from(selectedFiles).filter(id =>
         files.find(
-          file => file.id === id && file.uploadedBy === currentUserUid,
+          file => file.id === id && (file.uploadedBy === currentUserUid || isAdmin),
         ),
       );
 
+      
     const firestorePath: FirestorePath = {
       collectionType: 
         collectionPath[2] == "Buyers" ? "Buyers" :
@@ -356,7 +403,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
               selectedFiles.size > 0 &&
               Array.from(selectedFiles).every(id =>
                 files.find(
-                  file => file.id === id && file.uploadedBy === currentUserUid,
+                  file => file.id === id && (file.uploadedBy === currentUserUid || isAdmin),
                 ),
               )
             )
@@ -375,7 +422,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                   selectedFiles.size > 0 &&
                   Array.from(selectedFiles).every(id =>
                     files.find(
-                      file => file.id === id && file.uploadedBy === currentUserUid,
+                      file => file.id === id && (file.uploadedBy === currentUserUid || isAdmin),
                     ),
                   )
                 )
