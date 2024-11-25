@@ -22,9 +22,6 @@ describe("Home Component Tests", () => {
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
   });
 
-  it("renders the Home page with department links", () => {
-    render(<Home />);
-
   it("disables department links if the user does not have permissions", () => {
     const userDepartments: string[] = []; // No access
     const isAdmin = false;

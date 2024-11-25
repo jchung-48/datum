@@ -8,7 +8,7 @@ import {useRouter} from 'next/navigation';
 import {logoutUser} from '../authentication';
 import {LuCloudLightning} from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import styles from './styles.module.css'; // Correct import for CSS Modules
+import styles from './home.module.css'; // Correct import for CSS Modules
 import {getEmployeeProfile} from '../authentication'; // Adjust the import path if needed
 
 export default function Home() {
@@ -128,7 +128,7 @@ export default function Home() {
         {isDepartmentEnabled('qa') || isAdmin ? (
           <Link href="/departments/qa">
             <div
-              className="top-buttons"
+              className={styles.topButtons}
               style={{marginBottom: '20px', opacity: 1}}
             >
               Quality Assurance
@@ -136,7 +136,7 @@ export default function Home() {
           </Link>
         ) : (
           <div
-            className="top-buttons"
+            className={styles.topButtons}
             style={{
               marginBottom: '20px',
               opacity: 0.5,
@@ -152,7 +152,7 @@ export default function Home() {
         {isDepartmentEnabled('hr') || isAdmin ? (
           <Link href="/departments/hr">
             <div
-              className="top-buttons"
+              className={styles.topButtons}
               style={{marginBottom: '20px', opacity: 1}}
             >
               Human Resources
@@ -160,7 +160,7 @@ export default function Home() {
           </Link>
         ) : (
           <div
-            className="top-buttons"
+            className={styles.topButtons}
             style={{
               marginBottom: '20px',
               opacity: 0.5,
@@ -175,7 +175,7 @@ export default function Home() {
         {isDepartmentEnabled('logistics') || isAdmin ? (
           <Link href="/departments/logistics">
             <div
-              className="top-buttons"
+              className={styles.topButtons}
               style={{marginBottom: '20px', opacity: 1}}
             >
               Logistics
@@ -183,7 +183,7 @@ export default function Home() {
           </Link>
         ) : (
           <div
-            className="top-buttons"
+            className={styles.topButtons}
             style={{
               marginBottom: '20px',
               opacity: 0.5,
@@ -199,7 +199,7 @@ export default function Home() {
         {isDepartmentEnabled('merchandising') || isAdmin ? (
           <Link href="/departments/merchandising">
             <div
-              className="top-buttons"
+              className={styles.topButtons}
               style={{marginBottom: '20px', opacity: 1}}
             >
               Merchandising
@@ -207,7 +207,7 @@ export default function Home() {
           </Link>
         ) : (
           <div
-            className="top-buttons"
+            className={styles.topButtons}
             style={{
               marginBottom: '20px',
               opacity: 0.5,
@@ -224,7 +224,7 @@ export default function Home() {
         {isAdmin ? (
           <Link href="/createUser">
             <div
-              className="create-user"
+              className={styles.createUser}
               style={{marginBottom: '20px', opacity: 1}}
             >
               Create Employee
@@ -232,7 +232,7 @@ export default function Home() {
           </Link>
         ) : (
           <div
-            className="create-user"
+            className={styles.createUser}
             style={{
               marginBottom: '20px',
               opacity: 0.5,
