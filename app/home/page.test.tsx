@@ -43,8 +43,8 @@ describe("Home Component", () => {
 
     render(
       <Home
-        isAdmin={isAdmin}
-        userDepartments={userDepartments}
+        // isAdmin={false}
+        // userDepartments={userDepartments}
       />
     );
 
@@ -64,8 +64,8 @@ describe("Home Component", () => {
 
     render(
       <Home
-        isAdmin={isAdmin}
-        userDepartments={userDepartments}
+        // isAdmin={isAdmin}
+        // userDepartments={userDepartments}
       />
     );
 
@@ -81,8 +81,8 @@ describe("Home Component", () => {
 
     render(
       <Home
-        isAdmin={isAdmin}
-        userDepartments={userDepartments}
+        // isAdmin={isAdmin}
+        // userDepartments={userDepartments}
       />
     );
 
@@ -104,8 +104,8 @@ describe("Home Component", () => {
 
     render(
       <Home
-        isAdmin={isAdmin}
-        userDepartments={userDepartments}
+        // isAdmin={isAdmin}
+        // userDepartments={userDepartments}
       />
     );
 

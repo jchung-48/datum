@@ -102,6 +102,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
         return unsubscribe;
       } catch (error) {
         console.error("Error fetching admins:", error);
+        return null;
       }
     };
 

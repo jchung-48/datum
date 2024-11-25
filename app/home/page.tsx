@@ -1,59 +1,58 @@
-"use client";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { auth, db } from "@/lib/firebaseClient";
-import { doc, getDoc, DocumentReference } from "firebase/firestore";
-import { useRouter } from "next/navigation";
-import { logoutUser } from "../authentication";
-import { LuCloudLightning } from "react-icons/lu";
-import styles from "./styles.module.css"; // Correct import for CSS Modules
-import { getEmployeeProfile } from "../authentication"; // Adjust the import path if needed
-
+'use client';
+import Link from 'next/link';
+import React, {useEffect, useState} from 'react';
+import {auth, db} from '@/lib/firebaseClient';
+import {doc, getDoc, DocumentReference} from 'firebase/firestore';
+import {useRouter} from 'next/navigation';
+import {logoutUser} from '../authentication';
+import {LuCloudLightning} from 'react-icons/lu';
+import styles from './styles.module.css'; // Correct import for CSS Modules
+import {getEmployeeProfile} from '../authentication'; // Adjust the import path if needed
 
 export default function Home() {
   const router = useRouter();
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [userDepartments, setUserDepartments] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false); // New state for admin status
+  const [userDepartments, setUserDepartments] = useState<string[]>([]);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
 
   const departmentMapping = {
-    qa: "Eq2IDInbEQB5nI5Ar6Vj",
-    hr: "NpaV1QtwGZ2MDNOGAlXa",
-    logistics: "KZm56fUOuTobsTRCfknJ",
-    merchandising: "ti7yNByDOzarVXoujOog",
+    qa: 'Eq2IDInbEQB5nI5Ar6Vj',
+    hr: 'NpaV1QtwGZ2MDNOGAlXa',
+    logistics: 'KZm56fUOuTobsTRCfknJ',
+    merchandising: 'ti7yNByDOzarVXoujOog',
   };
 
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+        const unsubscribe = auth.onAuthStateChanged(async user => {
           if (user) {
             const employeeProfile = await getEmployeeProfile(user.uid);
             const employeeName = employeeProfile?.name;
-            console.log("Signed-in employee name:", employeeName);
+            console.log('Signed-in employee name:', employeeName);
 
-            const companyDocRef = doc(db, "Company", "mh3VZ5IrZjubXUCZL381");
+            const companyDocRef = doc(db, 'Company', 'mh3VZ5IrZjubXUCZL381');
             const companyDocSnap = await getDoc(companyDocRef);
 
             if (companyDocSnap.exists()) {
               const companyData = companyDocSnap.data();
               const admins: DocumentReference[] = companyData?.admins || [];
-            
+
               const adminNames = await Promise.all(
                 admins.map(async (ref: DocumentReference) => {
                   const adminSnap = await getDoc(ref);
-                  return adminSnap.exists() ? adminSnap.data()?.name : null; 
-                })
+                  return adminSnap.exists() ? adminSnap.data()?.name : null;
+                }),
               );
 
-              console.log("Admin Names:", adminNames);
+              console.log('Admin Names:', adminNames);
 
               const isEmployeeAdmin = adminNames.includes(employeeName);
               setIsAdmin(isEmployeeAdmin); // Update admin status
               console.log(
                 isEmployeeAdmin
-                  ? "Employee is an admin."
-                  : "Employee is NOT an admin."
+                  ? 'Employee is an admin.'
+                  : 'Employee is NOT an admin.'
               );
             }
           }
@@ -61,7 +60,8 @@ export default function Home() {
 
         return unsubscribe;
       } catch (error) {
-        console.error("Error fetching admins:", error);
+        console.error('Error fetching admins:', error);
+        return null;
       }
     };
 
@@ -69,27 +69,28 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    document.body.classList.add("home-page");
+    document.body.classList.add('home-page');
 
     //const [userDepartments, setUserDepartments] = useState<string[]>([]);
 
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    const unsubscribe = auth.onAuthStateChanged(async user => {
       if (user) {
         setIsSignedIn(true);
-    
+
         try {
-          const profile: { departments: DocumentReference[] } = await getEmployeeProfile(user.uid);
-    
+          const profile: {departments: DocumentReference[]} =
+            await getEmployeeProfile(user.uid);
+
           const resolvedDepartments = await Promise.all(
             profile.departments.map(async (ref: DocumentReference) => {
               const departmentSnap = await getDoc(ref);
               return departmentSnap.id; // departmentSnap.id is a string
-            })
+            }),
           );
-    
+
           setUserDepartments(resolvedDepartments); // resolvedDepartments is string[]
-        }catch (error) {
-          console.error("Error fetching profile info:", error);
+        } catch (error) {
+          console.error('Error fetching profile info:', error);
         }
       } else {
         setIsSignedIn(false);
@@ -97,21 +98,22 @@ export default function Home() {
     });
 
     return () => {
-      document.body.classList.remove("home-page");
+      document.body.classList.remove('home-page');
       unsubscribe();
     };
   }, []);
 
   const handleSignOut = async () => {
     await logoutUser();
-    router.push("/workplaces");
+    router.push('/workplaces');
   };
 
-  const isDepartmentEnabled = (departmentKey: keyof typeof departmentMapping): boolean => {
+  const isDepartmentEnabled = (
+    departmentKey: keyof typeof departmentMapping,
+  ): boolean => {
     const departmentId = departmentMapping[departmentKey];
     return userDepartments.includes(departmentId);
   };
-
 
   return (
     <div>
@@ -119,95 +121,109 @@ export default function Home() {
         <div className={styles.home}>
           <LuCloudLightning className={styles.cloudIcon} />
         </div>
-        
-        {isDepartmentEnabled("qa") || isAdmin ? (
-  <Link href="/departments/qa">
-    <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
-      Quality Assurance
-    </div>
-  </Link>
-  
-) : (
-  <div
-    className="top-buttons"
-    style={{
-      marginBottom: '20px',
-      opacity: 0.5,
-      cursor: 'not-allowed', // Ensures proper cursor feedback
-    }}
-    role="button"
-    aria-disabled="true" // Accessibility for disabled state
-  >
-    Quality Assurance
-  </div>
-)}
 
-{isDepartmentEnabled("hr")  || isAdmin ? (
-  <Link href="/departments/hr">
-    <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
-      Human Resources
-    </div>
-  </Link>
-) : (
-  <div
-    className="top-buttons"
-    style={{
-      marginBottom: '20px',
-      opacity: 0.5,
-      cursor: 'not-allowed', // Ensures proper cursor feedback
-    }}
-    role="button"
-    aria-disabled="true" // Accessibility for disabled state
-  >
-    Human Resources
-  </div>
-)}
-        {isDepartmentEnabled("logistics")  || isAdmin ? (
-  <Link href="/departments/logistics">
-    <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
-    Logistics
-    </div>
-  </Link>
-) : (
-  <div
-    className="top-buttons"
-    style={{
-      marginBottom: '20px',
-      opacity: 0.5,
-      cursor: 'not-allowed', // Ensures proper cursor feedback
-    }}
-    role="button"
-    aria-disabled="true" // Accessibility for disabled state
-  >
-    Logistics
-  </div>
-)}
+        {isDepartmentEnabled('qa') || isAdmin ? (
+          <Link href="/departments/qa">
+            <div
+              className="top-buttons"
+              style={{marginBottom: '20px', opacity: 1}}
+            >
+              Quality Assurance
+            </div>
+          </Link>
+        ) : (
+          <div
+            className="top-buttons"
+            style={{
+              marginBottom: '20px',
+              opacity: 0.5,
+              cursor: 'not-allowed', // Ensures proper cursor feedback
+            }}
+            role="button"
+            aria-disabled="true" // Accessibility for disabled state
+          >
+            Quality Assurance
+          </div>
+        )}
 
-{isDepartmentEnabled("merchandising")  || isAdmin ? (
-  <Link href="/departments/merchandising">
-    <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
-    Merchandising
-    </div>
-  </Link>
-) : (
-  <div
-    className="top-buttons"
-    style={{
-      marginBottom: '20px',
-      opacity: 0.5,
-      cursor: 'not-allowed', // Ensures proper cursor feedback
-    }}
-    role="button"
-    aria-disabled="true" // Accessibility for disabled state
-  >
-    Merchandising
-  </div>
-)}
+        {isDepartmentEnabled('hr') || isAdmin ? (
+          <Link href="/departments/hr">
+            <div
+              className="top-buttons"
+              style={{marginBottom: '20px', opacity: 1}}
+            >
+              Human Resources
+            </div>
+          </Link>
+        ) : (
+          <div
+            className="top-buttons"
+            style={{
+              marginBottom: '20px',
+              opacity: 0.5,
+              cursor: 'not-allowed', // Ensures proper cursor feedback
+            }}
+            role="button"
+            aria-disabled="true" // Accessibility for disabled state
+          >
+            Human Resources
+          </div>
+        )}
+        {isDepartmentEnabled('logistics') || isAdmin ? (
+          <Link href="/departments/logistics">
+            <div
+              className="top-buttons"
+              style={{marginBottom: '20px', opacity: 1}}
+            >
+              Logistics
+            </div>
+          </Link>
+        ) : (
+          <div
+            className="top-buttons"
+            style={{
+              marginBottom: '20px',
+              opacity: 0.5,
+              cursor: 'not-allowed', // Ensures proper cursor feedback
+            }}
+            role="button"
+            aria-disabled="true" // Accessibility for disabled state
+          >
+            Logistics
+          </div>
+        )}
+
+        {isDepartmentEnabled('merchandising') || isAdmin ? (
+          <Link href="/departments/merchandising">
+            <div
+              className="top-buttons"
+              style={{marginBottom: '20px', opacity: 1}}
+            >
+              Merchandising
+            </div>
+          </Link>
+        ) : (
+          <div
+            className="top-buttons"
+            style={{
+              marginBottom: '20px',
+              opacity: 0.5,
+              cursor: 'not-allowed', // Ensures proper cursor feedback
+            }}
+            role="button"
+            aria-disabled="true" // Accessibility for disabled state
+          >
+            Merchandising
+          </div>
+        )}
 
         {/* Lock Create Employee Button */}
         {isAdmin ? (
           <Link href="/createUser">
-            <div className="create-user" style={{ marginBottom: "20px", opacity: 1 }}>
+            <div
+              className="create-user"
+              style={{marginBottom: '20px', opacity: 1}}
+            >
               Create Employee
             </div>
           </Link>
@@ -215,9 +231,9 @@ export default function Home() {
           <div
             className="create-user"
             style={{
-              marginBottom: "20px",
+              marginBottom: '20px',
               opacity: 0.5,
-              cursor: "not-allowed",
+              cursor: 'not-allowed',
             }}
             role="button"
             aria-disabled="true"
@@ -227,11 +243,10 @@ export default function Home() {
         )}
 
         {isSignedIn && (
-          <button onClick={handleSignOut} style={{ marginTop: "20px" }}>
-
+          <button onClick={handleSignOut} style={{marginTop: '20px'}}>
             Sign Out
           </button>
-        )} */}
+        )}
       </div>
       <div className={styles.motto}>
         Knowledge
@@ -244,7 +259,7 @@ export default function Home() {
       </div>
       <div className={styles.bottomButtons}>
         <Link className={styles.faqButton} href="/faq">
-          <div style={{ marginBottom: "20px" }}>FAQ</div>
+          <div style={{marginBottom: '20px'}}>FAQ</div>
         </Link>
       </div>
     </div>
