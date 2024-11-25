@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Darker Grotesque';
+  src: url('fonts/DarkerGrotesque-Black.ttf') format('truetype'); /* Corrected format */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Darker Grotesque Semi Bold';
+  src: url('fonts/DarkerGrotesque-SemiBold.ttf') format('truetype');
+  font-style: normal;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -23,6 +35,10 @@
 
   --button-blue: #1F3C53;
   --button-blue-hover: #627D9F;
+  --button-green: #4caf50;
+  --button-green-hover: #409342;
+  --button-red: #e74c3c;
+  --button-red-hover: #c82f1e;
 }
 
 @media (prefers-color-scheme: dark) {
