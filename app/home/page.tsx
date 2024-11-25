@@ -246,9 +246,11 @@ export default function Home() {
         )}
 
         {isSignedIn && (
-          <button onClick={handleSignOut} style={{marginTop: '20px'}}>
-            Sign Out
-          </button>
+          <div className={styles.profileHome}>
+            <Link href="/profile">
+              <FaUserCircle className={styles.profileIconHome} />
+            </Link>
+          </div>
         )}
       </div>
       <div className={styles.motto}>
