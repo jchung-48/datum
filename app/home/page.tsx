@@ -35,26 +35,117 @@ export default function Home() {
   return (
     <div>
       <div className={styles.header}>
-        <Link href="/home">
-          <div className={styles.home}>
-            <LuCloudLightning className={styles.cloudIcon}/>
+
+        <div className={styles.home}>
+          <LuCloudLightning className={styles.cloudIcon} />
+        </div>
+        
+        {isDepartmentEnabled("qa") || isAdmin ? (
+  <Link href="/departments/qa">
+    <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
+      Quality Assurance
+    </div>
+  </Link>
+  
+) : (
+  <div
+    className="top-buttons"
+    style={{
+      marginBottom: '20px',
+      opacity: 0.5,
+      cursor: 'not-allowed', // Ensures proper cursor feedback
+    }}
+    role="button"
+    aria-disabled="true" // Accessibility for disabled state
+  >
+    Quality Assurance
+  </div>
+)}
+
+{isDepartmentEnabled("hr")  || isAdmin ? (
+  <Link href="/departments/hr">
+    <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
+      Human Resources
+    </div>
+  </Link>
+) : (
+  <div
+    className="top-buttons"
+    style={{
+      marginBottom: '20px',
+      opacity: 0.5,
+      cursor: 'not-allowed', // Ensures proper cursor feedback
+    }}
+    role="button"
+    aria-disabled="true" // Accessibility for disabled state
+  >
+    Human Resources
+  </div>
+)}
+        {isDepartmentEnabled("logistics")  || isAdmin ? (
+  <Link href="/departments/logistics">
+    <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
+    Logistics
+    </div>
+  </Link>
+) : (
+  <div
+    className="top-buttons"
+    style={{
+      marginBottom: '20px',
+      opacity: 0.5,
+      cursor: 'not-allowed', // Ensures proper cursor feedback
+    }}
+    role="button"
+    aria-disabled="true" // Accessibility for disabled state
+  >
+    Logistics
+  </div>
+)}
+
+{isDepartmentEnabled("merchandising")  || isAdmin ? (
+  <Link href="/departments/merchandising">
+    <div className="top-buttons" style={{ marginBottom: '20px', opacity: 1 }}>
+    Merchandising
+    </div>
+  </Link>
+) : (
+  <div
+    className="top-buttons"
+    style={{
+      marginBottom: '20px',
+      opacity: 0.5,
+      cursor: 'not-allowed', // Ensures proper cursor feedback
+    }}
+    role="button"
+    aria-disabled="true" // Accessibility for disabled state
+  >
+    Merchandising
+  </div>
+)}
+
+        {/* Lock Create Employee Button */}
+        {isAdmin ? (
+          <Link href="/createUser">
+            <div className="create-user" style={{ marginBottom: "20px", opacity: 1 }}>
+              Create Employee
+            </div>
+          </Link>
+        ) : (
+          <div
+            className="create-user"
+            style={{
+              marginBottom: "20px",
+              opacity: 0.5,
+              cursor: "not-allowed",
+            }}
+            role="button"
+            aria-disabled="true"
+          >
+            Create Employee
           </div>
-        </Link>
-          <Link href="/departments/qa">
-            <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Quality Assurance</div>
-          </Link>
-          <Link href="/departments/hr">
-            <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Human Resources</div>
-          </Link>
-          <Link href="/departments/logistics">
-            <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Logistics</div>
-          </Link>
-          <Link href="/departments/merchandising">
-            <div className={styles.topButtons} style={{ marginBottom: '20px' }}>Merchandising</div>
-          </Link>
-          <Link className={styles.userContainer} href="/createUser">
-            <div className={styles.createUser}style={{ marginBottom: '20px' }}>Create Employee</div>
-          </Link>
+        )}
+
         {isSignedIn && (
           <div className={styles.profileHome}>
             <Link href="/profile">
