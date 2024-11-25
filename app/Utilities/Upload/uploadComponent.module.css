@@ -39,7 +39,7 @@
   width: 300px;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Same shadow effect as modal */
-  font-family: "Darker Grotesque", sans-serif; /* Match modal font */
+  font-family: "Darker Grotesque SemiBold", sans-serif; /* Match modal font */
   font-size: var(--default-font-size); /* Adjust font size for consistency */
   color: #3d4d63; /* Dark text color */
 }
@@ -57,6 +57,12 @@
   margin-bottom: 10px;
   width: 100%; /* Full-width inputs */
   font-size: 0.9em;
+  height: 45px;
+}
+
+.uploadCard select {
+  font-family: "Darker Grotesque SemiBold", sans-serif; /* Match modal font */
+  font-size: var(--default-font-size); /* Adjust font size for consistency */
 }
 
 .uploadCard button {

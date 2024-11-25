@@ -5,15 +5,16 @@ import Link from 'next/link';
 import { FileList } from '@/app/Utilities/ListFiles/listFiles';
 import { uploadFileToStorage, updateFirestore } from '@/app/Utilities/Upload/uploadUtils';
 import deptStyles from '../departments.module.css';
-import logStyles from './logistics.module.css';
 import { LuCloudLightning } from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
 import AIButton from "@/app/aiAddon/aiButton";
 import SearchBar from "@/app/Utilities/SearchBar/searchBar";
 import UploadComponent from '@/app/Utilities/Upload/uploadComponent';
+import Header from '@/app/Utilities/Header/header';
+import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 
 const LogisticsDepartment: React.FC = () => {
-  const styles = { ...deptStyles, ...logStyles };
+  const styles = { ...deptStyles };
 
   const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
   const DEPARTMENTID = 'KZm56fUOuTobsTRCfknJ'; // Update to the Logistics department ID
@@ -98,20 +99,7 @@ const LogisticsDepartment: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <Link href="/home">
-          <div className={styles.home}>
-            <LuCloudLightning className="cloud-icon" />
-            DATUM
-          </div>
-        </Link>
-        <div className={styles.department}>Logistics</div>
-        <div className={styles.profile}>
-          <Link href="/profile">
-            <FaUserCircle className={styles.profileIcon}/>
-          </Link>
-        </div>
-      </div>
+      <Header department="Logistics" isProfile={false} />
       <div className={styles.body}>
 
         <div className={styles.topComponentContainer}>
@@ -128,7 +116,7 @@ const LogisticsDepartment: React.FC = () => {
         </div>
 
         <div className={styles.files}>
-          <div className={styles.fileTitle}>Transportation Files</div>
+          <FileTitle title="Transportation Files" />
           <FileList 
                 collectionPath={transportationFilesPath} 
                 title=""
@@ -137,7 +125,7 @@ const LogisticsDepartment: React.FC = () => {
                 refreshTrigger={fileListUpdated}
                 enableShare={true}
           />
-          <div className={styles.fileTitle}>Customs Files</div>
+          <FileTitle title="Customs Files" />
           <FileList 
                 collectionPath={customsFilesPath} 
                 title=""
@@ -146,7 +134,7 @@ const LogisticsDepartment: React.FC = () => {
                 refreshTrigger={fileListUpdated}
                 enableShare={true}
           />
-          <div className={styles.fileTitle}>Financial Files</div>
+          <FileTitle title="Financial Files" />
           <FileList 
                 collectionPath={financialFilesPath} 
                 title=""

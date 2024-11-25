@@ -88,7 +88,7 @@
   }
   
   .modal .shareButton {
-    background-color: #4caf50;
+    background-color: var(--button-green);
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -98,6 +98,6 @@
   }
   
   .modal .shareButton:hover {
-    background-color: #429944;
+    background-color: var(--button-green-hover);
   }
   
