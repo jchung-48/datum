@@ -1,16 +1,14 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebaseClient';
-import { 
-  fetchCompanies,
-  fetchContacts,
-  checkForDuplicate,
-  handleAddOrEditContact,
-  handleDeleteContact
-} from '../editContactUtils';
+import { fetchCompanies, fetchContacts, checkForDuplicate, handleAddOrEditContact, handleDeleteContact } from '../editContactUtils';
 import { Buyer, Company } from '../../types';
+import Header from '@/app/Utilities/Header/header';
+import styles from '../crudContacts.module.css';
+import DropdownMenu from '@/app/Utilities/DropDownMenu/dropdownMenu';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 const AddOrEditBuyer = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -123,124 +121,224 @@ const AddOrEditBuyer = () => {
     }
   };
 
+  // Handling edit button to populate the form with contact data
+  useEffect(() => {
+    if (editingContactIndex !== null && editingContactIndex >= 0) {
+      const contactToEdit = buyerData.contacts[editingContactIndex];
+      setContactName(contactToEdit.name);
+      setContactPhone(contactToEdit.phone);
+      setContactEmail(contactToEdit.email);
+      setContactRole(contactToEdit.role);
+    }
+  }, [editingContactIndex, buyerData.contacts]);
+
+  type ContactRowProps = {
+    contact: Buyer['contacts'][0]; // Assuming contacts are part of the Buyer type
+    index: number;
+    onEdit: (index: number) => void;
+    onDelete: (index: number) => void;
+  };
+
+  const ContactRow: React.FC<ContactRowProps> = ({ contact, index, onEdit, onDelete }) => {
+    const menuItems = [
+      {
+        icon: <FaEdit />,
+        label: 'Edit',
+        action: () => onEdit(index),
+      },
+      {
+        icon: <FaTrashAlt />,
+        label: 'Delete',
+        action: () => onDelete(index),
+      },
+    ];
+  
+    return (
+      <tr className={styles.contactRow}>
+        <td className={styles.name}>{contact.name}</td>
+        <td>{contact.role}</td>
+        <td>{contact.phone}</td>
+        <td>{contact.email}</td>
+        <td className={styles.action}>
+          <DropdownMenu 
+            iconColor='#333333'
+            menuItems={menuItems}
+          />
+        </td>
+      </tr>
+    );
+  };
+
   return (
     <div>
-      <h2>{isNewBuyer ? 'Add New Buyer' : 'Edit Buyer'}</h2>
-      <div>
-        <label>Select Company:</label>
-        <select value={selectedCompanyId} onChange={(e) => setSelectedCompanyId(e.target.value)}>
-          <option value="">Select a company</option>
-          {companies.map((company) => (
-            <option key={company.id} value={company.id}>
-              {company.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {selectedCompanyId && (
-        <div>
-          <label>Select Buyer:</label>
-          <select value={selectedBuyerId} onChange={(e) => handleSelectBuyer(e.target.value)}>
-            <option value="new">New Buyer</option>
-            {buyers.map((buyer) => (
-              <option key={buyer.id} value={buyer.id}>
-                {buyer.name}
+      <Header department={isNewBuyer ? 'Add Buyer' : 'Edit Buyer'} isProfile={false} />
+      <div className={styles.pageContainer}>
+        {/* Company selection dropdown */}
+        <div className={styles.selectGroup}>
+          <label>Select Company</label>
+          <select
+            value={selectedCompanyId}
+            onChange={(e) => setSelectedCompanyId(e.target.value)}
+            className={styles.select}
+          >
+            <option value="">Select a Company</option>
+            {companies.map((company) => (
+              <option key={company.id} value={company.id}>
+                {company.name}
               </option>
             ))}
           </select>
         </div>
-      )}
 
-      {/* Buyer Form Fields */}
-      {(isNewBuyer || selectedBuyerId) && (
-        <>
-          <div>
-            <input
-              type="text"
-              value={buyerData.name}
-              onChange={(e) => setBuyerData({ ...buyerData, name: e.target.value })}
-              placeholder="Buyer Name"
-            />
-          </div>
-          <div>
-            <input
-              type="tel"
-              value={buyerData.phone}
-              onChange={(e) => setBuyerData({ ...buyerData, phone: e.target.value })}
-              placeholder="Phone"
-            />
-          </div>
-          <div>
-            <input
-              type="email"
-              value={buyerData.email}
-              onChange={(e) => setBuyerData({ ...buyerData, email: e.target.value })}
-              placeholder="Email"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              value={buyerData.industry}
-              onChange={(e) => setBuyerData({ ...buyerData, industry: e.target.value })}
-              placeholder="Industry"
-            />
-          </div>
-
-          {/* Contact Management */}
-          <h3>Contacts</h3>
-          <ul>
-            {buyerData.contacts.map((contact, index) => (
-              <li key={index}>
-                {contact.name} ({contact.role}) - {contact.phone} - {contact.email}
-                <button onClick={() => setEditingContactIndex(index)}>Edit</button>
-                <button onClick={() => handleContactDelete(index)}>Delete</button>
-              </li>
-            ))}
-          </ul>
-
-          {/* Contact Form Fields */}
-          <div>
-            <div>
-              <input 
-                value={contactName} 
-                onChange={(e) => setContactName(e.target.value)} 
-                placeholder="Name" 
-              />
-            </div>
-            <div>
-              <input 
-                value={contactPhone} 
-                onChange={(e) => setContactPhone(e.target.value)} 
-                placeholder="Phone" 
-              />
-            </div>
-            <div>
-              <input 
-                value={contactEmail} 
-                onChange={(e) => setContactEmail(e.target.value)} 
-                placeholder="Email" 
-              />
-            </div>
-            <div>
-              <input 
-                value={contactRole} 
-                onChange={(e) => setContactRole(e.target.value)} 
-                placeholder="Role" 
-              />
+        {/* Only show this section if a company is selected */}
+        {selectedCompanyId && (
+          <>
+            <div className={styles.selectGroup}>
+              <label>Select Buyer:</label>
+              <select
+                value={selectedBuyerId}
+                onChange={(e) => handleSelectBuyer(e.target.value)}
+                className={styles.select}
+              >
+                <option value="new">New Buyer</option>
+                {buyers.map((buyer) => (
+                  <option key={buyer.id} value={buyer.id}>
+                    {buyer.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            <button onClick={handleContactAddOrEdit}>
-              {editingContactIndex !== null ? 'Update Contact' : 'Add Contact'}
-            </button>
-          </div>
+            {/* Buyer Form Fields */}
+            {(isNewBuyer || selectedBuyerId) && (
+              <div className={styles.inputGroup}>
+                <div>
+                  <input
+                    className={styles.input}
+                    type="text"
+                    value={buyerData.name}
+                    onChange={(e) => setBuyerData({ ...buyerData, name: e.target.value })}
+                    placeholder="Buyer Name"
+                  />
+                </div>
+                <div>
+                  <input
+                    className={styles.input}
+                    type="tel"
+                    value={buyerData.phone}
+                    onChange={(e) => setBuyerData({ ...buyerData, phone: e.target.value })}
+                    placeholder="Phone"
+                  />
+                </div>
+                <div>
+                  <input
+                    className={styles.input}
+                    type="email"
+                    value={buyerData.email}
+                    onChange={(e) => setBuyerData({ ...buyerData, email: e.target.value })}
+                    placeholder="Email"
+                  />
+                </div>
+                <div>
+                  <input
+                    className={styles.input}
+                    type="text"
+                    value={buyerData.industry}
+                    onChange={(e) => setBuyerData({ ...buyerData, industry: e.target.value })}
+                    placeholder="Industry"
+                  />
+                </div>
 
-          {/* Submit Buttons */}
-          <button onClick={handleSubmit}>{isNewBuyer ? 'Add Buyer' : 'Update Buyer'}</button>
-          {!isNewBuyer && <button onClick={handleDeleteBuyer}>Delete Buyer</button>}
-        </>
-      )}
+                {/* Contact Management */}
+                <h3>Contacts</h3>
+                <table className={styles.contactTable}>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Role</th>
+                      <th>Phone</th>
+                      <th>Email</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {buyerData.contacts.map((contact, index) => (
+                      <ContactRow
+                        key={index}
+                        contact={contact}
+                        index={index}
+                        onEdit={setEditingContactIndex}
+                        onDelete={handleContactDelete}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* Contact Form Fields */}
+                <div className={styles.inputGroup}>
+                  <div>
+                    <input
+                      className={styles.input}
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      placeholder="Name"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      className={styles.input}
+                      value={contactPhone}
+                      onChange={(e) => setContactPhone(e.target.value)}
+                      placeholder="Phone"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      className={styles.input}
+                      value={contactEmail}
+                      onChange={(e) => setContactEmail(e.target.value)}
+                      placeholder="Email"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      className={styles.input}
+                      value={contactRole}
+                      onChange={(e) => setContactRole(e.target.value)}
+                      placeholder="Role"
+                    />
+                  </div>
+
+                  <button
+                    className={styles.contactButton}
+                    onClick={handleContactAddOrEdit}
+                  >
+                    {editingContactIndex !== null ? 'Update Contact' : 'Add Contact'}
+                  </button>
+                </div>
+
+                {/* Submit Buttons */}
+                <div className={styles.actionButtons}>
+                  <button
+                    className={styles.save}
+                    onClick={handleSubmit}
+                  >
+                    {isNewBuyer ? 'Add Buyer' : 'Update Buyer'}
+                  </button>
+                  {!isNewBuyer && (
+                    <button
+                      className={styles.delete}
+                      onClick={handleDeleteBuyer}
+                    >
+                      Delete Buyer
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

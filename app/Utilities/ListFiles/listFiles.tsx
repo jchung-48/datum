@@ -15,6 +15,7 @@ import {s} from '@genkit-ai/core/lib/action-CnIb9v86';
 import {MdDelete} from 'react-icons/md';
 import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
+import DropdownMenu from '../DropDownMenu/dropdownMenu';
 
 import { F } from '@genkit-ai/flow/lib/flow-DR52DKjZ';
 
@@ -513,7 +514,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                   ></img>
                 </a>
               </th>
-              <th>Actions</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

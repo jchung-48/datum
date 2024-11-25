@@ -21,6 +21,9 @@ import AIButton from '../../aiAddon/aiButton';
 import SearchBar from '../../Utilities/SearchBar/searchBar';
 import Header from '@/app/Utilities/Header/header';
 import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
+import {doc, getDoc, DocumentReference} from 'firebase/firestore';
+import {auth, db} from '@/lib/firebaseClient';
+import { usePathname } from 'next/navigation';
 
 const MerchandisingDepartment = () => {
   const styles = { ...deptStyles, ...merchStyles };
@@ -51,6 +54,8 @@ const MerchandisingDepartment = () => {
   const [selectedContactFilesPath, setSelectedContactFilesPath] = useState<
     string[]
   >([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const pathname = usePathname();
 
   // Handle file selection for department files
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,6 +138,46 @@ const MerchandisingDepartment = () => {
     setShowModal(true);
   };
 
+  const checkAdminStatus = async (uid: string) => {
+    try {
+      const companyDocRef = doc(db, "Company", COMPANYID);
+      const companyDocSnapshot = await getDoc(companyDocRef);
+
+      if (companyDocSnapshot.exists()) {
+        const adminRefs: DocumentReference[] = companyDocSnapshot.data().admins;
+
+        if (Array.isArray(adminRefs)) {
+          const adminIds = await Promise.all(
+            adminRefs.map(async (ref) => {
+              const adminDoc = await getDoc(ref);
+              return adminDoc.id;
+            })
+          );
+
+          setIsAdmin(adminIds.includes(uid)); // Set admin status
+        } else {
+          console.warn("Admins field is not an array.");
+          setIsAdmin(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+      setIsAdmin(false);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        checkAdminStatus(user.uid); // Check admin status when user is logged in
+      } else {
+        setIsAdmin(false); // If user is not logged in, reset to false
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the listener on unmount
+  }, []);
+
   return (
     <div className='Page'>
       <Header department="Merchandising" isProfile={false} />
@@ -152,7 +197,7 @@ const MerchandisingDepartment = () => {
         </div>
 
         <div className={styles.files}>
-          <FileTitle title="Department Files" />
+          <FileTitle title="Department Files"/>
           <FileList
             collectionPath={deptFilesPath}
             title=""
@@ -172,7 +217,19 @@ const MerchandisingDepartment = () => {
         <div className={styles.contactListsContainer}>
           {/* Buyers List */}
           <div className={styles.contactList}>
-            <h2>Buyers</h2>
+            <div className={styles.contactListHeader}>
+              <h2>Buyers</h2>
+              {isAdmin && (
+                <button
+                  className={styles.adminButton}
+                  onClick={() => {
+                    window.location.href = "/editCompanyContacts/crudBuyer"; // Replace with the desired admin page URL
+                  }}
+                >
+                  Edit
+                </button>
+              )}
+            </div>
             {buyers.map(buyer =>
               buyer.id ? (
                 <div
@@ -192,7 +249,19 @@ const MerchandisingDepartment = () => {
 
           {/* Manufacturers List */}
           <div className={styles.contactList}>
-            <h2>Manufacturers</h2>
+            <div className={styles.contactListHeader}>
+              <h2>Manufacturers</h2>
+              {isAdmin && (
+                <button
+                  className={styles.adminButton}
+                  onClick={() => {
+                    window.location.href = "/editCompanyContacts/crudManufacturer"; // Replace with the desired admin page URL
+                  }}
+                >
+                  Edit
+                </button>
+              )}
+            </div>
             {manufacturers.map(manufacturer =>
               manufacturer.id ? (
                 <div

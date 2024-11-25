@@ -15,11 +15,17 @@
 }
 
 .contactList h2 {
-  margin-bottom: 15px;
   font-family: "Darker Grotesque";
   font-size: var(--heading-font-size);
   font-weight: bold;
   color: #1F3C53;
+}
+
+.contactListHeader {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 /* Styling for each card in the list */
@@ -104,4 +110,19 @@
   font-size: 28px;
   font-weight: bold;
   color: #1F3C53;
+}
+
+.adminButton {
+  background-color: var(--button-blue);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  padding: 7px 14px;
+  font-family: "Darker Grotesque";
+  font-size: var(--default-font-size);
+}
+
+.adminButton:hover {
+  background-color: var(--button-blue-hover);
 }

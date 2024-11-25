@@ -60,7 +60,7 @@
 }
 
 .createUser:hover, .faqButton:hover, .aiButton:hover {
-    background-color: #627D9F;
+    background-color: var(--button-blue-hover);
 }
 
 
@@ -107,9 +107,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 1.5%;
+    padding-top: 1%;
     margin-right: 5%;
-    background-color: #1F3C53;
+    background-color: var(--button-blue);
     font-family: "Darker Grotesque";
     font-weight: 800;
     font-size: 20px;

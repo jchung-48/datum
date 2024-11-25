@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebaseClient';
-import { 
+import {
   fetchCompanies,
   fetchContacts,
   checkForDuplicate,
@@ -11,6 +11,9 @@ import {
   handleDeleteContact
 } from '../editContactUtils';
 import { Manufacturer, Company } from '../../types';
+import styles from '../crudContacts.module.css';
+import DropdownMenu from '@/app/Utilities/DropDownMenu/dropdownMenu';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 const AddOrEditManufacturer = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -57,6 +60,15 @@ const AddOrEditManufacturer = () => {
         setIsNewManufacturer(false);
       }
     }
+  };
+
+  const handleEditContact = (index: number) => {
+    const contact = manufacturerData.contacts[index];
+    setContactName(contact.name);
+    setContactPhone(contact.phone);
+    setContactEmail(contact.email);
+    setContactRole(contact.role);
+    setEditingContactIndex(index);
   };
 
   const handleContactAddOrEdit = () => {
@@ -123,12 +135,54 @@ const AddOrEditManufacturer = () => {
     }
   };
 
+  type ContactRowProps = {
+    contact: Manufacturer['contacts'][0];
+    index: number;
+    onEdit: (index: number) => void;
+    onDelete: (index: number) => void;
+  };
+
+  const ContactRow: React.FC<ContactRowProps> = ({ contact, index, onEdit, onDelete }) => {
+    const menuItems = [
+      {
+        icon: <FaEdit />,
+        label: 'Edit',
+        action: () => onEdit(index),
+      },
+      {
+        icon: <FaTrashAlt />,
+        label: 'Delete',
+        action: () => onDelete(index),
+      },
+    ];
+
+    return (
+      <tr className={styles.contactRow}>
+        <td className={styles.name}>{contact.name}</td>
+        <td>{contact.role}</td>
+        <td>{contact.phone}</td>
+        <td>{contact.email}</td>
+        <td className={styles.action}>
+          <DropdownMenu
+            iconColor="#333333"
+            menuItems={menuItems}
+          />
+        </td>
+      </tr>
+    );
+  };
+
   return (
-    <div>
+    <div className={styles.pageContainer}>
       <h2>{isNewManufacturer ? 'Add New Manufacturer' : 'Edit Manufacturer'}</h2>
-      <div>
-        <label>Select Company:</label>
-        <select value={selectedCompanyId} onChange={(e) => setSelectedCompanyId(e.target.value)}>
+
+      <div className={styles.selectGroup}>
+        <label className={styles.selectLabel}>Select Company:</label>
+        <select
+          className={styles.select}
+          value={selectedCompanyId}
+          onChange={(e) => setSelectedCompanyId(e.target.value)}
+        >
           <option value="">Select a company</option>
           {companies.map((company) => (
             <option key={company.id} value={company.id}>
@@ -139,9 +193,13 @@ const AddOrEditManufacturer = () => {
       </div>
 
       {selectedCompanyId && (
-        <div>
-          <label>Select Manufacturer:</label>
-          <select value={selectedManufacturerId} onChange={(e) => handleSelectManufacturer(e.target.value)}>
+        <div className={styles.selectGroup}>
+          <label className={styles.selectLabel}>Select Manufacturer:</label>
+          <select
+            className={styles.select}
+            value={selectedManufacturerId}
+            onChange={(e) => handleSelectManufacturer(e.target.value)}
+          >
             <option value="new">New Manufacturer</option>
             {manufacturers.map((manufacturer) => (
               <option key={manufacturer.id} value={manufacturer.id}>
@@ -155,90 +213,130 @@ const AddOrEditManufacturer = () => {
       {/* Manufacturer Form Fields */}
       {(isNewManufacturer || selectedManufacturerId) && (
         <>
+          <div className={styles.inputGroup}>
+            <div>
+              <input
+                className={styles.input}
+                type="text"
+                value={manufacturerData.name}
+                onChange={(e) => setManufacturerData({ ...manufacturerData, name: e.target.value })}
+                placeholder="Manufacturer Name"
+              />
+            </div>
+            <div>
+              <input
+                className={styles.input}
+                type="tel"
+                value={manufacturerData.phone}
+                onChange={(e) => setManufacturerData({ ...manufacturerData, phone: e.target.value })}
+                placeholder="Phone"
+              />
+            </div>
+            <div>
+              <input
+                className={styles.input}
+                type="email"
+                value={manufacturerData.email}
+                onChange={(e) => setManufacturerData({ ...manufacturerData, email: e.target.value })}
+                placeholder="Email"
+              />
+            </div>
+            <div>
+              <input
+                className={styles.input}
+                type="text"
+                value={manufacturerData.industry}
+                onChange={(e) => setManufacturerData({ ...manufacturerData, industry: e.target.value })}
+                placeholder="Industry"
+              />
+            </div>
+          </div>
+
+          {/* Contact Management */}
+          <h3>Contacts</h3>
+          <table className={styles.contactTable}>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {manufacturerData.contacts.map((contact, index) => (
+                <ContactRow
+                  key={index}
+                  contact={contact}
+                  index={index}
+                  onEdit={handleEditContact}
+                  onDelete={handleContactDelete}
+                />
+              ))}
+            </tbody>
+          </table>
+
+          {/* Contact Form Fields */}
+          <div className={styles.inputGroup}>
           <div>
             <input
-              type="text"
-              value={manufacturerData.name}
-              onChange={(e) => setManufacturerData({ ...manufacturerData, name: e.target.value })}
-              placeholder="Manufacturer Name"
+              className={styles.input}
+              value={contactName}
+              onChange={(e) => setContactName(e.target.value)}
+              placeholder="Name"
             />
           </div>
           <div>
             <input
-              type="tel"
-              value={manufacturerData.phone}
-              onChange={(e) => setManufacturerData({ ...manufacturerData, phone: e.target.value })}
+              className={styles.input}
+              value={contactPhone}
+              onChange={(e) => setContactPhone(e.target.value)}
               placeholder="Phone"
             />
           </div>
           <div>
             <input
-              type="email"
-              value={manufacturerData.email}
-              onChange={(e) => setManufacturerData({ ...manufacturerData, email: e.target.value })}
+              className={styles.input}
+              value={contactEmail}
+              onChange={(e) => setContactEmail(e.target.value)}
               placeholder="Email"
             />
           </div>
           <div>
             <input
-              type="text"
-              value={manufacturerData.industry}
-              onChange={(e) => setManufacturerData({ ...manufacturerData, industry: e.target.value })}
-              placeholder="Industry"
+              className={styles.input}
+              value={contactRole}
+              onChange={(e) => setContactRole(e.target.value)}
+              placeholder="Role"
             />
           </div>
 
-          {/* Contact Management */}
-          <h3>Contacts</h3>
-          <ul>
-            {manufacturerData.contacts.map((contact, index) => (
-              <li key={index}>
-                {contact.name} ({contact.role}) - {contact.phone} - {contact.email}
-                <button onClick={() => setEditingContactIndex(index)}>Edit</button>
-                <button onClick={() => handleContactDelete(index)}>Delete</button>
-              </li>
-            ))}
-          </ul>
-
-          {/* Contact Form Fields */}
-          <div>
-            <div>
-              <input 
-                value={contactName} 
-                onChange={(e) => setContactName(e.target.value)} 
-                placeholder="Name" 
-              />
-            </div>
-            <div>
-              <input 
-                value={contactPhone} 
-                onChange={(e) => setContactPhone(e.target.value)} 
-                placeholder="Phone" 
-              />
-            </div>
-            <div>
-              <input 
-                value={contactEmail} 
-                onChange={(e) => setContactEmail(e.target.value)} 
-                placeholder="Email" 
-              />
-            </div>
-            <div>
-              <input 
-                value={contactRole} 
-                onChange={(e) => setContactRole(e.target.value)} 
-                placeholder="Role" 
-              />
-            </div>
-
-            <button onClick={handleContactAddOrEdit}>
+            <button
+              className={styles.contactButton}
+              onClick={handleContactAddOrEdit}
+            >
               {editingContactIndex !== null ? 'Update Contact' : 'Add Contact'}
             </button>
           </div>
 
           {/* Submit Buttons */}
-          <button onClick={handleSubmit}>{isNewManufacturer ? 'Add Manufacturer' : 'Update Manufacturer'}</button>
-          {!isNewManufacturer && <button onClick={handleDeleteManufacturer}>Delete Manufacturer</button>}
+          <div className={styles.actionButtons}>
+            <button
+              className={styles.save}
+              onClick={handleSubmit}
+            >
+              {isNewManufacturer ? 'Add Manufacturer' : 'Update Manufacturer'}
+            </button>
+            {!isNewManufacturer && (
+              <button
+                className={styles.delete}
+                onClick={handleDeleteManufacturer}
+              >
+                Delete Manufacturer
+              </button>
+            )}
+          </div>
         </>
       )}
     </div>
