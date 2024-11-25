@@ -24,8 +24,12 @@
 
 .cloudIcon {
     margin-right: 12px;
-    height: 35px;
-    width: 35px;
+    height: 32px;
+    width: 32px;
+}
+
+.cloudIcon:hover {
+    color: #627D9F;
 }
 
 .topButtons {
@@ -60,17 +64,16 @@
 }
 
 .createUser:hover, .faqButton:hover, .aiButton:hover {
-    background-color: var(--button-blue-hover);
+    background-color: #627D9F;
 }
-
 
 .profileHome {
     justify-self: end;
 }
   
 .profileIconHome {
-    height: 40px;
-    width: 40px;
+    height: 33px;
+    width: 33px;
     color: #fff;
     cursor: pointer; 
     color: #1F3C53;
@@ -107,9 +110,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 1%;
+    padding-top: 1.5%;
     margin-right: 5%;
-    background-color: var(--button-blue);
+    background-color: #1F3C53;
     font-family: "Darker Grotesque";
     font-weight: 800;
     font-size: 20px;

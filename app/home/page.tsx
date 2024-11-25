@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import React, {useEffect, useState} from 'react';
@@ -6,6 +7,7 @@ import {doc, getDoc, DocumentReference} from 'firebase/firestore';
 import {useRouter} from 'next/navigation';
 import {logoutUser} from '../authentication';
 import {LuCloudLightning} from 'react-icons/lu';
+import { FaUserCircle } from 'react-icons/fa';
 import styles from './styles.module.css'; // Correct import for CSS Modules
 import {getEmployeeProfile} from '../authentication'; // Adjust the import path if needed
 
@@ -97,6 +99,7 @@ export default function Home() {
       }
     });
 
+    // Clean up the effect by removing the home-page class on unmount
     return () => {
       document.body.classList.remove('home-page');
       unsubscribe();
@@ -119,9 +122,9 @@ export default function Home() {
     <div>
       <div className={styles.header}>
         <div className={styles.home}>
-          <LuCloudLightning className={styles.cloudIcon} />
+          <LuCloudLightning className={styles.cloudIcon}/>
         </div>
-
+        
         {isDepartmentEnabled('qa') || isAdmin ? (
           <Link href="/departments/qa">
             <div
@@ -249,8 +252,7 @@ export default function Home() {
         )}
       </div>
       <div className={styles.motto}>
-        Knowledge
-        <br />
+        Knowledge<br />
         is Power
       </div>
       <div className={styles.description}>
