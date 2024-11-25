@@ -152,73 +152,6 @@ export const updateFirestore = async (
   console.log(`File added to Firestore: ${fileName}`);
 };
 
-// Function to delete a file from Firebase Storage and Firestore
-export const handleFileDelete = async (
-  fileFullPath: string,
-  firestorePath: FirestorePath
-): Promise<void> => {
-  try {
-    // Delete the file from Firebase Storage
-    const fileRef = ref(storage, fileFullPath);
-    await deleteObject(fileRef);
-
-    // Delete the file entry from Firestore
-    const {
-      collectionType,
-      companyId,
-      departmentId,
-      collectionName,
-      buyerId,
-      manufacturerId,
-    } = firestorePath;
-
-    const fileName = fileFullPath.split("/").pop()!;
-
-    if (collectionType === "Departments" && departmentId) {
-      const collectionNameForRef = collectionName ? collectionName : "files";
-      const fileDocRef = doc(
-        db,
-        "Company",
-        companyId,
-        "Departments",
-        departmentId,
-        collectionNameForRef,
-        fileName
-      );
-      await deleteDoc(fileDocRef);
-    } else if (collectionType === "Buyers" && buyerId) {
-      const fileDocRef = doc(
-        db,
-        "Company",
-        companyId,
-        "Buyers",
-        buyerId,
-        "Quotes",
-        fileName
-      );
-      await deleteDoc(fileDocRef);
-    } else if (collectionType === "Manufacturers" && manufacturerId) {
-      const fileDocRef = doc(
-        db,
-        "Company",
-        companyId,
-        "Manufacturers",
-        manufacturerId,
-        "Products",
-        fileName
-      );
-      await deleteDoc(fileDocRef);
-    } else {
-      throw new Error("Invalid Firestore path provided.");
-    }
-
-    console.log(`File deleted from Storage and Firestore: ${fileFullPath}`);
-  } catch (error) {
-    console.error("Error deleting file:", error);
-    throw error; // Re-throw the error to be handled by the calling function
-  }
-};
-
 const getFirestoreRef = (
   collectionType: "Departments" | "Buyers" | "Manufacturers",
   companyId: string,
@@ -232,13 +165,59 @@ const getFirestoreRef = (
     if (!collectionName) collectionName = "files";
     return doc(db, "Company", companyId, "Departments", departmentId, collectionName, documentId);
   } else if (collectionType === "Buyers" && buyerId) {
-    if (!collectionName) collectionName = "Quotes";
+    collectionName = "Quotes";
     return doc(db, "Company", companyId, "Buyers", buyerId, collectionName, documentId);
   } else if (collectionType === "Manufacturers" && manufacturerId) {
-    if (!collectionName) collectionName = "Products";
+    collectionName = "Products";
     return doc(db, "Company", companyId, "Manufacturers", manufacturerId, collectionName, documentId);
   } else {
     throw new Error("Invalid Firestore path provided.");
+  }
+};
+
+// Function to delete a file from Firebase Storage and Firestore
+export const handleFileDelete = async (
+  fileFullPath: string,
+  firestorePath: FirestorePath
+): Promise<void> => {
+  try {
+    // Get the reference file from Firebase Storage
+    const fileRef = ref(storage, fileFullPath);
+
+    // Extract necessary values from FirestorePath
+    const {
+      collectionType,
+      companyId,
+      departmentId,
+      buyerId,
+      manufacturerId,
+      collectionName,
+    } = firestorePath;
+
+    // Extract the document ID (file name) from the full file path
+    const documentId = fileFullPath.split("/").pop()!;
+    
+    // Get Firestore document reference using the helper function
+    const fileDocRef = getFirestoreRef(
+      collectionType,
+      companyId,
+      documentId,
+      departmentId,
+      buyerId,
+      manufacturerId,
+      collectionName
+    );
+
+    // Delete the Firestore document
+    await deleteDoc(fileDocRef);
+
+    // Delete the Firebase storage object
+    await deleteObject(fileRef);
+
+    console.log(`File deleted from Storage and Firestore: ${fileFullPath}`);
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw error; // Re-throw the error to be handled by the calling function
   }
 };
 
