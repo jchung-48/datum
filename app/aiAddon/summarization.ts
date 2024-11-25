@@ -25,7 +25,8 @@ After providing context, provide a brief summary of the document content.
 Followed by a bulleted list of the main points of the document content. If the file is not in the format of a PDF,
 please say that the file is not a PDF and that the summarization may be inaccurate. In the case that it cannot 
 be analyzed, you MUST say that the file cannot be summarized.  
-Finally, list the key takeaways. Be clear, concise, and write in markdown format.
+Finally, list the key takeaways. Be clear, concise, and write in markdown format. 
+Note all files you will receive are PDFs. The metadata is retrieved from its Firestore document.
 
 Metadata: ${metadata}
 

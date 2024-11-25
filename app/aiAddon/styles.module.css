@@ -1,5 +1,7 @@
+/* styles.module.css */
+
 /* Circle Button */
-.circle-button {
+.circleButton {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -19,11 +21,11 @@
     z-index: 1000;
 }
 
-.circle-button:hover {
+.circleButton:hover {
     background-color: #4b617b;
 }
 
-.ai-logo {
+.aiLogo {
     width: 60%;
     height: auto;
     object-fit: cover;
@@ -46,10 +48,11 @@
     padding: 10px;
     z-index: 1000;
     overflow-y: auto;
+    font-family: "Darker Grotesque SemiBold", sans-serif;
 }
 
 /* Close Button in the Card */
-.card-close-button {
+.cardCloseButton {
     background: none;
     border: none;
     font-size: 24px;
@@ -58,12 +61,12 @@
     transition: color 0.3s;
 }
 
-.card-close-button:hover {
+.cardCloseButton:hover {
     color: red;
 }
 
 /* Close Button Wrapper */
-.tab-options {
+.tabOptions {
     display: flex;
     justify-content: flex-end;
     padding: 0px 5px 0;
@@ -71,14 +74,15 @@
 }
 
 /* Tab Button Styles */
-.mode-toggle {
+.modeToggle {
     display: flex;
     justify-content: space-around;
     width: 100%;
     margin-bottom: 15px;
+    font-family: "Darker Grotesque", sans-serif;
 }
 
-.tab-button {
+.tabButton {
     flex: 1;
     padding: 10px;
     font-size: 16px;
@@ -89,18 +93,19 @@
     transition: background-color 0.3s;
 }
 
-.tab-button.active {
+.tabButton.active {
     background-color: #627D9F;
     color: #ffffff;
     font-weight: bold;
     border-radius: 5px;
 }
 
-.tab-button:not(.active):hover {
+.tabButton:not(.active):hover {
     background-color: #e0e0e0;
 }
 
-.content-display {
+/* Content Display Area */
+.contentDisplay {
     padding: 15px;
     background-color: #f9f9f9; /* Light background for better readability */
     border: 1px solid #ddd;    /* Subtle border to distinguish the area */
@@ -110,68 +115,75 @@
     max-width: 380px;
     overflow-y: auto;          /* Enable vertical scrolling if content overflows */
     box-sizing: border-box;    /* Ensure padding and borders are included in the total width and height */
-    flex-grow: 1; /* Allow the content area to expand and take available space */
+    flex-grow: 1;              /* Allow the content area to expand and take available space */
     margin-bottom: 10px;
     color: black;
-    position: relative; /* Add relative positioning */
+    position: relative;        /* Add relative positioning */
 }
 
+/* Throbber (Loading Spinner) */
 .throbber {
     height: 100%;
     position: absolute; /* Position the throbber absolutely */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
+    top: 50%;           /* Center vertically */
+    left: 50%;          /* Center horizontally */
     transform: translate(-50%, -50%); /* Adjust position to truly center */
 }
 
 /* Optional: Style Markdown Elements for Better Presentation */
-.content-display h1,
-.content-display h2,
-.content-display h3 {
+.contentDisplay h1,
+.contentDisplay h2,
+.contentDisplay h3 {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.content-display p {
+.contentDisplay p {
     margin-bottom: 10px;
     line-height: 1.6; /* Improve readability */
 }
 
-.content-display ul {
+.contentDisplay ul {
     padding-left: 20px;
     margin-bottom: 10px;
 }
 
-.content-display a {
+.contentDisplay a {
     color: #0070f3;
     text-decoration: none;
 }
 
-.content-display a:hover {
+.contentDisplay a:hover {
     text-decoration: underline;
 }
 
-.input-area {
+.inputArea {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    align-items: center; /* Align items in the center */
+    justify-content: space-between; /* Adjust spacing */
+    gap: 10px; /* Add space between input and button */
     width: 100%;
+    padding: 0; /* Ensure no extra padding */
     box-sizing: border-box;
 }
 
-.input-area input[type="text"],
-.input-area input[type="file"] {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* Chat Input (inherits sharedInput styles) */
+.chatInput,
+.sharedInput {
+    flex: 1; /* Let the input take remaining space */
+    padding: 6px; /* Match padding with Summarize input */
+    font-size: 14px;
     color: black;
     background-color: white;
-    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in width */
+    height: 38px;
 }
 
-.action-button {
-    padding: 8px 12px;
+/* Chat Action Button (adjust for alignment) */
+.actionButton {
+    padding: 8px 12px; /* Match Summarize button padding */
     background-color: #627D9F;
     color: #ffffff;
     border: none;
@@ -180,10 +192,48 @@
     font-size: 14px;
     transition: background-color 0.3s;
     width: auto;
-    max-width: 50px;
-    box-sizing: border-box;
+    height: 38px; /* Ensure it matches the input height */
+    box-sizing: border-box; /* Include border and padding in width */
+    display: flex; /* Center content */
+    align-items: center;
+    justify-content: center;
 }
 
-.action-button:hover {
+.actionButton:hover {
     background-color: #4b617b;
+}
+
+/* Chat History */
+.chatHistory {
+    max-height: 300px;
+    overflow-y: auto;
+}
+/* Content Display Area */
+.contentDisplay {
+    padding: 15px;
+    background-color: #f9f9f9; /* Light background for better readability */
+    border: 1px solid #ddd;    /* Subtle border to distinguish the area */
+    border-radius: 4px;        /* Rounded corners */
+    margin-top: 10px;          /* Space above the content */
+    max-height: 300px;         /* Adjust as needed for your design */
+    max-width: 380px;
+    overflow-y: auto;          /* Enable vertical scrolling if content overflows */
+    box-sizing: border-box;    /* Ensure padding and borders are included in the total width and height */
+    flex-grow: 1;              /* Allow the content area to expand and take available space */
+    margin-bottom: 10px;
+    color: black;
+    position: relative;        /* Add relative positioning */
+}
+
+.chatMessage {
+    margin-bottom: 10px;
+}
+
+/* User and Bot Messages */
+.userMessage {
+    text-align: right;
+}
+
+.botMessage {
+    text-align: left;
 }

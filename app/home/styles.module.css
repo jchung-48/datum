@@ -63,6 +63,24 @@
     background-color: #627D9F;
 }
 
+
+.profileHome {
+    justify-self: end;
+}
+  
+.profileIconHome {
+    height: 40px;
+    width: 40px;
+    color: #fff;
+    cursor: pointer; 
+    color: #1F3C53;
+    justify-content: center;
+    align-items: center;
+}
+.profileIconHome:hover {
+    color: #627D9F;
+}
+
 .motto {
     color: #000000;
     font-family: "Darker Grotesque";
@@ -97,19 +115,5 @@
     font-size: 20px;
     height: 40px;
     width: 100px;
-    border-radius: 25px;
-}
-
-.aiButton {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 1.5%;
-    background-color: #1F3C53;
-    font-family: "Darker Grotesque";
-    font-weight: 100;
-    font-size: 20px;
-    height: 40px;
-    width: 170px;
     border-radius: 25px;
 }

@@ -9,6 +9,7 @@ import { LuCloudLightning } from "react-icons/lu";
 import styles from "./styles.module.css"; // Correct import for CSS Modules
 import { getEmployeeProfile } from "../authentication"; // Adjust the import path if needed
 
+
 export default function Home() {
   const router = useRouter();
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -110,6 +111,7 @@ export default function Home() {
     const departmentId = departmentMapping[departmentKey];
     return userDepartments.includes(departmentId);
   };
+
 
   return (
     <div>
@@ -225,9 +227,10 @@ export default function Home() {
 
         {isSignedIn && (
           <button onClick={handleSignOut} style={{ marginTop: "20px" }}>
+
             Sign Out
           </button>
-        )}
+        )} */}
       </div>
       <div className={styles.motto}>
         Knowledge
