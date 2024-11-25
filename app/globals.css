@@ -14,6 +14,12 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Darker Grotesque Med';
+  src: url('fonts/DarkerGrotesque-Medium.ttf') format('truetype');
+  font-style: normal;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
