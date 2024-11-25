@@ -5,7 +5,7 @@ import { auth, db } from '@/lib/firebaseClient';
 import { useRouter } from 'next/navigation';
 import { logoutUser } from '../authentication';
 import { LuCloudLightning } from 'react-icons/lu';
-import styles from './styles.module.css'; 
+import styles from './home.module.css'; 
 import { FaUserCircle } from 'react-icons/fa';
 
 export default function Home() {
