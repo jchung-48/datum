@@ -3,7 +3,7 @@
 'use client';
 
 import React, {useState, useEffect, useRef} from 'react';
-import {collection, getDocs, Timestamp} from 'firebase/firestore';
+import {collection, getDocs, Timestamp, doc, getDoc, DocumentReference} from 'firebase/firestore';
 import {getDownloadURL, ref} from 'firebase/storage';
 import {db, storage, auth} from '@/lib/firebaseClient';
 import {FileData, FileListProps, FirestorePath} from '../../types';
@@ -16,6 +16,7 @@ import {MdDelete} from 'react-icons/md';
 import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
 import DropdownMenu from '../DropDownMenu/dropdownMenu';
+import { getEmployeeProfile } from '@/app/authentication';
 
 import { F } from '@genkit-ai/flow/lib/flow-DR52DKjZ';
 
@@ -47,6 +48,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   const [showRightButton, setShowRightButton] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {

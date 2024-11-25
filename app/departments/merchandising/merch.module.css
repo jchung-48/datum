@@ -35,7 +35,7 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 15px;
   margin-bottom: 10px;
-  width: 100%;
+  width: 90%;
   text-align: center;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -58,7 +58,7 @@
 .contactCard .contactDetails {
   font-size: 0.95rem;
   color: #555;
-  font-family: "Darker Grotesque";
+  font-family: "Darker Grotesque Semi Bold";
   font-size: var(--default-font-size);
 }
 

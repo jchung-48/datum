@@ -221,29 +221,31 @@ export default function Home() {
         )}
 
         {/* Lock Create Employee Button */}
-        {isAdmin ? (
-          <Link href="/createUser">
+        <div className={styles.userContainer}>
+          {isAdmin ? (
+            <Link href="/createUser">
+              <div
+                className={styles.createUser}
+                style={{marginBottom: '20px', opacity: 1}}
+              >
+                Create Employee
+              </div>
+            </Link>
+          ) : (
             <div
               className={styles.createUser}
-              style={{marginBottom: '20px', opacity: 1}}
+              style={{
+                marginBottom: '20px',
+                opacity: 0.5,
+                cursor: 'not-allowed',
+              }}
+              role="button"
+              aria-disabled="true"
             >
               Create Employee
             </div>
-          </Link>
-        ) : (
-          <div
-            className={styles.createUser}
-            style={{
-              marginBottom: '20px',
-              opacity: 0.5,
-              cursor: 'not-allowed',
-            }}
-            role="button"
-            aria-disabled="true"
-          >
-            Create Employee
-          </div>
-        )}
+          )}
+        </div>
 
         {isSignedIn && (
           <div className={styles.profileHome}>
