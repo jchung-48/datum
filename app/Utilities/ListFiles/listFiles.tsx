@@ -332,6 +332,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
         ),
       );
 
+      
     const firestorePath: FirestorePath = {
       collectionType: 
         collectionPath[2] == "Buyers" ? "Buyers" :
