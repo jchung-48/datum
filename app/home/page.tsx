@@ -126,6 +126,7 @@ export default function Home() {
       Quality Assurance
     </div>
   </Link>
+  
 ) : (
   <div
     className="top-buttons"
