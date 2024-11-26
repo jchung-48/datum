@@ -18,6 +18,7 @@ const AiButton: React.FC<AiButtonProps> = ({ paths }) => {
     useState<SummarySearchResult | null>(null);
   const [summaryContent, setSummaryContent] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState<
     { sender: "user" | "bot"; message: string }[]
   >([]);
@@ -67,6 +68,7 @@ const AiButton: React.FC<AiButtonProps> = ({ paths }) => {
     // Add user's message to chat history
     setChatHistory((prev) => [...prev, { sender: "user", message: inputText }]);
     setInputValue(""); // Clear the input field
+    setChatLoading(true);
   
     try {
       const response = await fetch("/api/chatbot", {
@@ -88,6 +90,11 @@ const AiButton: React.FC<AiButtonProps> = ({ paths }) => {
         ...prev,
         { sender: "bot", message: "Error: Unable to fetch response." },
       ]);
+    } finally {
+      if (chatHistoryRef.current) {
+        chatHistoryRef.current.scrollTo(0, chatHistoryRef.current.scrollHeight);
+      }
+      setChatLoading(false);
     }
   };
   
@@ -174,11 +181,6 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
     };
   }, [isCardVisible]);
 
-  useEffect(() => {
-    if (chatHistoryRef.current) {
-      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
-    }
-  }, [chatHistory]); 
 
   return (
     <div>
@@ -220,23 +222,31 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
           <div className={styles.contentDisplay}>
             {mode === 'summarize' ? (
               <>
-                <SpinnerDiamond className={styles.throbber} enabled={loading} color="#617D9F" />
+                <SpinnerDiamond className={styles.throbber} enabled={loading}/>
                 <ReactMarkdown>{summaryContent}</ReactMarkdown>
               </>
             ) : (
               <>
-                <div className={styles.chatHistory}>
-                  {chatHistory.map((entry, index) => (
-                    <div
-                      key={index}
-                      className={`${styles.chatMessage} ${
-                        entry.sender === 'user' ? styles.userMessage : styles.botMessage
-                      }`}
-                    >
-                      <strong>{entry.sender === 'user' ? 'You' : 'AI'}:</strong> {entry.message}
+              <div className={styles.chatHistory} ref={chatHistoryRef}>
+                {chatHistory.map((entry, index) => (
+                  <div
+                    key={index}
+                    className={`${styles.chatMessage} ${
+                      entry.sender === 'user' ? styles.userMessage : styles.botMessage
+                    }`}
+                  >
+                    <strong>{entry.sender === 'user' ? 'You' : 'AI'}:</strong>{" "}
+                    <ReactMarkdown>{entry.message}</ReactMarkdown>
+                  </div>
+                ))}
+                
+                {/* Show spinner when waiting for AI's response */}
+                {chatLoading && (
+                    <div className={styles.botLoading}>
+                    <strong>AI: </strong> <SpinnerDiamond color="#617D9F" size={20} />
                     </div>
-                  ))}
-                </div>
+                )}
+              </div>
               </>
             )}
           </div>
