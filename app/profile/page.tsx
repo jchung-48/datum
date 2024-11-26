@@ -106,29 +106,38 @@ export default function ProfilePage() {
     return (
         <div>
           <Header isProfile={true} />
+          <div className="profile-layout">
           <div className="side-by-side">
             <div className="profile-card">
-                <FaUserCircle className="profile-img" />
-                <h1 className="name">{employeeData.name}</h1>
-                <h2 className="company">Datum Employee</h2>
-                <h2 className="company">Joined {employeeData.createdAt}</h2>
+              <FaUserCircle className="profile-img" />
+              <h1 className="name">{employeeData.name}</h1>
+              <h2 className="company">Datum Employee</h2>
+              <h2 className="company">Joined {employeeData.createdAt}</h2>
             </div>
 
-            <div className="info-card">
-              <div className="info-row">
-                <span className="info-title">Name:</span>
-                <span className="info-value">{employeeData.name}</span>
-              </div>
-              <div className="info-row">
+            <div className="info-section">
+              <div className="info-card">
+                <div className="info-row">
+                  <span className="info-title">Name:</span>
+                  <span className="info-value">{employeeData.name}</span>
+                </div>
+                <div className="info-row">
                   <span className="info-title">Email:</span>
                   <span className="info-value">{employeeData.email}</span>
-              </div>
-              <div className="info-row">
+                </div>
+                <div className="info-row">
                   <span className="info-title">Phone:</span>
                   <span className="info-value">{employeeData.phoneNumber}</span>
+                </div>
+              </div>
+
+              <div className="dept-card">
+                <h2>Authorized Departments</h2>
+                <p>{departments.length > 0 ? departments.join(", ") : "None"}</p>
               </div>
             </div>
           </div>
+        </div>
 
           <div className={styles.profileContainer}>
             <h1>{employeeData.name}</h1>

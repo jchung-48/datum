@@ -71,3 +71,37 @@
     border-color:rgba(0, 0, 0, 0.2);
   }
   
+  .fileDropdownThumbnail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+  }
+  
+  .dropdownMenuWrapper {
+    position: absolute;
+    top: 8px; /* Adjust spacing from the top */
+    right: 8px; /* Adjust spacing from the right */
+    z-index: 10; /* Ensure it stays on top of other elements */
+  }
+  
+  .fileThumbnail {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .fileName {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    word-wrap: break-word;
+  }
+  
+  .star {
+    color: #ffd700; /* Gold color for the star icon */
+    margin-top: 4px;
+  }
+  

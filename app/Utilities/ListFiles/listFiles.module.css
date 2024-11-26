@@ -1,28 +1,39 @@
+/* ==========================
+    General Styles
+========================== */
+
 .fileList {
   width: 100%;
   overflow: hidden;
   position: relative;
-  
   --main-font-size: var(--default-font-size);
   --light-font-weight: 400;
 }
+
+/* ==========================
+    Horizontal File Items
+========================== */
 
 .fileItemsHorizontal {
   display: flex;
   gap: 16px;
   flex-wrap: nowrap;
-  overflow-x: hidden;
+  overflow-x: auto; /* Allow scrolling horizontally */
   scroll-behavior: smooth;
   padding: 10px 40px; /* Add padding for the scroll button overlap */
   width: 100%;
-  height: 200px;  
+  height: 300px;
 }
 
 .fileItemsHorizontal p {
-  font-family: "Darker Grotesque";
+  font-family: "Darker Grotesque", sans-serif;
   font-size: var(--main-font-size);
   color: var(--text-color-light);
 }
+
+/* ==========================
+    Default File Items
+========================== */
 
 .fileItemsDefault {
   display: block;
@@ -43,6 +54,7 @@
   border-radius: 4px;
 }
 
+/* Checkbox container for selections */
 .checkboxContainer {
   position: absolute;
   top: 6px;
@@ -50,21 +62,20 @@
   z-index: 1;
 }
 
-/* ====================================
-Styling for the table for default view.
-==================================== */ 
+/* ==========================
+    Table Styles
+========================== */
 
 .fileTable {
   width: 97.45%;
   border-collapse: separate;
   border-spacing: 0 0.4em;
-  margin-top: 5px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 5px 20px 0 20px;
   color: var(--text-color-light);
 }
 
-.fileTable th, .fileTable td {
+.fileTable th,
+.fileTable td {
   padding: 10px;
   text-align: left;
 }
@@ -73,7 +84,7 @@ Styling for the table for default view.
   background-color: var(--card-background-light);
   font-weight: bold;
   min-width: 100px;
-  height: 45px;
+  height: 55px;
   font-size: 22px;
 }
 
@@ -88,7 +99,7 @@ Styling for the table for default view.
   cursor: pointer;
 }
 
-.ascDesImg {        /* cant seem to get this inline w/ text */
+.ascDesImg {
   width: 20px;
   height: 20px;
   margin-left: 5px;
@@ -97,10 +108,8 @@ Styling for the table for default view.
 
 .fileRow {
   background-color: var(--card-background-light);
-  overflow: hidden; /* Prevent content from spilling */
   display: table-row;
   transition: background-color 0.2s;
-  padding: 5px;
   position: relative;
 }
 
@@ -113,12 +122,12 @@ Styling for the table for default view.
 }
 
 .fileCell {
-  padding: 5px 5px; /* Padding within each cell */
-  border: none; /* No borders between cells */
+  padding: 5px;
   display: table-cell;
   font-size: var(--main-font-size);
-  font-family: "Darker Grotesque";
+  font-family: "Darker Grotesque", sans-serif;
   cursor: default;
+  border: none;
 }
 
 .fileCell:first-child {
@@ -131,10 +140,8 @@ Styling for the table for default view.
   border-bottom-right-radius: 10px;
 }
 
-/* Inset file name box in table entry */
 .fileNameBox {
   padding: 6px 8px;
-  /* background-color: var(--card-background-light); */
   border-radius: 4px;
   display: inline-block;
   cursor: pointer;
@@ -143,14 +150,15 @@ Styling for the table for default view.
 
 .fileNameBox:hover {
   background-color: var(--file-card-selected-light);
-  border-color: var(--card-background-light);
 }
 
 .fileNameBox.selected:hover {
   background-color: #8ba5b1;
 }
 
-/* Scroll and Edge containers for horizontal display */
+/* ==========================
+    Horizontal Scroll and Buttons
+========================== */
 
 .scrollContainer {
   position: relative;
@@ -159,13 +167,11 @@ Styling for the table for default view.
   overflow: hidden;
 }
 
-/* Scroll buttons */
 .scrollButton {
   background-color: #627d9f;
   border: none;
   border-radius: 50%;
   font-size: 24px;
-  cursor: pointer;
   color: #ffffff;
   position: absolute;
   z-index: 2;
@@ -177,6 +183,7 @@ Styling for the table for default view.
   top: 50%;
   transform: translateY(-50%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .scrollButton.left {
@@ -191,59 +198,32 @@ Styling for the table for default view.
   background-color: #4e6784;
 }
 
-/* Edge fading effect */
 .edgeFade {
   position: absolute;
   top: 0;
   bottom: 0;
   width: 50px;
-  background: linear-gradient(to left, transparent, var(--edge-fade-color,rgba(0, 0, 0, 0.9)));
+  background: linear-gradient(to left, transparent, var(--edge-fade-color, rgba(0, 0, 0, 0.9)));
   pointer-events: none;
-}
-
-.edgeFade.left {
-  left: 0;
 }
 
 .edgeFade.right {
   right: 0;
-  background: linear-gradient(to right, transparent, var(--edge-fade-color,rgba(0, 0, 0, 0.9)));
+  background: linear-gradient(to right, transparent, var(--edge-fade-color, rgba(0, 0, 0, 0.9)));
 }
 
-.trashIcon {
-  pointer-events: none; /* Ensure the icon doesn't capture click events */
-  margin: auto;
-  display: block;
-}
-
-/* Adjustments for the table cell */
-.actions {
-  text-align: center;
-}
-
-.search {
-  font-size: var(--main-font-size);
-  background-color: #e0e0e0;
-  font-family: "Darker Grotesque";
-  padding: 10px 16px;
-}
-
-.fileGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-  gap: 15px;
-  padding: 10px;
-}
+/* ==========================
+    Action Buttons
+========================== */
 
 .topButtons {
   display: flex;
-  gap: 10px; /* Space between buttons */
-  align-items: center; /* Vertically center the buttons */
+  gap: 10px;
+  align-items: center;
 }
 
-/* Delete Button */
 .deleteButtonTop {
-  padding: 8px 12px 8px 12px;
+  padding: 8px 12px;
   font-size: 20px;
   border: none;
   border-radius: 4px;
@@ -263,19 +243,18 @@ Styling for the table for default view.
 }
 
 .shareButton {
-  background-color: var(--button-blue); /* Primary color */
+  background-color: var(--button-blue);
   color: var(--text-color-dark);
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 5%;
-  font-family: "Darker Grotesque";
+  font-family: "Darker Grotesque", sans-serif;
   font-weight: 800;
   font-size: 20px;
   height: 40px;
   width: 100px;
   border-radius: 25px;
-  /* Other button styles here */
+  cursor: pointer;
 }
 
 .shareButton:hover {
@@ -283,7 +262,36 @@ Styling for the table for default view.
 }
 
 .shareButton:disabled {
-  background-color: #ccc; /* Gray for inactive state */
+  background-color: #ccc;
   color: #666;
   cursor: not-allowed;
 }
+
+.trashIcon {
+  pointer-events: none;
+  margin: auto;
+  display: block;
+}
+
+/* ==========================
+    Grid View
+========================== */
+
+.fileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 15px;
+  padding: 10px;
+}
+
+.search {
+  font-size: var(--main-font-size);
+  background-color: #e0e0e0;
+  font-family: "Darker Grotesque", sans-serif;
+  padding: 10px 16px;
+}
+
+.actions {
+  text-align: center;
+}
+
