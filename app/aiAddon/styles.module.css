@@ -124,10 +124,11 @@
 /* Throbber (Loading Spinner) */
 .throbber {
     height: 100%;
-    position: absolute; /* Position the throbber absolutely */
-    top: 50%;           /* Center vertically */
-    left: 50%;          /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust position to truly center */
+    position: absolute; 
+    top: 50%;           
+    left: 50%;          
+    transform: translate(-50%, -50%); 
+    color: "#617D9F";
 }
 
 /* Optional: Style Markdown Elements for Better Presentation */
@@ -227,6 +228,7 @@
 
 .chatMessage {
     margin-bottom: 10px;
+
 }
 
 /* User and Bot Messages */
@@ -236,4 +238,9 @@
 
 .botMessage {
     text-align: left;
+}
+
+.botLoading {
+    display: inline-flex;
+    align-items: center;
 }
