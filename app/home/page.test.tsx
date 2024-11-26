@@ -22,9 +22,66 @@ describe("Home Component Tests", () => {
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
   });
 
-  it("renders the Home page with department links", () => {
-    render(<Home />);
+  it("disables department links if the user does not have permissions", () => {
+    const userDepartments: string[] = []; // No access
+    const isAdmin = false;
 
+    render(
+      <Home
+        // isAdmin={false}
+        // userDepartments={userDepartments}
+      />
+    );
+
+    // Check for disabled state
+    const qaButton = screen.getByText("Quality Assurance");
+    expect(qaButton).toHaveStyle("opacity: 0.5");
+    expect(qaButton).toHaveAttribute("aria-disabled", "true");
+
+    const hrButton = screen.getByText("Human Resources");
+    expect(hrButton).toHaveStyle("opacity: 0.5");
+    expect(hrButton).toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("enables department links if the user has permissions", () => {
+    const userDepartments: string[] = ["Eq2IDInbEQB5nI5Ar6Vj"]; // QA department ID
+    const isAdmin = false;
+
+    render(
+      <Home
+        // isAdmin={isAdmin}
+        // userDepartments={userDepartments}
+      />
+    );
+
+    // Check for enabled state
+    const qaButton = screen.getByText("Quality Assurance");
+    expect(qaButton).toHaveStyle("opacity: 1");
+    expect(qaButton.closest("a")).toHaveAttribute("href", "/departments/qa");
+  });
+
+  it("enables all department links for admin users", () => {
+    const userDepartments: string[] = [];
+    const isAdmin = true;
+
+    render(
+      <Home
+        // isAdmin={isAdmin}
+        // userDepartments={userDepartments}
+      />
+    );
+
+    // All buttons should be enabled
+    const qaButton = screen.getByText("Quality Assurance");
+    const hrButton = screen.getByText("Human Resources");
+    const logisticsButton = screen.getByText("Logistics");
+    const merchandisingButton = screen.getByText("Merchandising");
+
+    [qaButton, hrButton, logisticsButton, merchandisingButton].forEach((button) => {
+      expect(button).toHaveStyle("opacity: 1");
+      expect(button.closest("a")).toBeInTheDocument();
+    });
+    
     expect(screen.getByText("Quality Assurance")).toBeInTheDocument();
     expect(screen.getByText("Human Resources")).toBeInTheDocument();
     expect(screen.getByText("Logistics")).toBeInTheDocument();
@@ -53,13 +110,21 @@ describe("Home Component Tests", () => {
     render(<Home />);
 
     expect(screen.queryByText("Sign Out")).not.toBeInTheDocument();
+
   });
 
   it("navigates to the correct department pages when links are clicked", () => {
-    render(<Home />);
+    render(
+      <Home
+        // isAdmin={isAdmin}
+        // userDepartments={userDepartments}
+      />
+    );
 
     fireEvent.click(screen.getByText("Quality Assurance"));
     expect(mockPush).toHaveBeenCalledWith("/qaDepartment");
+
+    
 
     fireEvent.click(screen.getByText("Human Resources"));
     expect(mockPush).toHaveBeenCalledWith("/hrDepartment");
