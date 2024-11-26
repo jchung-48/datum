@@ -138,6 +138,46 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+        <div className="resetting-stuff">
+          <button className="change-password-btn" onClick={() => resetPassword(employeeData.email)}>
+            Reset Password
+          </button>
+          <div className="update-phone-section">
+            <h1>Update Phone Number</h1>
+            <input
+                type="text"
+                placeholder="New Phone Number"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                style={{ color: "black" }}
+            />
+            <button onClick={handleVerificationCode}>Send Verification Code</button>
+
+            {verificationId && (
+                <>
+                    <input
+                        type="text"
+                        placeholder="Enter verification code"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        style={{ color: "black" }}
+                    />
+                    <button
+                        onClick={() =>
+                            verifyAndUpdatePhoneNumber(verificationCode, verificationId)
+                        }
+                    >
+                        Verify and Update
+                    </button>
+                </>
+            )}
+
+            <div id="recaptcha-container"></div>
+            {errorMessage && (
+                <p className="error-message">{errorMessage}</p>
+            )}
+          </div>
+        </div>
 
           <div className={styles.profileContainer}>
             <h1>{employeeData.name}</h1>
@@ -158,9 +198,6 @@ export default function ProfilePage() {
             ) : (
               <p>No departments assigned.</p>
             )}
-            <button onClick={() => resetPassword(employeeData.email)}>
-              Change Password
-            </button>
 
             
 
@@ -168,44 +205,12 @@ export default function ProfilePage() {
               <button onClick={handleSignOut} style={{ marginTop: "20px" }}>
                 Sign Out
               </button>
+
+              
             )}
 
             {/* Update Phone Number Section */}
-            <div>
-              <h1>Update Phone Number</h1>
-              <input
-                type="text"
-                placeholder="New Phone Number"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                style={{ color: "black" }}
-              />
-              <button onClick={handleVerificationCode}>Send Verification Code</button>
-
-              {verificationId && (
-                <>
-                  <input
-                    type="text"
-                    placeholder="Enter verification code"
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value)}
-                    style={{ color: "black" }}
-                  />
-                  <button
-                    onClick={() =>
-                      verifyAndUpdatePhoneNumber(verificationCode, verificationId)
-                    }
-                  >
-                    Verify and Update
-                  </button>
-                </>
-              )}
-
-              <div id="recaptcha-container"></div>
-              {errorMessage && (
-                <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>
-              )}
-            </div>
+            
           </div>
         </div>
 
