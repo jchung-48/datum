@@ -8,7 +8,7 @@ import {useRouter} from 'next/navigation';
 import {logoutUser} from '../authentication';
 import {LuCloudLightning} from 'react-icons/lu';
 import { FaUserCircle } from 'react-icons/fa';
-import styles from './styles.module.css'; // Correct import for CSS Modules
+import styles from './home.module.css'; // Correct import for CSS Modules
 import {getEmployeeProfile} from '../authentication'; // Adjust the import path if needed
 
 export default function Home() {
