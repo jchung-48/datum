@@ -287,3 +287,27 @@ Styling for the table for default view.
   color: #666;
   cursor: not-allowed;
 }
+
+.viewToggleButtons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.viewButton {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: var(--button-blue);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+}
+
+.viewButton:hover {
+  background-color: var(--button-blue-hover);
+}
+
+.viewButton:disabled {
+  display: none;
+}

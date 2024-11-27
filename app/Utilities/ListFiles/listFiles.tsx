@@ -17,6 +17,7 @@ import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
 import DropdownMenu from '../DropDownMenu/dropdownMenu';
 import { getEmployeeProfile } from '@/app/authentication';
+import { FaList, FaTh, FaGripLines } from 'react-icons/fa';
 
 import { F } from '@genkit-ai/flow/lib/flow-DR52DKjZ';
 
@@ -28,7 +29,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   title,
   onSearch,
   onFileSelect,
-  display = 'list' as const,
+  initialDisplay = 'list' as const,
   refreshTrigger,
   enableShare = false
 }) => {
@@ -49,6 +50,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
+  const [display, setDisplay] = useState<'list' | 'grid' | 'horizontal'>(initialDisplay); // New state for view mode
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -447,6 +449,31 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
             />
           </>
         )}
+
+        {/* View Mode Toggle Buttons */}
+        <div className={styles.viewToggleButtons}>
+          <button
+            className={`${styles.viewButton} ${display === 'list' ? styles.activeView : ''}`}
+            onClick={() => setDisplay('list')}
+            disabled={display === 'list'}
+          >
+            <FaList />
+          </button>
+          <button
+            className={`${styles.viewButton} ${display === 'grid' ? styles.activeView : ''}`}
+            onClick={() => setDisplay('grid')}
+            disabled={display === 'grid'}
+          >
+            <FaTh />
+          </button>
+          <button
+            className={`${styles.viewButton} ${display === 'horizontal' ? styles.activeView : ''}`}
+            onClick={() => setDisplay('horizontal')}
+            disabled={display === 'horizontal'}
+          >
+            <FaGripLines />
+          </button>
+        </div>
       </div>
 
       {onSearch && (

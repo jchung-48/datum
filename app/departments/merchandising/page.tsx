@@ -202,7 +202,7 @@ const MerchandisingDepartment = () => {
             collectionPath={deptFilesPath}
             title=""
             onFileSelect={handleFileSelect}
-            display="horizontal"
+            initialDisplay="horizontal"
             refreshTrigger={fileListUpdated}
             enableShare={true}
           />
@@ -298,7 +298,7 @@ const MerchandisingDepartment = () => {
               <FileList
                 collectionPath={selectedContactFilesPath as [string, ...string[]]}
                 title={modalTitle}
-                display="grid"
+                initialDisplay="grid"
               />
             </div>
           </div>

@@ -139,7 +139,6 @@ const LogisticsDepartment: React.FC = () => {
                 collectionPath={financialFilesPath} 
                 title=""
                 onFileSelect={handleFileSelect}
-                horizontal
                 refreshTrigger={fileListUpdated}
                 enableShare={true}
           />

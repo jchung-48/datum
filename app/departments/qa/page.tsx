@@ -102,7 +102,7 @@ const qaDepartment = () => {
             <div className={styles.fileBox}>
               <FileList
                 collectionPath={deptFilesPath}
-                title='' display='grid'
+                title='' initialDisplay='grid'
                 refreshTrigger={fileListUpdated}
                 enableShare={true}
               />
