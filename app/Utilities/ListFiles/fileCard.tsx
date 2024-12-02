@@ -18,7 +18,7 @@ const FileCard: React.FC<FileCardProps> = ({
   isSelected,
   currentUserUid,
   onSelect,
-  onDelete,
+  onDelete, // Make sure this is passed correctly
 }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -39,11 +39,7 @@ const FileCard: React.FC<FileCardProps> = ({
       action: () => {
         console.log(`Delete action for file: ${file.fileName}`);
         if (onDelete) {
-          onDelete({
-            id: file.id,
-            fileName: file.fileName,
-            filePath: file.filePath,
-          });
+          onDelete(file.id); // Pass only the file id to the onDelete function
         }
       },
     },
@@ -55,9 +51,8 @@ const FileCard: React.FC<FileCardProps> = ({
         key={file.id}
         className={`${styles.fileItem} ${isSelected ? styles.selected : ''}`}
         onClick={(e) => {
-          if (
-            !(e.target as HTMLElement).closest(`.${styles.dropdownMenuWrapper}`)
-          ) {
+          // This ensures file selection works when clicking the file card itself
+          if (!(e.target as HTMLElement).closest(`.${styles.dropdownMenuWrapper}`)) {
             onSelect(file.id);
           }
         }}

@@ -174,9 +174,12 @@ export const handleFileDelete = async (
 
     const fileName = fileFullPath.split("/").pop()!;
 
+    let fileDocRef;
+
+    // Handle different collection types
     if (collectionType === "Departments" && departmentId) {
-      const collectionNameForRef = collectionName ? collectionName : "files";
-      const fileDocRef = doc(
+      const collectionNameForRef = collectionName || "files";
+      fileDocRef = doc(
         db,
         "Company",
         companyId,
@@ -185,9 +188,8 @@ export const handleFileDelete = async (
         collectionNameForRef,
         fileName
       );
-      await deleteDoc(fileDocRef);
     } else if (collectionType === "Buyers" && buyerId) {
-      const fileDocRef = doc(
+      fileDocRef = doc(
         db,
         "Company",
         companyId,
@@ -196,9 +198,8 @@ export const handleFileDelete = async (
         "Quotes",
         fileName
       );
-      await deleteDoc(fileDocRef);
     } else if (collectionType === "Manufacturers" && manufacturerId) {
-      const fileDocRef = doc(
+      fileDocRef = doc(
         db,
         "Company",
         companyId,
@@ -207,15 +208,22 @@ export const handleFileDelete = async (
         "Products",
         fileName
       );
-      await deleteDoc(fileDocRef);
     } else {
       throw new Error("Invalid Firestore path provided.");
     }
 
+    // Check if the document exists before deleting
+    const docSnapshot = await getDoc(fileDocRef);
+    if (!docSnapshot.exists()) {
+      throw new Error(`Document not found in Firestore: ${fileName}`);
+    }
+
+    // Proceed to delete the document from Firestore
+    await deleteDoc(fileDocRef);
     console.log(`File deleted from Storage and Firestore: ${fileFullPath}`);
   } catch (error) {
     console.error("Error deleting file:", error);
-    throw error; // Re-throw the error to be handled by the calling function
+    throw new Error(`File deletion failed: ${error.message}`);
   }
 };
 
