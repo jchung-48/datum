@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './fileCard.module.css';
 import { FileData } from '@/app/types';
 import { FaStar, FaTrash, FaShare } from 'react-icons/fa';
 import DropdownMenu from '@/app/Utilities/DropDownMenu/dropdownMenu';
+import ShareFileModal from '@/app/Utilities/ShareFiles/shareFile';
 
 type FileCardProps = {
   file: FileData;
@@ -19,6 +20,9 @@ const FileCard: React.FC<FileCardProps> = ({
   onSelect,
   onDelete,
 }) => {
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   // Menu items for the dropdown menu
   const menuItems = [
     {
@@ -26,7 +30,7 @@ const FileCard: React.FC<FileCardProps> = ({
       label: 'Share',
       action: () => {
         console.log(`Share action for file: ${file.fileName}`);
-        // Add share functionality here
+        setIsShareModalOpen(true); // Open the share modal
       },
     },
     {
@@ -46,42 +50,53 @@ const FileCard: React.FC<FileCardProps> = ({
   ];
 
   return (
-    <div
-      key={file.id}
-      className={`${styles.fileItem} ${isSelected ? styles.selected : ''}`}
-      onClick={(e) => {
-        if (
-          !(e.target as HTMLElement).closest(`.${styles.dropdownMenuWrapper}`)
-        ) {
-          onSelect(file.id);
-        }
-      }}
-    >
-      {/* Dropdown menu positioned at the top-right */}
+    <>
       <div
-        className={styles.dropdownMenuWrapper}
-        onClick={(e) => e.stopPropagation()} // Prevents click propagation to parent
+        key={file.id}
+        className={`${styles.fileItem} ${isSelected ? styles.selected : ''}`}
+        onClick={(e) => {
+          if (
+            !(e.target as HTMLElement).closest(`.${styles.dropdownMenuWrapper}`)
+          ) {
+            onSelect(file.id);
+          }
+        }}
       >
-        <DropdownMenu menuItems={menuItems} iconColor="#333333" />
+        {/* Dropdown menu positioned at the top-right */}
+        <div
+          className={styles.dropdownMenuWrapper}
+          onClick={(e) => e.stopPropagation()} // Prevents click propagation to parent
+        >
+          <DropdownMenu menuItems={menuItems} iconColor="#333333" />
+        </div>
+
+        {/* Thumbnail image */}
+        <img
+          src={file.thumbnail}
+          alt={file.fileName}
+          className={styles.fileThumbnail}
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(file.download, '_blank');
+          }}
+        />
+
+        {/* File name */}
+        <p className={styles.fileName}>{file.fileName}</p>
+
+        {/* Optional star icon for files uploaded by the current user */}
+        {currentUserUid === file.uploadedBy && <FaStar className={styles.star} />}
       </div>
 
-      {/* Thumbnail image */}
-      <img
-        src={file.thumbnail}
-        alt={file.fileName}
-        className={styles.fileThumbnail}
-        onClick={(e) => {
-          e.stopPropagation();
-          window.open(file.download, '_blank');
-        }}
+      {/* Share file modal */}
+      <ShareFileModal
+        companyId={file.companyId} // Assuming `companyId` is part of the `file` data
+        filesToShare={[file]}
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        buttonRef={buttonRef}
       />
-
-      {/* File name */}
-      <p className={styles.fileName}>{file.fileName}</p>
-
-      {/* Optional star icon for files uploaded by the current user */}
-      {currentUserUid === file.uploadedBy && <FaStar className={styles.star} />}
-    </div>
+    </>
   );
 };
 
