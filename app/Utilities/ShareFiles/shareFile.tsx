@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { moveDocument } from '../Upload/uploadUtils';
-import { fetchContacts } from '@/app/editCompanyContacts/editContactUtils';
-import { Buyer, Manufacturer, FileData } from '@/app/types';
-import { getDocs, collection } from 'firebase/firestore';
-import { db } from "@/lib/firebaseClient";
+import React, {useState, useEffect} from 'react';
+import {moveDocument} from '../Upload/uploadUtils';
+import {fetchContacts} from '@/app/editCompanyContacts/editContactUtils';
+import {Buyer, Manufacturer, FileData} from '@/app/types';
+import {getDocs, collection} from 'firebase/firestore';
+import {db} from '@/lib/firebaseClient';
 import styles from './shareFile.module.css';
-import { MdClose } from 'react-icons/md';
-import { departmentCollectionsMap } from '../departmentCollectionsMap';
+import {MdClose} from 'react-icons/md';
+import {departmentCollectionsMap} from '../departmentCollectionsMap';
 
 type ShareFileModalProps = {
     companyId: string;
@@ -23,19 +23,24 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     departmentId,
     isOpen,
     onClose,
-    buttonRef
+    buttonRef,
 }) => {
-    const [selectedCollectionType, setSelectedCollectionType] = useState< 
+    const [selectedCollectionType, setSelectedCollectionType] = useState<
         'Departments' | 'Buyers' | 'Manufacturers' | ''
     >('');
     const [destinationId, setDestinationId] = useState('');
-    const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
+    const [departments, setDepartments] = useState<
+        {id: string; name: string}[]
+    >([]);
     const [buyers, setBuyers] = useState<Buyer[]>([]);
     const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
     const [collections, setCollections] = useState<string[]>([]);
     const [selectedCollectionName, setSelectedCollectionName] = useState('');
     const [isCopy, setIsCopy] = useState(false);
-    const [modalPosition, setModalPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+    const [modalPosition, setModalPosition] = useState<{
+        top: number;
+        left: number;
+    }>({top: 0, left: 0});
 
     useEffect(() => {
         if (isOpen && buttonRef.current) {
@@ -53,7 +58,10 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
             const fetchData = async () => {
                 const departmentsList = await fetchDepartments(companyId);
                 const buyersList = await fetchContacts(companyId, 'Buyer');
-                const manufacturersList = await fetchContacts(companyId, 'Manufacturer');
+                const manufacturersList = await fetchContacts(
+                    companyId,
+                    'Manufacturer',
+                );
                 setDepartments(departmentsList);
                 setBuyers(buyersList as Buyer[]);
                 setManufacturers(manufacturersList as Manufacturer[]);
@@ -63,8 +71,10 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     }, [isOpen, companyId]);
 
     const fetchDepartments = async (companyId: string) => {
-        const departmentsSnapshot = await getDocs(collection(db, 'Company', companyId, 'Departments'));
-        return departmentsSnapshot.docs.map((doc) => ({
+        const departmentsSnapshot = await getDocs(
+            collection(db, 'Company', companyId, 'Departments'),
+        );
+        return departmentsSnapshot.docs.map(doc => ({
             id: doc.id,
             name: doc.data().name,
         }));
@@ -84,7 +94,12 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     }, [selectedCollectionType, destinationId]);
 
     const handleMoveOrCopy = async () => {
-        if (!selectedCollectionType || !destinationId || (selectedCollectionType === 'Departments' && !selectedCollectionName)) {
+        if (
+            !selectedCollectionType ||
+            !destinationId ||
+            (selectedCollectionType === 'Departments' &&
+                !selectedCollectionName)
+        ) {
             alert('Please select a destination and collection.');
             return;
         }
@@ -100,10 +115,22 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
                     {
                         collectionType: selectedCollectionType,
                         companyId,
-                        departmentId: selectedCollectionType === 'Departments' ? destinationId : undefined,
-                        buyerId: selectedCollectionType === 'Buyers' ? destinationId : undefined,
-                        manufacturerId: selectedCollectionType === 'Manufacturers' ? destinationId : undefined,
-                        collectionName: selectedCollectionType === 'Departments' ? selectedCollectionName : undefined,
+                        departmentId:
+                            selectedCollectionType === 'Departments'
+                                ? destinationId
+                                : undefined,
+                        buyerId:
+                            selectedCollectionType === 'Buyers'
+                                ? destinationId
+                                : undefined,
+                        manufacturerId:
+                            selectedCollectionType === 'Manufacturers'
+                                ? destinationId
+                                : undefined,
+                        collectionName:
+                            selectedCollectionType === 'Departments'
+                                ? selectedCollectionName
+                                : undefined,
                     },
                     file.id,
                     isCopy,
@@ -133,13 +160,20 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
                 <div className={styles.modalContent}>
                     <h2>Share Files</h2>
                     <p>
-                        {filesToShare.length} file{filesToShare.length > 1 ? 's' : ''} selected for sharing.
+                        {filesToShare.length} file
+                        {filesToShare.length > 1 ? 's' : ''} selected for
+                        sharing.
                     </p>
                     <label>Choose Destination Type:</label>
                     <select
                         value={selectedCollectionType}
-                        onChange={(e) =>
-                            setSelectedCollectionType(e.target.value as 'Departments' | 'Buyers' | 'Manufacturers')
+                        onChange={e =>
+                            setSelectedCollectionType(
+                                e.target.value as
+                                    | 'Departments'
+                                    | 'Buyers'
+                                    | 'Manufacturers',
+                            )
                         }
                     >
                         <option value="">Select</option>
@@ -153,23 +187,29 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
                             <label>Select {selectedCollectionType}</label>
                             <select
                                 value={destinationId}
-                                onChange={(e) => setDestinationId(e.target.value)}
+                                onChange={e => setDestinationId(e.target.value)}
                             >
                                 <option value="">Select</option>
                                 {selectedCollectionType === 'Departments'
-                                    ? departments.map((dept) => (
-                                        <option key={dept.id} value={dept.id}>
-                                            {dept.name}
-                                        </option>
-                                    ))
+                                    ? departments.map(dept => (
+                                          <option key={dept.id} value={dept.id}>
+                                              {dept.name}
+                                          </option>
+                                      ))
                                     : selectedCollectionType === 'Buyers'
-                                        ? buyers.map((buyer) => (
-                                            <option key={buyer.id} value={buyer.id}>
+                                      ? buyers.map(buyer => (
+                                            <option
+                                                key={buyer.id}
+                                                value={buyer.id}
+                                            >
                                                 {buyer.name}
                                             </option>
                                         ))
-                                        : manufacturers.map((manufacturer) => (
-                                            <option key={manufacturer.id} value={manufacturer.id}>
+                                      : manufacturers.map(manufacturer => (
+                                            <option
+                                                key={manufacturer.id}
+                                                value={manufacturer.id}
+                                            >
                                                 {manufacturer.name}
                                             </option>
                                         ))}
@@ -177,33 +217,44 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
                         </>
                     )}
 
-                    {selectedCollectionType === 'Departments' && collections.length > 0 && (
-                        <>
-                            <label>Select Collection</label>
-                            <select
-                                value={selectedCollectionName}
-                                onChange={(e) => setSelectedCollectionName(e.target.value)}
-                            >
-                                <option value="">Select</option>
-                                {collections.map((collectionName) => (
-                                    <option key={collectionName} value={collectionName}>
-                                        {collectionName}
-                                    </option>
-                                ))}
-                            </select>
-                        </>
-                    )}
+                    {selectedCollectionType === 'Departments' &&
+                        collections.length > 0 && (
+                            <>
+                                <label>Select Collection</label>
+                                <select
+                                    value={selectedCollectionName}
+                                    onChange={e =>
+                                        setSelectedCollectionName(
+                                            e.target.value,
+                                        )
+                                    }
+                                >
+                                    <option value="">Select</option>
+                                    {collections.map(collectionName => (
+                                        <option
+                                            key={collectionName}
+                                            value={collectionName}
+                                        >
+                                            {collectionName}
+                                        </option>
+                                    ))}
+                                </select>
+                            </>
+                        )}
 
                     <label>
                         <input
                             type="checkbox"
                             checked={isCopy}
-                            onChange={() => setIsCopy((prev) => !prev)}
+                            onChange={() => setIsCopy(prev => !prev)}
                         />
                         Copy
                     </label>
 
-                    <button className={`${styles.modal} ${styles.shareButton}`} onClick={handleMoveOrCopy}>
+                    <button
+                        className={`${styles.modal} ${styles.shareButton}`}
+                        onClick={handleMoveOrCopy}
+                    >
                         {isCopy ? 'Copy' : 'Move'} Files
                     </button>
                 </div>

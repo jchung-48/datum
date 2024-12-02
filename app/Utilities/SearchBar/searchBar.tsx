@@ -10,7 +10,7 @@ import {
 import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
 import './searchBar.css';
 import {FileData, SearchResult, SearchBarProps} from '../../types';
-import { FaSearch } from 'react-icons/fa';
+import {FaSearch} from 'react-icons/fa';
 
 // Debounce function to limit search calls
 const debounce = (func: (...args: any[]) => void, delay: number) => {
@@ -201,19 +201,22 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
                 />
 
                 {isResultsVisible && results.length > 0 && (
-                <div ref={resultsRef} className="search-results-card">
-                    <ul>
-                    {results.map((item, index) => (
-                        <li key={index} className="search-result-item">
-                        <a href={item.downloadURL} target="_blank" rel="noopener noreferrer">
-                            {item.name}
-                        </a>
-                        </li>
-                    ))}
-                    </ul>
-                </div>
+                    <div ref={resultsRef} className="search-results-card">
+                        <ul>
+                            {results.map((item, index) => (
+                                <li key={index} className="search-result-item">
+                                    <a
+                                        href={item.downloadURL}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {item.name}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 )}
-
             </div>
         </div>
     );
