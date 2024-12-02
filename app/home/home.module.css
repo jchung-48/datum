@@ -16,8 +16,8 @@
 .home {
     display: flex;
     align-items: center;
-    font-family: "Darker Grotesque";
-    color: #1F3C53;
+    font-family: 'Darker Grotesque';
+    color: #1f3c53;
     font-weight: 800;
     font-size: 40px;
 }
@@ -29,7 +29,7 @@
 }
 
 .cloudIcon:hover {
-    color: #627D9F;
+    color: #627d9f;
 }
 
 .topButtons {
@@ -37,26 +37,26 @@
     justify-content: center;
     padding-top: 15px;
     padding-left: 20px;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-weight: 800;
     font-size: 20px;
-    color: #1F3C53;
+    color: #1f3c53;
 }
 
 .topButtons:hover {
-    color: #627D9F;
+    color: #627d9f;
 }
 
 .userContainer {
-    padding-top: 15px;;
+    padding-top: 15px;
 }
 
 .createUser {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #1F3C53;
-    font-family: "Darker Grotesque";
+    background-color: #1f3c53;
+    font-family: 'Darker Grotesque';
     font-weight: 800;
     font-size: 20px;
     height: 40px;
@@ -64,38 +64,40 @@
     border-radius: 25px;
 }
 
-.createUser:hover, .faqButton:hover, .aiButton:hover {
-    background-color: #627D9F;
+.createUser:hover,
+.faqButton:hover,
+.aiButton:hover {
+    background-color: #627d9f;
 }
 
 .profileHome {
     justify-self: end;
 }
-  
+
 .profileIconHome {
     height: 33px;
     width: 33px;
     color: #fff;
-    cursor: pointer; 
-    color: #1F3C53;
+    cursor: pointer;
+    color: #1f3c53;
     justify-content: center;
     align-items: center;
 }
 .profileIconHome:hover {
-    color: #627D9F;
+    color: #627d9f;
 }
 
 .motto {
     color: #000000;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-weight: 800;
     font-size: 120px;
     padding-left: 7%;
 }
 
 .description {
-    color: #1F3C53;
-    font-family: "Darker Grotesque";
+    color: #1f3c53;
+    font-family: 'Darker Grotesque';
     font-size: 25px;
     padding-left: 7%;
     padding-top: 1%;
@@ -113,8 +115,8 @@
     align-items: center;
     padding-top: 1.5%;
     margin-right: 5%;
-    background-color: #1F3C53;
-    font-family: "Darker Grotesque";
+    background-color: #1f3c53;
+    font-family: 'Darker Grotesque';
     font-weight: 800;
     font-size: 20px;
     height: 40px;

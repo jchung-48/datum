@@ -1,14 +1,16 @@
 .side-by-side {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;  /* Align items to the start to allow individual vertical adjustments */
+    align-items: flex-start; /* Align items to the start to allow individual vertical adjustments */
     justify-content: center;
     margin-top: 50px;
     gap: 30px; /* Space between profile and info cards */
     width: 100%;
 }
 
-.profile-card, .info-card, .dept-card {
+.profile-card,
+.info-card,
+.dept-card {
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -28,14 +30,14 @@
 }
 
 .name {
-    font-family: "Darker Grotesque";
-    color: #1F3C53;
+    font-family: 'Darker Grotesque';
+    color: #1f3c53;
     font-size: 35px;
     margin-top: 10px;
 }
 
 .company {
-    font-family: "Darker Grotesque Med";
+    font-family: 'Darker Grotesque Med';
     color: #535353;
     font-size: 20px;
 }
@@ -57,16 +59,16 @@
 }
 
 .info-title {
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-size: 25px;
     font-weight: 600;
-    color: #1F3C53;
+    color: #1f3c53;
     text-align: left;
     flex: 1;
 }
 
 .info-value {
-    font-family: "Darker Grotesque Med";
+    font-family: 'Darker Grotesque Med';
     font-size: 20px;
     color: #265780;
     text-align: right;
@@ -84,14 +86,14 @@
 }
 
 .dept-card h2 {
-    font-family: "Darker Grotesque";
-    color: #1F3C53;
+    font-family: 'Darker Grotesque';
+    color: #1f3c53;
     font-size: 24px;
     margin-bottom: 10px;
 }
 
 .dept-card p {
-    font-family: "Darker Grotesque Med";
+    font-family: 'Darker Grotesque Med';
     color: #535353;
     font-size: 18px;
 }
@@ -99,7 +101,7 @@
 .profile-layout {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     gap: 20px;
 }
 
@@ -136,13 +138,13 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 15px;
-    color: #627D9F;
+    color: #627d9f;
     background-color: #f9f9f9;
     transition: border-color 0.3s ease;
 }
 
 .update-phone-section input:focus {
-    border-color: #1F3C53;
+    border-color: #1f3c53;
     outline: none;
     background-color: #fff;
 }
@@ -154,35 +156,39 @@
 .update-phone-section button {
     height: 40px;
     padding: 0 16px; /* Adjust padding for smaller button */
-    background-color: #1F3C53;
+    background-color: #1f3c53;
     color: white;
     font-size: 16px;
     font-weight: 600;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition:
+        background-color 0.3s ease,
+        transform 0.2s ease;
 }
 
 .update-phone-section button:hover {
-    background-color: #627D9F;
+    background-color: #627d9f;
     transform: translateY(-2px);
 }
 
 .change-password-btn {
     padding: 10px 20px;
-    background-color: #1F3C53;
+    background-color: #1f3c53;
     color: white;
     font-size: 16px;
     font-weight: 600;
     border: none;
     border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition:
+        background-color 0.3s ease,
+        transform 0.2s ease;
 }
 
 .change-password-btn:hover {
-    background-color: #627D9F;
+    background-color: #627d9f;
     transform: translateY(-2px);
 }
 
@@ -197,17 +203,19 @@
     height: 55px;
     width: 120px;
     padding: 0 16px;
-    background-color: #1F3C53;
+    background-color: #1f3c53;
     color: white;
     font-size: 18px;
     font-weight: 600;
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition:
+        background-color 0.3s ease,
+        transform 0.2s ease;
 }
 
 .sign-out:hover {
-    background-color: #627D9F;
+    background-color: #627d9f;
     transform: translateY(-2px);
 }

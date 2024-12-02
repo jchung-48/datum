@@ -2,195 +2,196 @@
 
 /* Container for the entire form */
 .pageContainer {
-  padding: 20px;
-  max-width: 800px;
-  margin: 20px auto;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: "Darker Grotesque Semi Bold";
-  font-size: var(--default-font-size);
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Darker Grotesque Semi Bold';
+    font-size: var(--default-font-size);
 }
 
 /* Title styling */
 .pageContainer h2 {
-  font-family: "Darker Grotesque";
-  font-size: 35px;
-  color: #1F3C53;
-  margin-bottom: 20px;
-  text-align: center;
+    font-family: 'Darker Grotesque';
+    font-size: 35px;
+    color: #1f3c53;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .pageContainer h3 {
-  font-family: "Darker Grotesque";
-  font-size: 25px;
-  color: #1F3C53;
+    font-family: 'Darker Grotesque';
+    font-size: 25px;
+    color: #1f3c53;
 }
 
 .pageContainer label {
-  color: var(--text-color-light);
-  font-family: "Darker Grotesque";
+    color: var(--text-color-light);
+    font-family: 'Darker Grotesque';
 }
 
 .pageContainer button {
-  font-family: "Darker Grotesque";
-  color: var(--text-color-dark);
+    font-family: 'Darker Grotesque';
+    color: var(--text-color-dark);
 }
 
 /* Form input styling */
 .inputGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 
 .inputGroup input {
-  padding: 5px;
-  font-size: 1em;
-  border: 1px solid #cdd4df;
-  border-radius: 5px;
-  background-color: #f7f9fc;
-  color: #3d4d63;
+    padding: 5px;
+    font-size: 1em;
+    border: 1px solid #cdd4df;
+    border-radius: 5px;
+    background-color: #f7f9fc;
+    color: #3d4d63;
 }
 
 .inputGroup input:focus {
-  outline: none;
-  border-color: #4caf50;
+    outline: none;
+    border-color: #4caf50;
 }
 
 .inputGroup input::placeholder {
-  color: #aaa;
+    color: #aaa;
 }
 
 /* Select dropdown styling */
 .selectGroup {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
 }
 
 .selectGroup select {
-  border: 1px solid #cdd4df;
-  border-radius: 5px;
-  background-color: #f7f9fc;
-  cursor: pointer;
-  color: #3d4d63;
-  font-family: "Darker Grotesque";
+    border: 1px solid #cdd4df;
+    border-radius: 5px;
+    background-color: #f7f9fc;
+    cursor: pointer;
+    color: #3d4d63;
+    font-family: 'Darker Grotesque';
 }
 
 .selectGroup select:focus {
-  border-color: #4caf50;
+    border-color: #4caf50;
 }
 
 /* Contact management section */
 
 .contactTable {
-  width: 97.45%;
-  border-collapse: separate;
-  border-spacing: 0 0.4em;
-  color: var(--text-color-light);
+    width: 97.45%;
+    border-collapse: separate;
+    border-spacing: 0 0.4em;
+    color: var(--text-color-light);
 }
 
 .contactTable th {
-  font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
 }
 
-.contactTable th, .contactTable td {
-  padding: 0px 5px;
-  text-align: left;
+.contactTable th,
+.contactTable td {
+    padding: 0px 5px;
+    text-align: left;
 }
 
 .contactTable td {
-  padding: 5px;
+    padding: 5px;
 }
 
 .contactRow {
-  background-color: var(--card-background-light);
-  overflow: hidden; /* Prevent content from spilling */
-  display: table-row;
-  transition: background-color 0.2s;
-  padding: 5px;
-  position: relative;
+    background-color: var(--card-background-light);
+    overflow: hidden; /* Prevent content from spilling */
+    display: table-row;
+    transition: background-color 0.2s;
+    padding: 5px;
+    position: relative;
 }
 
 .contactRow td.name {
-  font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
 }
 
 .contactRow td.action {
-  text-align: right;
-  color: var(--text-color-light);
+    text-align: right;
+    color: var(--text-color-light);
 }
 
 .contactRow td:first-child {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  padding-left: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding-left: 10px;
 }
 
 .contactRow td:last-child {
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .contactButton {
-  max-width: fit-content;
-  margin: 0 5px;
-  padding: 5px 20px;
-  cursor: pointer;
-  background-color: var(--button-blue);
-  border-radius: 25px;
+    max-width: fit-content;
+    margin: 0 5px;
+    padding: 5px 20px;
+    cursor: pointer;
+    background-color: var(--button-blue);
+    border-radius: 25px;
 }
 
 .contactButton:hover {
-  background-color: var(--button-blue-hover);
+    background-color: var(--button-blue-hover);
 }
 
 /* Action buttons */
 .actionButtons {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .actionButtons button {
-  padding: 10px 20px;
-  border-radius: 25px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .actionButtons button.save {
-  background-color: var(--button-green);
-  color: white;
-  border: none;
+    background-color: var(--button-green);
+    color: white;
+    border: none;
 }
 
 .actionButtons button.save:hover {
-  background-color: var(--button-green-hover);
+    background-color: var(--button-green-hover);
 }
 
 .actionButtons button.delete {
-  background-color: var(--button-red);
-  color: white;
-  border: none;
+    background-color: var(--button-red);
+    color: white;
+    border: none;
 }
 
 .actionButtons button.delete:hover {
-  background-color: var(--button-red-hover);
+    background-color: var(--button-red-hover);
 }
 
 /* Loading or Error state */
 .loading {
-  text-align: center;
-  font-size: 1.5em;
-  color: #4caf50;
+    text-align: center;
+    font-size: 1.5em;
+    color: #4caf50;
 }
 
 .error {
-  text-align: center;
-  font-size: 1.5em;
-  color: #f44336;
+    text-align: center;
+    font-size: 1.5em;
+    color: #f44336;
 }

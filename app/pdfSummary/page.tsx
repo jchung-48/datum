@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from 'react';
-import { callSummarizeFlow } from '../aiAddon/summarization';
-import { getDownloadURL, ref, listAll } from 'firebase/storage';
-import { db, storage } from '@/lib/firebaseClient';
+import {useState, useEffect} from 'react';
+import {callSummarizeFlow} from '../aiAddon/summarization';
+import {getDownloadURL, ref, listAll} from 'firebase/storage';
+import {db, storage} from '@/lib/firebaseClient';
 import * as pdfjsLib from 'pdfjs-dist';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
@@ -24,7 +24,9 @@ export default function PdfSummaryPage() {
                 const storageRef = ref(storage, '/');
                 const fileList = await listAll(storageRef);
                 const urls = await Promise.all(
-                    fileList.items.map(async (itemRef) => await getDownloadURL(itemRef))
+                    fileList.items.map(
+                        async itemRef => await getDownloadURL(itemRef),
+                    ),
                 );
                 setFileUrls(urls);
             } catch (error) {
@@ -35,13 +37,16 @@ export default function PdfSummaryPage() {
         fetchFiles();
     }, []);
 
-    const extractTextFromPdf = async (arrayBuffer: ArrayBuffer): Promise<string> => {
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const extractTextFromPdf = async (
+        arrayBuffer: ArrayBuffer,
+    ): Promise<string> => {
+        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
         let textContent = '';
         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
             const page = await pdf.getPage(pageNum);
             const content = await page.getTextContent();
-            textContent += content.items.map((item: any) => item.str).join(' ') + '\n';
+            textContent +=
+                content.items.map((item: any) => item.str).join(' ') + '\n';
         }
         return textContent;
     };
@@ -58,7 +63,10 @@ export default function PdfSummaryPage() {
             const response = await fetch(selectedFileUrl);
             const arrayBuffer = await response.arrayBuffer();
             const textContent = await extractTextFromPdf(arrayBuffer);
-            const summaryResponse = await callSummarizeFlow(textContent,"meta");
+            const summaryResponse = await callSummarizeFlow(
+                textContent,
+                'meta',
+            );
             setSummary(summaryResponse);
         } catch (error) {
             console.error('Error generating summary:', error);
@@ -71,7 +79,7 @@ export default function PdfSummaryPage() {
     return (
         <div className={styles.container}>
             <Link href="/">
-                <button style={{ marginBottom: '20px' }}>Home</button>
+                <button style={{marginBottom: '20px'}}>Home</button>
             </Link>
             <h1>PDF Summary Generator</h1>
             <div className={styles.selectWrapper}>
@@ -79,18 +87,26 @@ export default function PdfSummaryPage() {
                     <option value="">Select a PDF file</option>
                     {fileUrls.map((url, index) => (
                         <option key={index} value={url}>
-                            {decodeURIComponent((url.split('/').pop())?.split('?alt=')[0] || `File ${index + 1}`)}
+                            {decodeURIComponent(
+                                url.split('/').pop()?.split('?alt=')[0] ||
+                                    `File ${index + 1}`,
+                            )}
                         </option>
                     ))}
                 </select>
             </div>
-            <button onClick={handleGenerateSummary} disabled={loading || !selectedFileUrl}>
+            <button
+                onClick={handleGenerateSummary}
+                disabled={loading || !selectedFileUrl}
+            >
                 Generate Summary
             </button>
             {loading && <p className={styles.loading}>Loading...</p>}
             {summary && (
                 <div className={styles.summaryContainer}>
-                    <ReactMarkdown className={styles.summaryText}>{summary}</ReactMarkdown>
+                    <ReactMarkdown className={styles.summaryText}>
+                        {summary}
+                    </ReactMarkdown>
                 </div>
             )}
         </div>

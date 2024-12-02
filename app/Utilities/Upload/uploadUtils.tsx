@@ -259,6 +259,7 @@ export const moveDocument = async (
       sourcePath.manufacturerId,
       sourcePath.collectionName
     );
+    console.log(sourceDocRef);
     const docSnapshot = await getDoc(sourceDocRef);
 
     if (!docSnapshot.exists()) {

@@ -1,6 +1,4 @@
-PdfSummaryPage.module.css
-
-.container {
+PdfSummaryPage.module.css .container {
     display: flex;
     flex-direction: column;
     align-items: center;

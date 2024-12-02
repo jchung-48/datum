@@ -1,13 +1,13 @@
 body {
     background-color: #e3e3e3;
-    font-family: "Darker Grotesque", sans-serif;
+    font-family: 'Darker Grotesque', sans-serif;
     margin: 0;
     font-size: 15px; /* Reduced the base font size */
 }
 
 .profile-container {
     padding: 25px; /* Reduced padding */
-    background: linear-gradient(10deg, #627D9F 20%, #1F3C53 74%);
+    background: linear-gradient(10deg, #627d9f 20%, #1f3c53 74%);
     border-radius: 10px;
     color: #ffffff;
     max-width: 850px; /* Reduced max-width */
@@ -15,7 +15,9 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); /* Adjusted shadow */
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     color: #ffffff;
     font-weight: 800;
     margin-bottom: 12px; /* Reduced margin */
@@ -30,7 +32,7 @@ ul {
 
 li {
     background-color: #ffffff;
-    color: #1F3C53;
+    color: #1f3c53;
     padding: 12px; /* Reduced padding */
     border-radius: 5px;
     margin-bottom: 8px; /* Reduced margin */
@@ -40,7 +42,7 @@ li {
 
 button {
     font-weight: 800;
-    background-color: #627D9F;
+    background-color: #627d9f;
     color: #ffffff;
     border: none;
     border-radius: 5px;

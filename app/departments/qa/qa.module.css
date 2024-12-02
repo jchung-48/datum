@@ -1,5 +1,5 @@
 .fileUpload {
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-weight: 400;
     color: black;
     padding-left: 4%;
@@ -19,9 +19,9 @@
 .fileItem {
     display: flex;
     align-items: center;
-    background-color: #EBEBEB;
+    background-color: #ebebeb;
     border: 2px solid #ffffff;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-size: 15px;
     color: #000000;
     height: 35px;
