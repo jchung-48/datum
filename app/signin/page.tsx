@@ -2,7 +2,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
-import './styles.module.css';
+import styles from './styles.module.css';
 import { auth, db } from '@/lib/firebaseClient'; 
 import { signInUser, getUserDepartments, resetPassword } from "../authentication";
 import { doc, getDoc } from "firebase/firestore";
@@ -80,37 +80,36 @@ const Page = () => {
   };
 
   return (
-    // Updated JSX in Page component
-    <div className="page-container">
-      <div className="top-left-circle"></div>
-      <div className="bottom-right-circle"></div>
-      <div className="box-container">
-        <div className="box">
-          <h1 className="login">Login</h1>
-          <h3 className="login-words">Please login to continue</h3>
+    <div className={styles.pageContainer}>
+      <div className={styles.topLeftCircle}></div>
+      <div className={styles.bottomRightCircle}></div>
+      <div className={styles.boxContainer}>
+        <div className={styles.box}>
+          <h1 className={styles.login}>Login</h1>
+          <h3 className={styles.loginWords}>Please login to continue</h3>
           <input
-            className="email"
+            className={styles.email}
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
-            className="password"
+            className={styles.password}
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className="submit" onClick={handleSignIn}>Sign In</button>
+          <button className={styles.submit} onClick={handleSignIn}>Sign In</button>
           {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>}
         </div>
-        <div className="box-right">
-          <div className="triangle-right"></div>
-          <div className="circle"></div>
-          <div className="circle2"></div>
-          <p className="new">New Here?</p>
-          <p className="datum">Welcome to Datum!</p>
+        <div className={styles.boxRight}>
+          <div className={styles.triangleRight}></div>
+          <div className={styles.circle}></div>
+          <div className={styles.circle2}></div>
+          <h1 className={styles.new}>New Here?</h1>
+          <h2 className={styles.datum}>Join Datum today!</h2>
         </div>
       </div>
     </div>
