@@ -1,0 +1,213 @@
+.side-by-side {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;  /* Align items to the start to allow individual vertical adjustments */
+    justify-content: center;
+    margin-top: 50px;
+    gap: 30px; /* Space between profile and info cards */
+    width: 100%;
+}
+
+.profile-card, .info-card, .dept-card {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.profile-img {
+    height: 170px;
+    width: 150px;
+    color: #bebebe;
+}
+
+.name {
+    font-family: "Darker Grotesque";
+    color: #1F3C53;
+    font-size: 35px;
+    margin-top: 10px;
+}
+
+.company {
+    font-family: "Darker Grotesque Med";
+    color: #535353;
+    font-size: 20px;
+}
+
+.info-card {
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.info-title {
+    font-family: "Darker Grotesque";
+    font-size: 25px;
+    font-weight: 600;
+    color: #1F3C53;
+    text-align: left;
+    flex: 1;
+}
+
+.info-value {
+    font-family: "Darker Grotesque Med";
+    font-size: 20px;
+    color: #265780;
+    text-align: right;
+    flex: 1;
+}
+
+.dept-card {
+    width: 500px;
+    margin: 20px auto; /* Centers the card and adds vertical spacing */
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center-align the text */
+    margin-top: 15px; /* Adjust this value to shift the dept-card down */
+}
+
+.dept-card h2 {
+    font-family: "Darker Grotesque";
+    color: #1F3C53;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.dept-card p {
+    font-family: "Darker Grotesque Med";
+    color: #535353;
+    font-size: 18px;
+}
+
+.profile-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 20px;
+}
+
+.side-by-side {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* Align items to the start for better control */
+    justify-content: center;
+    gap: 30px; /* Space between profile and info cards */
+    width: 100%;
+}
+
+.resetting-stuff {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Adjust space between reset button and input section */
+    margin-top: 20px;
+}
+
+.update-phone-section {
+    display: flex;
+    flex-direction: row; /* Arrange items in a horizontal row */
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Small gap between inputs and button */
+}
+
+.update-phone-section input {
+    width: 250px;
+    flex: 1;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #627D9F;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+.update-phone-section input:focus {
+    border-color: #1F3C53;
+    outline: none;
+    background-color: #fff;
+}
+
+.reset-container {
+    padding-right: 10px;
+}
+
+.update-phone-section button {
+    height: 40px;
+    padding: 0 16px; /* Adjust padding for smaller button */
+    background-color: #1F3C53;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.update-phone-section button:hover {
+    background-color: #627D9F;
+    transform: translateY(-2px);
+}
+
+.change-password-btn {
+    padding: 10px 20px;
+    background-color: #1F3C53;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.change-password-btn:hover {
+    background-color: #627D9F;
+    transform: translateY(-2px);
+}
+
+.sign-out-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 20px;
+}
+
+.sign-out {
+    height: 55px;
+    width: 120px;
+    padding: 0 16px;
+    background-color: #1F3C53;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.sign-out:hover {
+    background-color: #627D9F;
+    transform: translateY(-2px);
+}
