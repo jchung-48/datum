@@ -139,80 +139,57 @@ export default function ProfilePage() {
           </div>
         </div>
         <div className="resetting-stuff">
-          <button className="change-password-btn" onClick={() => resetPassword(employeeData.email)}>
-            Reset Password
-          </button>
-          <div className="update-phone-section">
-            <h1>Update Phone Number</h1>
-            <input
-                type="text"
-                placeholder="New Phone Number"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                style={{ color: "black" }}
-            />
-            <button onClick={handleVerificationCode}>Send Verification Code</button>
+          <div className="reset-container">
+            <button className="change-password-btn">Reset Password</button>
+          </div>
 
-            {verificationId && (
-                <>
+            <div className="update-phone-section">
+                <div className="input-group">
                     <input
                         type="text"
-                        placeholder="Enter verification code"
-                        value={verificationCode}
-                        onChange={(e) => setVerificationCode(e.target.value)}
+                        placeholder="enter phone number"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        className="phone-number"
                         style={{ color: "black" }}
                     />
-                    <button
-                        onClick={() =>
-                            verifyAndUpdatePhoneNumber(verificationCode, verificationId)
-                        }
-                    >
-                        Verify and Update
-                    </button>
-                </>
-            )}
+                    <button onClick={handleVerificationCode}>Send Code</button>
+                </div>
 
-            <div id="recaptcha-container"></div>
-            {errorMessage && (
-                <p className="error-message">{errorMessage}</p>
-            )}
-          </div>
+                {verificationId && (
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            placeholder="Enter verification code"
+                            value={verificationCode}
+                            onChange={(e) => setVerificationCode(e.target.value)}
+                            className="verification-code"
+                            style={{ color: "black" }}
+                        />
+                        <button
+                            onClick={() =>
+                                verifyAndUpdatePhoneNumber(verificationCode, verificationId)
+                            }
+                        >
+                            Verify and Update
+                        </button>
+                    </div>
+                )}
+
+                <div id="recaptcha-container"></div>
+                {errorMessage && (
+                    <p className="error-message">{errorMessage}</p>
+                )}
+            </div>
         </div>
-
-          <div className={styles.profileContainer}>
-            <h1>{employeeData.name}</h1>
-            <h2>Employee at Datum since {employeeData.createdAt}</h2>
-            <h3>Additional Information:</h3>
-            <ul>
-              <li>Email: {employeeData.email}</li>
-              <li>Phone Number: {employeeData.phoneNumber}</li>
-              <li>Role: {employeeData.role}</li>
-            </ul>
-            <h3>Authorized Departments</h3>
-            {departments.length > 0 ? (
-              <ul>
-                {departments.map((dept, index) => (
-                  <li key={index}>{dept}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No departments assigned.</p>
-            )}
-
-            
-
-            {isSignedIn && (
-              <button onClick={handleSignOut} style={{ marginTop: "20px" }}>
-                Sign Out
-              </button>
-
-              
-            )}
-
-            {/* Update Phone Number Section */}
-            
-          </div>
+        
+        <div className="sign-out-container">
+          {isSignedIn && (
+            <button className="sign-out" onClick={handleSignOut} style={{ marginTop: "20px" }}>
+              Sign Out
+            </button>
+          )}
         </div>
-
+      </div>
     );
 }

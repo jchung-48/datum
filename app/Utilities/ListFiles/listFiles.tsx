@@ -36,6 +36,23 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  const adjustDropdownPosition = (dropdown: HTMLElement) => {
+    const rect = dropdown.getBoundingClientRect();
+    if (rect.right > window.innerWidth) {
+      dropdown.style.left = `-${rect.right - window.innerWidth + 10}px`;
+    }
+    if (rect.bottom > window.innerHeight) {
+      dropdown.style.top = `-${rect.bottom - window.innerHeight + 10}px`;
+    }
+  };
+  
+  useEffect(() => {
+    const dropdowns = document.querySelectorAll('.dropdownMenu');
+    dropdowns.forEach((dropdown) => {
+      adjustDropdownPosition(dropdown as HTMLElement);
+    });
+  }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUserUid(user ? user.uid : null);
@@ -205,14 +222,22 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                   <td>{file.fileName}</td>
                   <td>{file.userDisplayName || 'N/A'}</td>
                   <td>
-                    <DropdownMenu
-                      menuItems={menuItems(file)}
-                      trigger={
-                        <button className={styles.dropdownTrigger}>
-                          <MdMoreVert />
-                        </button>
-                      }
-                    />
+                  <DropdownMenu
+                    menuItems={menuItems(file)}
+                    trigger={
+                      <button className={styles.dropdownTrigger}>
+                        <MdMoreVert />
+                      </button>
+                    }
+                  />
+                  <div className={styles.dropdownContainer}>
+                    {menuItems(file).map((item, index) => (
+                      <button key={index} className={styles.menuItem} onClick={item.action}>
+                        {item.icon}
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
                   </td>
                 </tr>
               ))
