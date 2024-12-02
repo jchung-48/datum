@@ -19,9 +19,7 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
   const [summaryContent, setSummaryContent] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [chatLoading, setChatLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState<
-    {sender: 'user' | 'bot'; message: string}[]
-  >([]);
+  const [chatHistory, setChatHistory] = useState<Array<{ sender: 'user' | 'bot'; message: string }>>([]);
   const chatHistoryRef = useRef<HTMLDivElement>(null);
 
   // Toggle card visibility
@@ -79,10 +77,18 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
       const data = await response.json();
 
       // Add bot's response to chat history
-      setChatHistory(prev => [
-        ...prev,
-        {sender: 'bot', message: data.response},
-      ]);
+      setChatHistory(prev => {
+        const newHistory = [
+          ...prev,
+          { sender: 'bot' as const, message: data.response }
+        ];
+        setTimeout(() => {
+          if (chatHistoryRef.current) {
+            chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+          }
+        }, 0);
+        return newHistory;
+      });
     } catch (error) {
       console.error('Error in chat:', error);
       setChatHistory(prev => [
@@ -90,9 +96,6 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
         {sender: 'bot', message: 'Error: Unable to fetch response.'},
       ]);
     } finally {
-      if (chatHistoryRef.current) {
-        chatHistoryRef.current.scrollTo(0, chatHistoryRef.current.scrollHeight);
-      }
       setChatLoading(false);
     }
   };
@@ -179,6 +182,12 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [isCardVisible]);
+
+  useEffect(() => {
+    if (chatHistoryRef.current) {
+      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+    }
+  }, [chatHistory]);
 
   return (
     <div>
@@ -293,3 +302,4 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
 };
 
 export default AiButton;
+

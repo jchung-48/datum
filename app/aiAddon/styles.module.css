@@ -206,9 +206,12 @@
 
 /* Chat History */
 .chatHistory {
-    max-height: 300px;
-    overflow-y: auto;
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
+
 /* Content Display Area */
 .contentDisplay {
     padding: 15px;
@@ -227,20 +230,27 @@
 }
 
 .chatMessage {
-    margin-bottom: 10px;
-
+  margin-bottom: 10px;
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  word-wrap: break-word;
 }
 
-/* User and Bot Messages */
 .userMessage {
-    text-align: right;
+  align-self: flex-end;
+  background-color: #007bff;
+  color: white;
 }
 
 .botMessage {
-    text-align: left;
+  align-self: flex-start;
+  background-color: #f1f0f0;
+  color: black;
 }
 
 .botLoading {
     display: inline-flex;
     align-items: center;
 }
+
