@@ -159,7 +159,7 @@ export default function ProfilePage() {
             </div>
             <div className="resetting-stuff">
                 <div className="reset-container">
-                    <button className="change-password-btn">
+                    <button className="change-password-btn" onClick={() => resetPassword(employeeData.email)}>
                         Reset Password
                     </button>
                 </div>
