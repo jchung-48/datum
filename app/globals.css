@@ -9,6 +9,12 @@
 }
 
 @font-face {
+  font-family: 'Darker Grotesque Med';
+  src: url('fonts/DarkerGrotesque-Medium.ttf') format('truetype'); /* Corrected format */
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'Darker Grotesque Semi Bold';
   src: url('fonts/DarkerGrotesque-SemiBold.ttf') format('truetype');
   font-style: normal;
