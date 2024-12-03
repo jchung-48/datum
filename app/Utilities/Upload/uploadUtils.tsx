@@ -9,7 +9,6 @@ import {
 } from 'firebase/storage';
 import {doc, setDoc, getDoc, deleteDoc, Timestamp} from 'firebase/firestore';
 import {storage, db, auth} from '@/lib/firebaseClient';
-import {createTypeReferenceDirectiveResolutionCache} from 'typescript';
 import {FirestorePath} from '@/app/types';
 
 // Function to upload file to Firebase Storage and return the download URL

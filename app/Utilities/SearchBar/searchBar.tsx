@@ -10,7 +10,6 @@ import {
 import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
 import './searchBar.css';
 import {FileData, SearchResult, SearchBarProps} from '../../types';
-import {FaSearch} from 'react-icons/fa';
 
 // Debounce function to limit search calls
 const debounce = (func: (...args: any[]) => void, delay: number) => {
@@ -26,7 +25,6 @@ const companyId = 'mh3VZ5IrZjubXUCZL381';
 const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
     const [queryText, setQueryText] = useState('');
     const [results, setResults] = useState<SearchResult[]>([]);
-    const [loading, setLoading] = useState(false);
     const [isResultsVisible, setIsResultsVisible] = useState(false);
 
     const resultsRef = useRef<HTMLDivElement>(null);
@@ -57,7 +55,6 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
             return;
         }
 
-        setLoading(true);
         const searchResults: SearchResult[] = [];
 
         try {
@@ -124,7 +121,6 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
         }
 
         setResults(searchResults);
-        setLoading(false);
     };
 
     // Helper function to fetch and filter documents

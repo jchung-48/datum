@@ -4,6 +4,10 @@
     font-style: normal;
 }
 
+.page {
+    min-height: 100vh;
+}
+
 .header {
     display: flex;
     align-items: center;

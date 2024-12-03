@@ -130,7 +130,7 @@ export default function Home() {
     };
 
     return (
-        <div>
+        <div className={styles.page}>
             <div className={styles.header}>
                 <div className={styles.home}>
                     <LuCloudLightning className={styles.cloudIcon} />
