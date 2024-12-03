@@ -6,7 +6,6 @@ import React, {useState, useEffect, useRef} from 'react';
 import {
     collection,
     getDocs,
-    Timestamp,
     doc,
     getDoc,
     DocumentReference,
@@ -18,14 +17,10 @@ import {handleFileDelete} from '../Upload/uploadUtils';
 import * as pdfjsLib from 'pdfjs-dist';
 import styles from './listFiles.module.css';
 import {onAuthStateChanged} from 'firebase/auth';
-import {s} from '@genkit-ai/core/lib/action-CnIb9v86';
 import {MdDelete} from 'react-icons/md';
 import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
-import DropdownMenu from '../DropDownMenu/dropdownMenu';
 import {getEmployeeProfile} from '@/app/authentication';
-
-import {F} from '@genkit-ai/flow/lib/flow-DR52DKjZ';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.min.js';
@@ -42,8 +37,6 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
     const [files, setFiles] = useState<FileData[]>([]);
     const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [currentUserUid, setCurrentUserUid] = useState<string | null>(null);
     const [sortField, setSortField] = useState<string>('File Name');
@@ -128,7 +121,6 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
 
     useEffect(() => {
         const fetchFiles = async () => {
-            setLoading(true);
             try {
                 const filesCollectionRef = collection(db, ...collectionPath);
                 const querySnapshot = await getDocs(filesCollectionRef);
@@ -136,11 +128,8 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
 
                 setFiles(filesData);
                 setFilteredFiles(filesData);
-                setLoading(false);
             } catch (error) {
                 console.error(`Error fetching files for ${title}:`, error);
-                setError(`Failed to load ${title.toLowerCase()}.`);
-                setLoading(false);
             }
         };
 

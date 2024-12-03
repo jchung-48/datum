@@ -1,19 +1,10 @@
 'use client';
 
 import React, {useState, useEffect} from 'react';
-import Link from 'next/link';
 import merchStyles from './merch.module.css';
 import deptStyles from '../departments.module.css';
 import {FileList} from '../../Utilities/ListFiles/listFiles';
-import {LuCloudLightning} from 'react-icons/lu';
-import {FaUserCircle} from 'react-icons/fa';
 import {MdClose} from 'react-icons/md';
-import {
-    uploadFileToStorage,
-    updateFirestore,
-    moveDocument,
-} from '../../Utilities/Upload/uploadUtils';
-
 import {fetchContacts} from '../../editCompanyContacts/editContactUtils';
 import {Buyer, Manufacturer} from '../../types';
 import UploadComponent from '../../Utilities/Upload/uploadComponent';
@@ -29,25 +20,8 @@ const MerchandisingDepartment = () => {
     const styles = {...deptStyles, ...merchStyles};
     const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
     const DEPARTMENTID = 'ti7yNByDOzarVXoujOog';
-
-    const [file, setFile] = useState<File | null>(null);
-    const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-    const [selectedCollections, setSelectedCollections] = useState<string[]>([
-        'files',
-    ]);
     const [buyers, setBuyers] = useState<Buyer[]>([]);
     const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
-    const [selectedContactId, setSelectedContactId] = useState<string | null>(
-        null,
-    );
-    const [selectedContactType, setSelectedContactType] = useState<
-        'Buyer' | 'Manufacturer' | null
-    >(null);
-    const [contactFile, setContactFile] = useState<File | null>(null);
-    const [contactUploadStatus, setContactUploadStatus] = useState<
-        string | null
-    >(null);
-    const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
     const [fileListUpdated, setFileListUpdated] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
@@ -56,39 +30,6 @@ const MerchandisingDepartment = () => {
     >([]);
     const [isAdmin, setIsAdmin] = useState(false);
     const pathname = usePathname();
-
-    // Handle file selection for department files
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setFile(e.target.files[0]);
-        }
-    };
-
-    // Handle file selection for contact files
-    const handleContactFileChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        if (e.target.files && e.target.files[0]) {
-            setContactFile(e.target.files[0]);
-        }
-    };
-
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setSelectedCollections(prevSelected =>
-            e.target.checked
-                ? [...prevSelected, value]
-                : prevSelected.filter(item => item !== value),
-        );
-    };
-
-    const handleFileSelect = (fileId: string) => {
-        setSelectedFiles(prevSelected =>
-            prevSelected.includes(fileId)
-                ? prevSelected.filter(id => id !== fileId)
-                : [...prevSelected, fileId],
-        );
-    };
 
     useEffect(() => {
         const loadBuyersAndManufacturers = async () => {
@@ -206,7 +147,6 @@ const MerchandisingDepartment = () => {
                     <FileList
                         collectionPath={deptFilesPath}
                         title=""
-                        onFileSelect={handleFileSelect}
                         display="horizontal"
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
