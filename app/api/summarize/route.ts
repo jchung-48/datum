@@ -31,7 +31,6 @@ export async function POST(req: Request) {
 
         return NextResponse.json({summary});
     } catch (error) {
-        console.error('Error in summarize API:', error);
         return NextResponse.json(
             {error: 'Internal Server Error'},
             {status: 500},

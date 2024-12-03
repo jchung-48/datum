@@ -1,44 +1,52 @@
+// genkit.ts
 'use server';
 
 import * as z from 'zod';
-
-import './genkitConfig';
-
-// Import the Genkit core libraries and plugins.
-import {generate} from '@genkit-ai/ai';
-import {configureGenkit} from '@genkit-ai/core';
-import {defineFlow, runFlow, run} from '@genkit-ai/flow';
-import {ollama} from 'genkitx-ollama';
-import {index} from '@genkit-ai/ai';
-import {Document, retrieve} from '@genkit-ai/ai/retriever';
-
+import { defineFlow, run } from '@genkit-ai/flow';
+import { generate, index } from '@genkit-ai/ai';
+import { Document, retrieve } from '@genkit-ai/ai/retriever';
 import * as admin from 'firebase-admin';
-
 import {
     devLocalIndexerRef,
-    devLocalVectorstore,
     devLocalRetrieverRef,
 } from '@genkit-ai/dev-local-vectorstore';
-import {textEmbeddingGecko, vertexAI} from '@genkit-ai/vertexai';
-
 import pdf from 'pdf-parse';
-import {chunk} from 'llm-chunk';
+import { chunk } from 'llm-chunk';
 
 export const knowledgeBaseIndexer = devLocalIndexerRef('knowledgeBase');
 
-// Create chunking config
-const chunkingConfig = {
+// Define type for chunking config that matches SplitOptions
+interface ChunkingConfig {
+    minLength: number;
+    maxLength: number;
+    splitter: 'sentence' | 'paragraph' | undefined;
+    overlap: number;
+    delimiters: string;
+}
+
+// Create chunking config with proper typing
+const chunkingConfig: ChunkingConfig = {
     minLength: 1000,
     maxLength: 2000,
-    splitter: 'sentence',
+    splitter: 'sentence', // Now correctly typed as literal 'sentence'
     overlap: 100,
     delimiters: '',
-} as any;
+};
 
 // Initialize Firebase Admin SDK if not already initialized
-if (!admin.apps.length) {
-    admin.initializeApp();
-}
+void (async () => {
+    if (!admin.apps.length) {
+        try {
+            await admin.initializeApp();
+        } catch (error) {
+            console.error('Failed to initialize Firebase Admin:', error);
+            throw error;
+        }
+    }
+})().catch(error => {
+    console.error('Firebase initialization error:', error);
+    process.exit(1);
+});
 
 // Indexer flow
 export const indexKB = defineFlow(
@@ -48,13 +56,12 @@ export const indexKB = defineFlow(
         outputSchema: z.void(),
     },
     async () => {
-        // add all collection paths to files
         // Fetch PDFs from Firestore
         const pdfs = await run('fetch-pdfs', fetchPdfsFromFirestore);
 
         // Process each PDF
         for (const pdf of pdfs) {
-            const {pdfName, filePath} = pdf;
+            const { pdfName, filePath } = pdf;
 
             // Download the PDF from Storage
             const pdfBuffer = await run('download-pdf', () =>
@@ -73,7 +80,7 @@ export const indexKB = defineFlow(
 
             // Convert chunks to Documents
             const documents = chunks.map(text => {
-                return Document.fromText(text, {pdfName});
+                return Document.fromText(text, { pdfName });
             });
 
             // Add documents to the index
@@ -86,7 +93,6 @@ export const indexKB = defineFlow(
 );
 
 // Function to fetch PDFs from Firestore
-// NOTE: if there are corrupted PDFs indexer will get bad xRef. If other files like .jpg are in the collection, an error will occur
 async function fetchPdfsFromFirestore() {
     const db = admin.firestore();
 
@@ -123,9 +129,7 @@ async function fetchPdfsFromFirestore() {
                         collectionPath: path,
                     });
                 } else {
-                    console.warn(
-                        `Document ${doc.id} in ${path} is missing 'filePath'`,
-                    );
+                    console.warn(`Document ${doc.id} in ${path} is missing 'filePath'`);
                 }
             });
         } catch (error) {
@@ -141,9 +145,7 @@ async function downloadPdfFromStorage(filePath: string) {
         throw new Error('Storage path is undefined or empty.');
     }
 
-    console.log('Attempting to download file from storage path:', filePath);
-
-    const bucket = admin.storage().bucket('datum-115a.appspot.com'); // Ensure this matches your actual bucket name
+    const bucket = admin.storage().bucket('datum-115a.appspot.com');
     const file = bucket.file(filePath);
     const [fileContents] = await file.download();
     return fileContents;
@@ -169,7 +171,7 @@ export const kbQAFlow = defineFlow(
         const docs = await retrieve({
             retriever: kbRetriever,
             query: input,
-            options: {k: 3},
+            options: { k: 3 },
         });
 
         // Generate a response using llama3.2 and your company context
@@ -187,7 +189,6 @@ Question: ${input}
             context: docs,
         });
 
-        const output = llmResponse.text();
-        return output;
+        return llmResponse.text();
     },
 );
