@@ -129,6 +129,7 @@ Styling for the table for default view.
 }
 
 .fileCell:last-child {
+    text-align: right;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
