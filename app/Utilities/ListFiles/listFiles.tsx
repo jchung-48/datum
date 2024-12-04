@@ -471,17 +471,15 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                     >
                         <FaTh />
                     </button>
-                    <button
+                    {/* <button
                         className={`${styles.viewButton} ${display === 'horizontal' ? styles.activeView : ''}`}
                         onClick={() => setDisplay('horizontal')}
                         disabled={display === 'horizontal'}
                     >
                         <FaGripLines />
-                    </button>
+                    </button> */}
                 </div>
-            </div>
 
-            {onSearch && (
                 <input
                     className={styles.search}
                     type="text"
@@ -489,7 +487,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                 />
-            )}
+            </div>
 
             {display === 'horizontal' ? (
                 <div className={styles.scrollContainer}>
