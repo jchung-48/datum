@@ -5,6 +5,7 @@ import React from 'react';
 import {auth} from '@/lib/firebaseClient';
 import {getDepartments} from '../authentication';
 import styles from './createUser.module.css';
+import Header from '@/app/Utilities/Header/header';
 
 interface Department {
     id: string;
@@ -15,8 +16,8 @@ const Page = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
-    const [departments, setDepartments] = useState<Department[]>([]); // Departments list state
-    const [selectedDepartment, setSelectedDepartment] = useState(''); // Store selected department
+    const [departments, setDepartments] = useState<Department[]>([]);
+    const [selectedDepartment, setSelectedDepartment] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [role, setRole] = useState('');
@@ -25,10 +26,9 @@ const Page = () => {
     useEffect(() => {
         if (errorMessage) {
             const timer = setTimeout(() => {
-                setErrorMessage(''); // Clear error message after 3 seconds
+                setErrorMessage('');
             }, 3000);
-
-            return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
+            return () => clearTimeout(timer);
         }
         return undefined;
     }, [errorMessage]);
@@ -36,11 +36,10 @@ const Page = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async user => {
             if (user) {
-                const companyId = (await user.getIdTokenResult()).claims
-                    .companyId;
+                const companyId = (await user.getIdTokenResult()).claims.companyId;
                 const departmentList = await getDepartments(companyId);
                 if (departmentList.length > 0) {
-                    setDepartments(departmentList); // Store fetched departments in state
+                    setDepartments(departmentList);
                 } else {
                     setErrorMessage('No departments available.');
                 }
@@ -93,58 +92,63 @@ const Page = () => {
 
     return (
         <div className={styles.pageContainer}>
-            <h1 className={styles.header}>Create New Employee</h1>
-            <input
-                className={styles.inputDiv}
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-            />
-            <input
-                className={styles.inputDiv}
-                type="text"
-                placeholder="Name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-            />
-            <input
-                className={styles.inputDiv}
-                type="text"
-                placeholder="Phone"
-                value={phone}
-                onChange={e => setPhone(e.target.value)}
-            />
-            <select
-                className={styles.selectDiv}
-                value={selectedDepartment}
-                onChange={departmentSelect}
-            >
-                <option value="" disabled>
-                    Select a Department
-                </option>
-                {departments.map(department => (
-                    <option key={department.id} value={department.id}>
-                        {department.name}
+            <header className={styles.navbar}>
+                <Header department="                                        " isProfile={false} />
+            </header>
+            <main className={styles.mainContent}>
+                <h1 className={styles.header}>Create New Employee</h1>
+                <input
+                    className={styles.inputDiv}
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                />
+                <input
+                    className={styles.inputDiv}
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                />
+                <input
+                    className={styles.inputDiv}
+                    type="text"
+                    placeholder="Phone"
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                />
+                <select
+                    className={styles.selectDiv}
+                    value={selectedDepartment}
+                    onChange={departmentSelect}
+                >
+                    <option value="" disabled>
+                        Select a Department
                     </option>
-                ))}
-            </select>
-            <input
-                className={styles.inputDiv}
-                type="text"
-                placeholder="Role"
-                value={role}
-                onChange={e => setRole(e.target.value)}
-            />
-            <button
-                className={styles.buttonDiv}
-                onClick={handleAccountCreation}
-            >
-                Create User Account
-            </button>
-            {errorMessage && (
-                <p className={styles.errorMessage}>{errorMessage}</p>
-            )}
+                    {departments.map(department => (
+                        <option key={department.id} value={department.id}>
+                            {department.name}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    className={styles.inputDiv}
+                    type="text"
+                    placeholder="Role"
+                    value={role}
+                    onChange={e => setRole(e.target.value)}
+                />
+                <button
+                    className={styles.buttonDiv}
+                    onClick={handleAccountCreation}
+                >
+                    Create User Account
+                </button>
+                {errorMessage && (
+                    <p className={styles.errorMessage}>{errorMessage}</p>
+                )}
+            </main>
         </div>
     );
 };
