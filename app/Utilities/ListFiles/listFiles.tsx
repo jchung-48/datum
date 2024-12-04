@@ -11,7 +11,6 @@ import { handleFileDelete } from '../Upload/uploadUtils';
 import * as pdfjsLib from 'pdfjs-dist';
 import styles from './listFiles.module.css';
 import { onAuthStateChanged } from 'firebase/auth';
-import { MdDelete } from 'react-icons/md';
 import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
 import DropdownMenu from '../DropDownMenu/dropdownMenu';
@@ -419,7 +418,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                         )
                     }
                 >
-                    <MdDelete />
+                    <FaTrashAlt />
                 </button>
 
                 {enableShare && (
@@ -671,8 +670,8 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                             currentFile = file.id;
                                         }}
                                     >
-                                        <DropdownMenu iconColor="#333333" menuItems={menuItems} />
-                                        {/* {currentUserUid === file.uploadedBy && (
+                                        {/* <DropdownMenu iconColor="#333333" menuItems={menuItems} /> */}
+                                        {currentUserUid === file.uploadedBy && (
                                             <button
                                                 className={styles.deleteButton}
                                                 onClick={e => {
@@ -681,10 +680,10 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                                 }}
                                             >
                                                 <span className="trashIcon">
-                                                    <MdDelete />
+                                                    <FaTrashAlt />
                                                 </span>
                                             </button>
-                                        )} */}
+                                        )}
                                     </td>
                                 </tr>
                             ))
