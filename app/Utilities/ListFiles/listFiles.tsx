@@ -549,7 +549,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                         <tr>
                             <th>
                                 <a
-                                    className="sortable-header"
+                                    className={`${styles.sortableHeader} ${sortDirection ? styles.showImg : ''}`}
                                     onClick={() =>
                                         handleSortFieldClick(
                                             'file-name',
@@ -557,18 +557,18 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                         )
                                     }
                                 >
-                                    File Name{' '}
+                                    File Name
                                     <img
-                                        id="file-name-a-d-img"
-                                        className={styles.ascDesImg}
+                                        id="file-name-a-d-img"  
                                         src={sortDirection}
+                                        className={styles.ascDesImg}
                                         hidden={true}
                                     ></img>
                                 </a>
                             </th>
                             <th>
                                 <a
-                                    className="sortable-header"
+                                    className={`${styles.sortableHeader} ${sortDirection ? styles.showImg : ''}`}
                                     onClick={() =>
                                         handleSortFieldClick(
                                             'owner',
@@ -576,18 +576,18 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                         )
                                     }
                                 >
-                                    Owner{' '}
+                                    Owner
                                     <img
                                         id="owner-a-d-img"
-                                        className={styles.ascDesImg}
                                         src={sortDirection}
+                                        className={styles.ascDesImg}
                                         hidden={true}
                                     ></img>
                                 </a>
                             </th>
                             <th>
                                 <a
-                                    className="sortable-header"
+                                    className={`${styles.sortableHeader} ${sortDirection ? styles.showImg : ''}`}
                                     onClick={() =>
                                         handleSortFieldClick(
                                             'time',
@@ -598,8 +598,8 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     Upload Date{' '}
                                     <img
                                         id="time-a-d-img"
-                                        className={styles.ascDesImg}
                                         src={sortDirection}
+                                        className={styles.ascDesImg}
                                         hidden={true}
                                     ></img>
                                 </a>
