@@ -3,7 +3,7 @@
 'use client';
 
 import React, {useState, useEffect, useRef} from 'react';
-import {collection, getDocs, Timestamp} from 'firebase/firestore';
+import {collection, getDocs, Timestamp, doc, getDoc, DocumentReference} from 'firebase/firestore';
 import {getDownloadURL, ref} from 'firebase/storage';
 import {db, storage, auth} from '@/lib/firebaseClient';
 import {FileData, FileListProps, FirestorePath} from '../../types';
@@ -16,6 +16,8 @@ import {MdDelete} from 'react-icons/md';
 import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
 import DropdownMenu from '../DropDownMenu/dropdownMenu';
+import { getEmployeeProfile } from '@/app/authentication';
+import { FaList, FaTh, FaGripLines } from 'react-icons/fa';
 
 import { F } from '@genkit-ai/flow/lib/flow-DR52DKjZ';
 
@@ -27,7 +29,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   title,
   onSearch,
   onFileSelect,
-  display = 'list' as const,
+  initialDisplay = 'list' as const,
   refreshTrigger,
   enableShare = false
 }) => {
@@ -47,6 +49,8 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
   const [showRightButton, setShowRightButton] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
+  const [display, setDisplay] = useState<'list' | 'grid' | 'horizontal'>(initialDisplay); // New state for view mode
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
@@ -58,6 +62,52 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
     });
 
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const fetchAdmins = async () => {
+      try {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            const employeeProfile = await getEmployeeProfile(user.uid);
+            const employeeName = employeeProfile?.name;
+            console.log("Signed-in employee name:", employeeName);
+
+            const companyDocRef = doc(db, "Company", "mh3VZ5IrZjubXUCZL381");
+            const companyDocSnap = await getDoc(companyDocRef);
+
+            if (companyDocSnap.exists()) {
+              const companyData = companyDocSnap.data();
+              const admins: DocumentReference[] = companyData?.admins || [];
+            
+              const adminNames = await Promise.all(
+                admins.map(async (ref: DocumentReference) => {
+                  const adminSnap = await getDoc(ref);
+                  return adminSnap.exists() ? adminSnap.data()?.name : null; 
+                })
+              );
+
+              console.log("Admin Names:", adminNames);
+
+              const isEmployeeAdmin = adminNames.includes(employeeName);
+              setIsAdmin(isEmployeeAdmin); // Update admin status
+              console.log(
+                isEmployeeAdmin
+                  ? "Employee is an admin."
+                  : "Employee is NOT an admin."
+              );
+            }
+          }
+        });
+
+        return unsubscribe;
+      } catch (error) {
+        console.error("Error fetching admins:", error);
+        return null;
+      }
+    };
+
+    fetchAdmins();
   }, []);
 
   useEffect(() => {
@@ -280,10 +330,11 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
     const deletableFiles = fileId ? [fileId] :
       Array.from(selectedFiles).filter(id =>
         files.find(
-          file => file.id === id && file.uploadedBy === currentUserUid,
+          file => file.id === id && (file.uploadedBy === currentUserUid || isAdmin),
         ),
       );
 
+      
     const firestorePath: FirestorePath = {
       collectionType: 
         collectionPath[2] == "Buyers" ? "Buyers" :
@@ -356,7 +407,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
               selectedFiles.size > 0 &&
               Array.from(selectedFiles).every(id =>
                 files.find(
-                  file => file.id === id && file.uploadedBy === currentUserUid,
+                  file => file.id === id && (file.uploadedBy === currentUserUid || isAdmin),
                 ),
               )
             )
@@ -375,7 +426,7 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
                   selectedFiles.size > 0 &&
                   Array.from(selectedFiles).every(id =>
                     files.find(
-                      file => file.id === id && file.uploadedBy === currentUserUid,
+                      file => file.id === id && (file.uploadedBy === currentUserUid || isAdmin),
                     ),
                   )
                 )
@@ -398,6 +449,31 @@ export const FileList: React.FC<FileListProps & {horizontal?: boolean}> = ({
             />
           </>
         )}
+
+        {/* View Mode Toggle Buttons */}
+        <div className={styles.viewToggleButtons}>
+          <button
+            className={`${styles.viewButton} ${display === 'list' ? styles.activeView : ''}`}
+            onClick={() => setDisplay('list')}
+            disabled={display === 'list'}
+          >
+            <FaList />
+          </button>
+          <button
+            className={`${styles.viewButton} ${display === 'grid' ? styles.activeView : ''}`}
+            onClick={() => setDisplay('grid')}
+            disabled={display === 'grid'}
+          >
+            <FaTh />
+          </button>
+          <button
+            className={`${styles.viewButton} ${display === 'horizontal' ? styles.activeView : ''}`}
+            onClick={() => setDisplay('horizontal')}
+            disabled={display === 'horizontal'}
+          >
+            <FaGripLines />
+          </button>
+        </div>
       </div>
 
       {onSearch && (
