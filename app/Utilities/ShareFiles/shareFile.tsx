@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { moveDocument } from '../Upload/uploadUtils';
 import { fetchContacts } from '@/app/editCompanyContacts/editContactUtils';
-import { Buyer, Manufacturer, FileData } from '@/app/types';
+import { Buyer, Manufacturer, FileData, FirestorePath } from '@/app/types';
 import { getDocs, collection } from 'firebase/firestore';
 import { db } from '@/lib/firebaseClient';
 import styles from './shareFile.module.css';
@@ -9,21 +9,21 @@ import { MdClose } from 'react-icons/md';
 import { departmentCollectionsMap } from '../departmentCollectionsMap';
 
 type ShareFileModalProps = {
-  companyId: string;
+  source: FirestorePath;
   filesToShare: FileData[]; // Accept an array of files
-  departmentId: string;
   isOpen: boolean;
   onClose: () => void;
   buttonRef: React.RefObject<HTMLButtonElement>;
+  onOperationComplete?: () => void;
 };
 
 const ShareFileModal: React.FC<ShareFileModalProps> = ({
-  companyId,
-  filesToShare,
-  departmentId,
+  source,
+  filesToShare = [],
   isOpen,
   onClose,
   buttonRef,
+  onOperationComplete,
 }) => {
   const [selectedCollectionType, setSelectedCollectionType] = useState<
     'Departments' | 'Buyers' | 'Manufacturers' | ''
@@ -43,23 +43,50 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
   }>({ top: 0, left: 0 });
 
   useEffect(() => {
-    if (isOpen && buttonRef.current) {
-      // Get the button's position when modal is open
-      const buttonRect = buttonRef.current.getBoundingClientRect();
-      setModalPosition({
-        top: buttonRect.bottom + window.scrollY + 10, // Position below the button with some offset
-        left: buttonRect.left + window.scrollX, // Align modal left with the button
-      });
+    const updateModalPosition = () => {
+      if (isOpen && buttonRef.current) {
+        let buttonRect = buttonRef.current.getBoundingClientRect();
+        let parentScrollTop = 0;
+        let parentScrollLeft = 0;
+  
+        // Check if the button is within a scrollable container
+
+        let parentElement = buttonRef.current.parentElement;
+        while (parentElement) {
+          parentScrollTop += parentElement.scrollTop || 0;
+          parentScrollLeft += parentElement.scrollLeft || 0;
+          parentElement = parentElement.parentElement;
+        }
+  
+        // Update modal position with scroll position adjustments
+        setModalPosition({
+          top: buttonRect.bottom + window.scrollY - parentScrollTop + 10, // account for page scroll + container scroll
+          left: buttonRect.left + window.scrollX - parentScrollLeft,
+        });
+      }
+    };
+  
+    if (isOpen) {
+      updateModalPosition(); // Set initial position
+      window.addEventListener('scroll', updateModalPosition); // Update on scroll
+      window.addEventListener('resize', updateModalPosition); // Adjust on window resize
     }
+  
+    // Cleanup the event listeners when the modal is closed
+    return () => {
+      window.removeEventListener('scroll', updateModalPosition);
+      window.removeEventListener('resize', updateModalPosition);
+    };
   }, [isOpen, buttonRef]);
+  
 
   useEffect(() => {
     if (isOpen) {
       const fetchData = async () => {
-        const departmentsList = await fetchDepartments(companyId);
-        const buyersList = await fetchContacts(companyId, 'Buyer');
+        const departmentsList = await fetchDepartments(source.companyId);
+        const buyersList = await fetchContacts(source.companyId, 'Buyer');
         const manufacturersList = await fetchContacts(
-          companyId,
+          source.companyId,
           'Manufacturer',
         );
         setDepartments(departmentsList);
@@ -68,7 +95,7 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
       };
       fetchData();
     }
-  }, [isOpen, companyId]);
+  }, [isOpen, source.companyId]);
 
   const fetchDepartments = async (companyId: string) => {
     const departmentsSnapshot = await getDocs(
@@ -105,42 +132,70 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     }
 
     try {
-      for (const file of filesToShare) {
-        await moveDocument(
-          {
-            collectionType: 'Departments',
-            companyId,
-            departmentId,
-          },
-          {
-            collectionType: selectedCollectionType,
-            companyId,
-            departmentId:
-              selectedCollectionType === 'Departments'
-                ? destinationId
-                : undefined,
-            buyerId:
-              selectedCollectionType === 'Buyers'
-                ? destinationId
-                : undefined,
-            manufacturerId:
-              selectedCollectionType === 'Manufacturers'
-                ? destinationId
-                : undefined,
-            collectionName:
-              selectedCollectionType === 'Departments'
-                ? selectedCollectionName
-                : undefined,
-          },
-          file.id,
-          isCopy,
-        );
+      let destCollection: FirestorePath = {
+        collectionType: selectedCollectionType,
+        companyId: source.companyId,
+        departmentId:
+          selectedCollectionType === 'Departments'
+            ? destinationId
+            : undefined,
+        buyerId:
+          selectedCollectionType === 'Buyers'
+            ? destinationId
+            : undefined,
+        manufacturerId:
+          selectedCollectionType === 'Manufacturers'
+            ? destinationId
+            : undefined,
+        collectionName:
+          selectedCollectionType === 'Departments'
+            ? selectedCollectionName
+            : undefined,
       }
-      alert(`Files ${isCopy ? 'copied' : 'moved'} successfully!`);
+      let errored_files = 0;
+      for (const file of filesToShare) {
+        try {
+          await moveDocument(
+            source,
+            destCollection,
+            file.id,
+            isCopy,
+          );
+        } catch (error) {
+          errored_files += 1;
+        }
+      }
+
+      if (onOperationComplete) {
+        onOperationComplete();
+        // if (destCollection.departmentId === source.departmentId) {
+        //   const destStrings = [
+        //     'Company',
+        //     destCollection.companyId,
+        //     destCollection.buyerId ? 'Buyers' :
+        //     destCollection.manufacturerId ? 'Manufacturers' :
+        //     'Departments',
+        //     destCollection.departmentId || destCollection.buyerId || destCollection.manufacturerId,
+        //     destCollection.collectionName || 'files',
+        //   ] as [string, ...string[]];
+        //   onOperationComplete(destStrings);
+        // }
+      }
+      
+      if (errored_files == 0) {
+        alert(`Files ${isCopy ? 'copied' : 'moved'} successfully!`);
+      } else {
+        throw new Error("Failed to move/copy one or more files.");
+      }
       onClose();
     } catch (error) {
       console.error('Error moving/copying files:', error);
-      alert('Failed to move/copy some files.');
+      if (error == 'Error: Copying to directory in the same department not permitted.') {
+        alert('Copying to directory in the same department not permitted.');
+      } else {
+        alert('Failed to move/copy one or more files.');
+      }
+      onClose();
     }
   };
 

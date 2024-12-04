@@ -50,7 +50,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     return (
         <div className={styles.dropdownContainer} ref={dropdownRef}>
             {/* Button with three dots to toggle the dropdown */}
-            <button className={styles.menuButton} onClick={toggleDropdown}>
+            <button
+                className={styles.menuButton}
+                onClick={toggleDropdown}
+            >
                 <FaEllipsisV color={iconColor} />
             </button>
 

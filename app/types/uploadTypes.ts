@@ -25,11 +25,10 @@ export type FileData = {
 export type FileListProps = {
     collectionPath: [string, ...string[]];
     title: string;
-    onSearch?: (query: string) => void;
-    onFileSelect?: (fileId: string) => void;
-    display?: 'list' | 'horizontal' | 'grid';
+    initialDisplay?: 'list' | 'horizontal' | 'grid';
     refreshTrigger?: boolean;
     enableShare?: boolean;
+    onListUpdate?: () => void;
 };
 
 export type UploadComponentProps = {

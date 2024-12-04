@@ -71,6 +71,10 @@ const qaDepartment = () => {
         }
     };
 
+    const updateLists = () => {
+        setFileListUpdated(prev => !prev)
+    }
+
     // Paths for the FileList components
     const deptFilesPath = [
         'Company',
@@ -99,9 +103,7 @@ const qaDepartment = () => {
                         departmentId={DEPARTMENTID}
                         departmentName="QualityAssurance"
                         collections={['files']}
-                        onUploadSuccess={() =>
-                            setFileListUpdated(!fileListUpdated)
-                        }
+                        onUploadSuccess={updateLists}
                     />
                     <SearchBar
                         paths={[
@@ -118,9 +120,10 @@ const qaDepartment = () => {
                             <FileList
                                 collectionPath={deptFilesPath}
                                 title=""
-                                display="grid"
+                                initialDisplay="grid"
                                 refreshTrigger={fileListUpdated}
                                 enableShare={true}
+                                onListUpdate={updateLists}
                             />
                         </div>
                     </div>
@@ -131,6 +134,7 @@ const qaDepartment = () => {
                                 collectionPath={inboxFilesPath}
                                 title=""
                                 refreshTrigger={fileListUpdated}
+                                onListUpdate={updateLists}
                             />
                         </div>
                     </div>
