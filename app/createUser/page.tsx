@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { auth } from "@/lib/firebaseClient";
 import { getDepartments } from "../authentication";
+import Header from '@/app/Utilities/Header/header';
 
 interface Department {
   id: string;
@@ -91,6 +92,7 @@ const Page = () => {
 
   return (
     <div>
+      <Header department="                    " isProfile={false} />
       <h1>Create New Employee</h1>
       <input
         type="email"
