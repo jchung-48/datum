@@ -562,8 +562,9 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                         hidden={!(sortField == "fileName")}
                                     >
                                         {isAscending ?
-                                            <FaSortAmountUp /> :
-                                            <FaSortAmountDown />
+                                            <FaSortAmountDown /> :
+                                            <FaSortAmountUp />
+                                            
                                         }
                                     </div>
                                     {/* <img
