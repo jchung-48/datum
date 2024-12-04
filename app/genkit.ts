@@ -6,9 +6,7 @@ import './genkitConfig';
 
 // Import the Genkit core libraries and plugins.
 import {generate} from '@genkit-ai/ai';
-import {configureGenkit} from '@genkit-ai/core';
-import {defineFlow, runFlow, run} from '@genkit-ai/flow';
-import {ollama} from 'genkitx-ollama';
+import {defineFlow, run} from '@genkit-ai/flow';
 import {index} from '@genkit-ai/ai';
 import {Document, retrieve} from '@genkit-ai/ai/retriever';
 
@@ -16,10 +14,8 @@ import * as admin from 'firebase-admin';
 
 import {
     devLocalIndexerRef,
-    devLocalVectorstore,
     devLocalRetrieverRef,
 } from '@genkit-ai/dev-local-vectorstore';
-import {textEmbeddingGecko, vertexAI} from '@genkit-ai/vertexai';
 
 import pdf from 'pdf-parse';
 import {chunk} from 'llm-chunk';
@@ -154,40 +150,3 @@ async function extractTextFromPdfBuffer(pdfBuffer: Buffer) {
     const data = await pdf(pdfBuffer);
     return data.text;
 }
-
-// Define retriever
-export const kbRetriever = devLocalRetrieverRef('knowledgeBase');
-
-export const kbQAFlow = defineFlow(
-    {
-        name: 'knowledgeBaseQA',
-        inputSchema: z.string(),
-        outputSchema: z.string(),
-    },
-    async (input: string) => {
-        // Retrieve relevant documents from your knowledge base
-        const docs = await retrieve({
-            retriever: kbRetriever,
-            query: input,
-            options: {k: 3},
-        });
-
-        // Generate a response using llama3.2 and your company context
-        const llmResponse = await generate({
-            model: 'ollama/llama3.2',
-            prompt: `
-You are acting as a helpful AI assistant in a private knowledge base that can answer questions about buyers (clients) and manufacturers (suppliers) for each department (merchandisers, QA managers, logistics agents) at our supply chain and global sourcing company.
-Imagine that the prompter is an employee at the supply chain/global sourcing company who is searching for company records from any of these departments.
-You are to answer accordingly to all your documentation provided. Answer truthfully.
-Use the context provided to answer the question, but if there is not enough context ask clarifying questions to the prompter.
-If you don't know, do not make up an answer.
-
-Question: ${input}
-`,
-            context: docs,
-        });
-
-        const output = llmResponse.text();
-        return output;
-    },
-);
