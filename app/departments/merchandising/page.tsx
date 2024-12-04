@@ -147,7 +147,7 @@ const MerchandisingDepartment = () => {
                     <FileList
                         collectionPath={deptFilesPath}
                         title=""
-                        display="horizontal"
+                        initialDisplay="horizontal"
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
                     />
@@ -268,7 +268,7 @@ const MerchandisingDepartment = () => {
                                     ]
                                 }
                                 title={modalTitle}
-                                display="grid"
+                                initialDisplay="grid"
                             />
                         </div>
                     </div>

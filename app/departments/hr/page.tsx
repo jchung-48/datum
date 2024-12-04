@@ -118,7 +118,6 @@ const hrDepartment: React.FC = () => {
                         title=""
                         onSearch={() => {}}
                         onFileSelect={handleFileSelect}
-                        horizontal
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
                     />

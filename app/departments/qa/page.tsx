@@ -118,7 +118,7 @@ const qaDepartment = () => {
                             <FileList
                                 collectionPath={deptFilesPath}
                                 title=""
-                                display="grid"
+                                initialDisplay="grid"
                                 refreshTrigger={fileListUpdated}
                                 enableShare={true}
                             />
