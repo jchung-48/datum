@@ -28,7 +28,6 @@ const LogisticsDepartment: React.FC = () => {
     const [selectedCollection, setSelectedCollection] = useState<string>(
         'transportationFiles',
     ); // Default collection
-    const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
     const [fileListUpdated, setFileListUpdated] = useState(false);
 
     // Handle file selection
@@ -36,14 +35,6 @@ const LogisticsDepartment: React.FC = () => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
         }
-    };
-
-    const handleFileSelect = (fileId: string) => {
-        setSelectedFiles(prevSelected =>
-            prevSelected.includes(fileId)
-                ? prevSelected.filter(id => id !== fileId)
-                : [...prevSelected, fileId],
-        );
     };
 
     // Handle collection selection
@@ -84,6 +75,10 @@ const LogisticsDepartment: React.FC = () => {
         }
     };
 
+    const updateLists = () => {
+        setFileListUpdated(prev => !prev)
+    }
+
     // Firestore paths for different file types
     const customsFilesPath = [
         'Company',
@@ -123,9 +118,7 @@ const LogisticsDepartment: React.FC = () => {
                             'customsFiles',
                             'financialFiles',
                         ]}
-                        onUploadSuccess={() =>
-                            setFileListUpdated(prev => !prev)
-                        }
+                        onUploadSuccess={updateLists}
                     />
                     <div className={styles.search}>
                         <SearchBar paths={['KZm56fUOuTobsTRCfknJ']} />
@@ -137,25 +130,25 @@ const LogisticsDepartment: React.FC = () => {
                     <FileList
                         collectionPath={transportationFilesPath}
                         title=""
-                        onFileSelect={handleFileSelect}
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
+                        onListUpdate={updateLists}
                     />
                     <FileTitle title="Customs Files" />
                     <FileList
                         collectionPath={customsFilesPath}
                         title=""
-                        onFileSelect={handleFileSelect}
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
+                        onListUpdate={updateLists}
                     />
                     <FileTitle title="Financial Files" />
                     <FileList
                         collectionPath={financialFilesPath}
                         title=""
-                        onFileSelect={handleFileSelect}
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
+                        onListUpdate={updateLists}
                     />
                 </div>
 

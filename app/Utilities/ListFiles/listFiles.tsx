@@ -16,9 +16,10 @@ import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
 import DropdownMenu from '../DropDownMenu/dropdownMenu';
 import { getEmployeeProfile } from '@/app/authentication';
-import { FaList, FaTh, FaGripLines } from 'react-icons/fa';
+import { FaList, FaTh, FaGripLines, FaTrashAlt } from 'react-icons/fa';
 
 import { F } from '@genkit-ai/flow/lib/flow-DR52DKjZ';
+import { firestore } from 'firebase-admin';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.min.js';
@@ -26,16 +27,14 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
 export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     collectionPath,
     title,
-    onSearch,
-    onFileSelect,
     initialDisplay = 'list' as const,
     refreshTrigger,
-    enableShare = false
+    enableShare = false,
+    onListUpdate
 }) => {
     const [files, setFiles] = useState<FileData[]>([]);
     const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [currentUserUid, setCurrentUserUid] = useState<string | null>(null);
@@ -50,6 +49,18 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
     const [display, setDisplay] = useState<'list' | 'grid' | 'horizontal'>(initialDisplay); // New state for view mode
+
+    const firestorePath: FirestorePath = {
+        collectionType:
+            collectionPath[2] == "Buyers" ? "Buyers" :
+                collectionPath[2] == "Manufacturers" ? "Manufacturers" :
+                    "Departments",
+        companyId: collectionPath[1],
+        departmentId: collectionPath[2] == "Departments" ? collectionPath[3] : undefined,
+        buyerId: collectionPath[2] == "Buyers" ? collectionPath[3] : undefined,
+        manufacturerId: collectionPath[2] == "Manufacturers" ? collectionPath[3] : undefined,
+        collectionName: collectionPath[4]
+    }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
@@ -109,20 +120,20 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         fetchAdmins();
     }, []);
 
+    const fetchFiles = async () => {
+        try {
+            const filesCollectionRef = collection(db, ...collectionPath);
+            const querySnapshot = await getDocs(filesCollectionRef);
+            const filesData = await processFiles(querySnapshot);
+
+            setFiles(filesData);
+            setFilteredFiles(filesData);
+        } catch (error) {
+            console.error(`Error fetching files for ${title}:`, error);
+        }
+    };
+
     useEffect(() => {
-        const fetchFiles = async () => {
-            try {
-                const filesCollectionRef = collection(db, ...collectionPath);
-                const querySnapshot = await getDocs(filesCollectionRef);
-                const filesData = await processFiles(querySnapshot);
-
-                setFiles(filesData);
-                setFilteredFiles(filesData);
-            } catch (error) {
-                console.error(`Error fetching files for ${title}:`, error);
-            }
-        };
-
         fetchFiles();
     }, [collectionPath, title, refreshTrigger]);
 
@@ -326,7 +337,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
             newSelectedFiles.add(fileId);
         }
         setSelectedFiles(newSelectedFiles);
-        if (onFileSelect) onFileSelect(fileId);
     };
 
     const handleDelete = async (fileId?: string) => {
@@ -337,18 +347,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                 ),
             );
 
-
-        const firestorePath: FirestorePath = {
-            collectionType:
-                collectionPath[2] == "Buyers" ? "Buyers" :
-                    collectionPath[2] == "Manufacturers" ? "Manufacturers" :
-                        "Departments",
-            companyId: collectionPath[1],
-            departmentId: collectionPath[2] == "Departments" ? collectionPath[3] : undefined,
-            buyerId: collectionPath[2] == "Buyers" ? collectionPath[3] : undefined,
-            manufacturerId: collectionPath[2] == "Manufacturers" ? collectionPath[3] : undefined,
-            collectionName: collectionPath[4]
-        }
+        
 
         if (deletableFiles.length > 0) {
             const confirmDelete = window.confirm(
@@ -366,12 +365,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                 firestorePath,
                             );
 
-                            setFiles(prevFiles =>
-                                prevFiles.filter(f => f.id !== file.id),
-                            );
-                            setFilteredFiles(prevFiles =>
-                                prevFiles.filter(f => f.id !== file.id),
-                            );
+                            fetchFiles();
                             setSelectedFiles(prevSelected => {
                                 const newSelected = new Set(prevSelected);
                                 newSelected.delete(id);
@@ -396,10 +390,17 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         setIsShareModalOpen(true);
     };
 
+    var currentFile: string = '';
+    const menuItems = [
+        {
+            icon: <FaTrashAlt />,
+            label: 'Delete',
+            action: () => handleDelete(currentFile),
+        },
+    ];
+
     return (
         <div className={styles.fileList}>
-            <h2>{title}</h2>
-
             <div className={styles.topButtons}>
                 {/* Top Delete Button */}
                 <button
@@ -441,16 +442,16 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                             Share
                         </button>
                         <ShareFileModal
-                            companyId={collectionPath[1]}
+                            source={firestorePath}
                             filesToShare={
                                 Array.from(selectedFiles)
                                     .map(fileId => files.find(file => file.id === fileId))
                                     .filter(Boolean) as FileData[]
                             } // Pass the selected files as an array
-                            departmentId={collectionPath[3] || ""}
                             isOpen={isShareModalOpen}
                             onClose={() => setIsShareModalOpen(false)}
                             buttonRef={buttonRef}
+                            onOperationComplete={onListUpdate}
                         />
                     </>
                 )}
@@ -617,8 +618,8 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                 <tr
                                     key={file.id}
                                     className={`${styles.fileRow} ${selectedFiles.has(file.id)
-                                            ? styles.selected
-                                            : ''
+                                        ? styles.selected
+                                        : ''
                                         }`}
                                     onClick={e => {
                                         if (
@@ -633,8 +634,8 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     <td className={styles.fileCell}>
                                         <div
                                             className={`${styles.fileNameBox} ${selectedFiles.has(file.id)
-                                                    ? styles.selected
-                                                    : ''
+                                                ? styles.selected
+                                                : ''
                                                 }`}
                                             onClick={e => {
                                                 e.stopPropagation();
@@ -665,8 +666,13 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     </td>
                                     <td
                                         className={`${styles.fileCell} ${styles.actions}`}
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            currentFile = file.id;
+                                        }}
                                     >
-                                        {currentUserUid === file.uploadedBy && (
+                                        <DropdownMenu iconColor="#333333" menuItems={menuItems} />
+                                        {/* {currentUserUid === file.uploadedBy && (
                                             <button
                                                 className={styles.deleteButton}
                                                 onClick={e => {
@@ -678,7 +684,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                                     <MdDelete />
                                                 </span>
                                             </button>
-                                        )}
+                                        )} */}
                                     </td>
                                 </tr>
                             ))
