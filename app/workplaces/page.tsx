@@ -5,10 +5,12 @@ import { auth, db } from '@/lib/firebaseClient';
 import { doc, getDoc } from "firebase/firestore";
 import Link from 'next/link';
 import { LuCloudLightning } from 'react-icons/lu';
-import './styles.modules.css';
+import styles from './styles.module.css';
+import '../globals.css';
 import { useRouter } from "next/navigation";
 import { capitalize } from 'lodash';
 import React from 'react';
+
 
 interface Company {
   id: string;
@@ -66,14 +68,14 @@ const Page = () => {
   }
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       <Link href="/home">
-        <div className="home">
-          <LuCloudLightning className="cloud-icon"/>
+        <div className={styles.home}>
+          <LuCloudLightning className={styles.cloudIcon}/>
           DATUM
         </div>
       </Link>
-      <h1 className="title">Select a Workplace:</h1>
+      <h1 className={styles.title}>Select a Workplace:</h1>
       <select value={selectedCompany} onChange={companySelect}>
         <option value="" disabled>Unselected</option>
         {companies.map((company) => (
