@@ -147,7 +147,7 @@ const MerchandisingDepartment = () => {
                     <FileList
                         collectionPath={deptFilesPath}
                         title=""
-                        initialDisplay="horizontal"
+                        initialDisplay="grid"
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
                     />

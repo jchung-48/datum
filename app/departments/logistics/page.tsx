@@ -138,7 +138,6 @@ const LogisticsDepartment: React.FC = () => {
                         collectionPath={transportationFilesPath}
                         title=""
                         onFileSelect={handleFileSelect}
-                        horizontal
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
                     />
@@ -147,7 +146,6 @@ const LogisticsDepartment: React.FC = () => {
                         collectionPath={customsFilesPath}
                         title=""
                         onFileSelect={handleFileSelect}
-                        horizontal
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
                     />
@@ -156,7 +154,6 @@ const LogisticsDepartment: React.FC = () => {
                         collectionPath={financialFilesPath}
                         title=""
                         onFileSelect={handleFileSelect}
-                        horizontal
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
                     />
