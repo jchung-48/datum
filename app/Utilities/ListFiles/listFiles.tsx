@@ -590,8 +590,8 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                         hidden={!(sortField == "userDisplayName")}
                                     >
                                         {isAscending ?
-                                            <FaSortAmountUp /> :
-                                            <FaSortAmountDown />
+                                            <FaSortAmountDown /> :
+                                            <FaSortAmountUp />
                                         }
                                     </div>
                                 </a>
@@ -611,8 +611,8 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                         hidden={!(sortField == "uploadTimeStamp")}
                                     >
                                         {isAscending ?
-                                            <FaSortAmountUp /> :
-                                            <FaSortAmountDown />
+                                            <FaSortAmountDown /> :
+                                            <FaSortAmountUp />
                                         }
                                     </div>
                                 </a>
