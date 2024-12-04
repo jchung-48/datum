@@ -65,6 +65,10 @@ const MerchandisingDepartment = () => {
         'records',
     ] as [string, ...string[]];
 
+    const updateLists = () => {
+        setFileListUpdated(prev => !prev);
+    }
+
     const handleCardClick = (
         type: 'Buyer' | 'Manufacturer',
         id: string,
@@ -133,9 +137,7 @@ const MerchandisingDepartment = () => {
                         departmentId={DEPARTMENTID}
                         departmentName="Merchandising"
                         collections={['files']}
-                        onUploadSuccess={() =>
-                            setFileListUpdated(prev => !prev)
-                        }
+                        onUploadSuccess={updateLists}
                     />
                     <div className={styles.search}>
                         <SearchBar paths={['ti7yNByDOzarVXoujOog']} />
@@ -147,15 +149,18 @@ const MerchandisingDepartment = () => {
                     <FileList
                         collectionPath={deptFilesPath}
                         title=""
-                        initialDisplay="horizontal"
+                        initialDisplay="grid"
                         refreshTrigger={fileListUpdated}
                         enableShare={true}
+                        onListUpdate={updateLists}
                     />
                     <FileTitle title="Records" />
                     <FileList
                         collectionPath={deptRecordsPath}
                         title=""
                         refreshTrigger={fileListUpdated}
+                        enableShare={true}
+                        onListUpdate={updateLists}
                     />
                 </div>
 

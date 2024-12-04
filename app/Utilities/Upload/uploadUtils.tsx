@@ -351,6 +351,23 @@ export const moveDocument = async (
             }/${documentId}`;
 
             const destinationFileRef = ref(storage, newStoragePath);
+
+            try {
+                // Try to get the URL for the new file path to check if it exists
+                await getDownloadURL(destinationFileRef);
+                console.log("File already exists at destination.");
+                throw new Error('File already exists at destination.');
+            } catch (error) {
+                // If the file doesn't exist (error is thrown), proceed with the upload
+                const firebaseError = error as { code: string };
+
+                if (firebaseError.code === 'storage/object-not-found') {
+                    console.log("File does not exist at the new location, proceeding with upload.");
+                } else {
+                    throw error;
+                }
+            }
+
             await uploadBytes(destinationFileRef, fileBlob);
 
             // Update document data for new storage location
@@ -359,6 +376,12 @@ export const moveDocument = async (
             // Optionally delete the original file in storage
             if (!copy) {
                 await deleteObject(fileRef);
+            }
+        } else {
+            if (copy) {
+                throw new Error(
+                    'Copying to directory in the same department not permitted.',
+                );
             }
         }
 

@@ -225,9 +225,17 @@ Styling for the table for default view.
 
 .search {
   font-size: var(--main-font-size);
-  background-color: #e0e0e0;
+  color: var(--text-color-light);
   font-family: "Darker Grotesque";
-  padding: 10px 16px;
+  padding: 5px 10px;
+  border: 1px solid #cdd4df;
+  border-radius: 5px;
+  background-color: #efefef;
+}
+
+.search:focus {
+  outline: none;
+  border-color: #555;
 }
 
 .fileGrid {
