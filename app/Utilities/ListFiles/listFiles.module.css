@@ -82,25 +82,19 @@ Styling for the table for default view.
   cursor: pointer;
 }
 
-/* .sortableHeader {
+.sortableHeader {
   display: inline-flex;
   gap: 5px;
   align-items: center;
   cursor: pointer;
-} */
+}
 
 /* .sortableHeader img {
   /* visibility: hidden;
   width: 20px;
   height: 20px;
 } */
-
-.ascDesImg {        /* cant seem to get this inline w/ text */
-  width: 20px;
-  height: 20px;
-  margin-left: 5px;
-}
-
+ 
 /* .sortableHeader.showImg img {
   visibility: visible;
 } */

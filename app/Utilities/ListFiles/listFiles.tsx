@@ -15,7 +15,7 @@ import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
 import DropdownMenu from '../DropDownMenu/dropdownMenu';
 import { getEmployeeProfile } from '@/app/authentication';
-import { FaList, FaTh, FaGripLines, FaTrashAlt } from 'react-icons/fa';
+import { FaList, FaTh, FaGripLines, FaTrashAlt, FaSortAmountUp, FaSortAmountDown} from 'react-icons/fa';
 
 import { F } from '@genkit-ai/flow/lib/flow-DR52DKjZ';
 import { firestore } from 'firebase-admin';
@@ -148,18 +148,18 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         if (sortField != field) {
             setIsAscending(true);
         }
-        const imageIds = ['file-name-a-d-img', 'owner-a-d-img', 'time-a-d-img'];
+        // const imageIds = ['file-name-a-d-img', 'owner-a-d-img', 'time-a-d-img'];
 
-        imageIds.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                if (id.startsWith(selection)) {
-                    element.removeAttribute('hidden');
-                } else {
-                    element.setAttribute('hidden', '');
-                }
-            }
-        });
+        // imageIds.forEach(id => {
+        //     const element = document.getElementById(id);
+        //     if (element) {
+        //         if (id.startsWith(selection)) {
+        //             element.removeAttribute('hidden');
+        //         } else {
+        //             element.setAttribute('hidden', '');
+        //         }
+        //     }
+        // });
 
         setSortField(field);
         sortFiles(field as keyof FileData);
@@ -558,12 +558,20 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     }
                                 >
                                     File Name
-                                    <img
-                                        id="file-name-a-d-img"  
+                                    <div
+                                        hidden={!(sortField == "fileName")}
+                                    >
+                                        {isAscending ?
+                                            <FaSortAmountUp /> :
+                                            <FaSortAmountDown />
+                                        }
+                                    </div>
+                                    {/* <img
+                                        id="file-name-a-d-img"
                                         src={sortDirection}
                                         className={styles.ascDesImg}
                                         hidden={true}
-                                    ></img>
+                                    ></img> */}
                                 </a>
                             </th>
                             <th>
@@ -577,12 +585,14 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     }
                                 >
                                     Owner
-                                    <img
-                                        id="owner-a-d-img"
-                                        src={sortDirection}
-                                        className={styles.ascDesImg}
-                                        hidden={true}
-                                    ></img>
+                                    <div
+                                        hidden={!(sortField == "userDisplayName")}
+                                    >
+                                        {isAscending ?
+                                            <FaSortAmountUp /> :
+                                            <FaSortAmountDown />
+                                        }
+                                    </div>
                                 </a>
                             </th>
                             <th>
@@ -596,12 +606,14 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     }
                                 >
                                     Upload Date{' '}
-                                    <img
-                                        id="time-a-d-img"
-                                        src={sortDirection}
-                                        className={styles.ascDesImg}
-                                        hidden={true}
-                                    ></img>
+                                    <div
+                                        hidden={!(sortField == "uploadTimeStamp")}
+                                    >
+                                        {isAscending ?
+                                            <FaSortAmountUp /> :
+                                            <FaSortAmountDown />
+                                        }
+                                    </div>
                                 </a>
                             </th>
                             <th></th>
