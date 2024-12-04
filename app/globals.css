@@ -3,197 +3,198 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Darker Grotesque';
-  src: url('fonts/DarkerGrotesque-Black.ttf') format('truetype'); /* Corrected format */
-  font-style: normal;
+    font-family: 'Darker Grotesque';
+    src: url('fonts/DarkerGrotesque-Black.ttf') format('truetype'); /* Corrected format */
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Darker Grotesque Med';
-  src: url('fonts/DarkerGrotesque-Medium.ttf') format('truetype'); /* Corrected format */
-  font-style: normal;
+    font-family: 'Darker Grotesque Med';
+    src: url('fonts/DarkerGrotesque-Medium.ttf') format('truetype'); /* Corrected format */
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Darker Grotesque Semi Bold';
-  src: url('fonts/DarkerGrotesque-SemiBold.ttf') format('truetype');
-  font-style: normal;
+    font-family: 'Darker Grotesque Semi Bold';
+    src: url('fonts/DarkerGrotesque-SemiBold.ttf') format('truetype');
+    font-style: normal;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #ffffff;
+    --foreground: #171717;
 
-  --default-font-size: 18px;
+    --default-font-size: 18px;
 
-  /* Colors */
-  --card-background-light: #c2c1c1;
-  --hover-color-light: #a3a3a3;
-  --file-card-selected-light: #858585;
-  --text-color-light: #333333;
+    /* Colors */
+    --card-background-light: #c2c1c1;
+    --hover-color-light: #a3a3a3;
+    --file-card-selected-light: #858585;
+    --text-color-light: #333333;
 
-  --selected-color: #8Ab9ee;
-  
-  --card-background-dark: #333333;
-  --hover-color-dark: #616161;
-  --file-card-selected-dark: #717171;
-  --text-color-dark: #f5f5f5;
+    --selected-color: #8ab9ee;
 
-  --button-blue: #1F3C53;
-  --button-blue-hover: #627D9F;
-  --button-green: #4caf50;
-  --button-green-hover: #409342;
-  --button-red: #e74c3c;
-  --button-red-hover: #c82f1e;
+    --card-background-dark: #333333;
+    --hover-color-dark: #616161;
+    --file-card-selected-dark: #717171;
+    --text-color-dark: #f5f5f5;
+
+    --button-blue: #1f3c53;
+    --button-blue-hover: #627d9f;
+    --button-green: #4caf50;
+    --button-green-hover: #409342;
+    --button-red: #e74c3c;
+    --button-red-hover: #c82f1e;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
 }
 
 html {
-  max-width: 100vw;
-  overflow-x: hidden;
-  height: 100%;
-  overscroll-behavior: none;
+    max-width: 100vw;
+    overflow-x: hidden;
+    height: 100%;
+    overscroll-behavior: none;
 }
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
-
 body {
-  color: var(--foreground);
-  /* Updated background styles */
-  background-color: var(--background);
-  background-image: 
-    linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
-    linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
-    linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
-  background-size: 100% 100%, 50px 50px, 50px 50px;
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    color: var(--foreground);
+    /* Updated background styles */
+    background-color: var(--background);
+    background-image: linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
+        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+    background-size:
+        100% 100%,
+        50px 50px,
+        50px 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
 
 html {
-  height: 100%;
-  margin: 0;
+    height: 100%;
+    margin: 0;
 }
 
 body {
-  background-color: #e3e3e3;
-  background-image: 
-      linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
-      linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
-  background-size: 50px 50px;
+    background-color: #e3e3e3;
+    background-image: linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+    background-size: 50px 50px;
 }
 
 body.home-page {
-  background-color: #e3e3e3;
-  background-image: 
-      linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
-      linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
-      linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
-  background-size: 100% 100%, 50px 50px, 50px 50px;
+    background-color: #e3e3e3;
+    background-image: linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),
+        linear-gradient(to right, #bbbbbb39 1px, transparent 1px),
+        linear-gradient(to bottom, #bbbbbb39 1px, transparent 1px);
+    background-size:
+        100% 100%,
+        50px 50px,
+        50px 50px;
 }
 
 select {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 17px;
-  height: 30px;
-  padding-left: 7px;
-  background-color: #727779;
-  border-radius: 9px;
-  outline: none;
-  font-family: "Darker Grotesque Med";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    height: 30px;
+    padding-left: 7px;
+    background-color: #727779;
+    border-radius: 9px;
+    outline: none;
+    font-family: 'Darker Grotesque Med';
 }
 
-
 a {
-  color: inherit;
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+    html {
+        color-scheme: dark;
+    }
 }
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-  }
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 0 0% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 3.9%;
+        --primary: 0 0% 9%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 0 0% 96.1%;
+        --secondary-foreground: 0 0% 9%;
+        --muted: 0 0% 96.1%;
+        --muted-foreground: 0 0% 45.1%;
+        --accent: 0 0% 96.1%;
+        --accent-foreground: 0 0% 9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 89.8%;
+        --input: 0 0% 89.8%;
+        --ring: 0 0% 3.9%;
+        --chart-1: 12 76% 61%;
+        --chart-2: 173 58% 39%;
+        --chart-3: 197 37% 24%;
+        --chart-4: 43 74% 66%;
+        --chart-5: 27 87% 67%;
+        --radius: 0.5rem;
+    }
+    .dark {
+        --background: 0 0% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 0 0% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 0 0% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 0 0% 9%;
+        --secondary: 0 0% 14.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 0 0% 14.9%;
+        --muted-foreground: 0 0% 63.9%;
+        --accent: 0 0% 14.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14.9%;
+        --input: 0 0% 14.9%;
+        --ring: 0 0% 83.1%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+    }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
 }

@@ -19,19 +19,20 @@
 }
 
 .home {
-    position: absolute; 
+    position: absolute;
     top: 10px;
     left: 15px;
     display: flex;
     align-items: center;
-    font-family: "Darker Grotesque";
-    color: #1F3C53;
+    font-family: 'Darker Grotesque';
+    color: #1f3c53;
     font-weight: 800;
     font-size: 42px;
 }
 
-.home:hover, .searchButton:hover {
-    color: #627D9F;
+.home:hover,
+.searchButton:hover {
+    color: #627d9f;
 }
 
 .cloudIcon {
@@ -44,8 +45,8 @@
     display: flex;
     justify-content: center;
     padding-top: 2%;
-    font-family: "Darker Grotesque";
-    color: #1F3C53;
+    font-family: 'Darker Grotesque';
+    color: #1f3c53;
     font-weight: 800;
     font-size: 50px;
     margin-bottom: 20px;
@@ -58,8 +59,8 @@
 }
 
 .roleTitle {
-    font-family: "Darker Grotesque Med";
-    color: #1F3C53;
+    font-family: 'Darker Grotesque Med';
+    color: #1f3c53;
     font-weight: 800;
     font-size: 30px;
     padding-right: 2%;
@@ -77,23 +78,23 @@
 }
 
 .searchButton {
-    font-family: "Darker Grotesque Med";
+    font-family: 'Darker Grotesque Med';
     font-size: 25px;
-    background-color: #1F3C53;
+    background-color: #1f3c53;
     width: 120px;
     height: 50px;
     border-radius: 13px;
-    margin-bottom: 3%
+    margin-bottom: 3%;
 }
 
 .searchButton:hover {
-    background-color: #627D9F;
+    background-color: #627d9f;
     color: #ffffff;
 }
 
 .prompt {
     color: #000000;
-    font-family: "Darker Grotesque Med";
+    font-family: 'Darker Grotesque Med';
     font-weight: 400;
     font-size: 30px;
     margin-bottom: 3%;
@@ -102,9 +103,9 @@
 
 .response {
     display: flex;
-    font-family: "Darker Grotesque Med";
+    font-family: 'Darker Grotesque Med';
     font-size: 25px;
-    color: #1F3C53;
+    color: #1f3c53;
     background-color: #e3e3e3;
     padding-left: 2%;
     margin-top: 5%;

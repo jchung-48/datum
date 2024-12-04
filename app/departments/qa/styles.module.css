@@ -8,7 +8,7 @@
 .header {
     display: flex;
     align-items: center;
-    background-color: #1F3C53;
+    background-color: #1f3c53;
     justify-content: space-between;
     height: 66px;
     padding-left: 2%;
@@ -19,7 +19,7 @@
 .home {
     display: flex;
     align-items: center;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-weight: 800;
     font-size: 42px;
 }
@@ -33,7 +33,7 @@
 .department {
     display: flex;
     justify-content: center;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-weight: 800;
     font-size: 40px;
     color: black;
@@ -50,7 +50,7 @@
 .upload {
     display: flex;
     justify-content: center;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     color: black;
     margin-bottom: 3%;
 }
@@ -66,11 +66,11 @@
 }
 
 .fileTitle {
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-size: 35px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #1F3C53;
+    color: #1f3c53;
     text-align: center;
 }
 
@@ -82,9 +82,9 @@
 .fileItem {
     display: flex;
     align-items: center;
-    background-color: #EBEBEB;
+    background-color: #ebebeb;
     border: 2px solid #ffffff;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-size: 15px;
     color: #000000;
     height: 35px;

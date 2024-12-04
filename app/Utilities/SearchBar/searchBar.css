@@ -28,7 +28,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box; /* Include padding and border in width */
-    font-family: "Darker Grotesque SemiBold", sans-serif; /* Match modal font */
+    font-family: 'Darker Grotesque SemiBold', sans-serif; /* Match modal font */
 }
 
 /* Remove the search button if it's no longer used */
@@ -49,7 +49,7 @@
     z-index: 10;
     max-height: 200px;
     overflow-y: auto;
-    font-family: "Darker Grotesque SemiBold", sans-serif; /* Match modal font */
+    font-family: 'Darker Grotesque SemiBold', sans-serif; /* Match modal font */
     font-size: var(--default-font-size); /* Adjust font size for consistency */
 }
 

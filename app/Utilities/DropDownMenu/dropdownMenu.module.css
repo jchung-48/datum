@@ -1,58 +1,58 @@
 /* Container for the dropdown */
 .dropdownContainer {
-  position: relative;
+    position: relative;
 }
 
 /* The button for toggling the dropdown (3 dots) */
 .menuButton {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  color: var(--text-color-light);
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--text-color-light);
 }
 
 .menuButton:hover {
-  color: var(--button-blue-hover);
+    color: var(--button-blue-hover);
 }
 
 .menuButton svg {
-  fill: currentColor;
+    fill: currentColor;
 }
 
 /* Dropdown menu */
 .dropdownMenu {
-  position: absolute;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  right: 0;
-  top: 100%;
-  width: 120px;
+    position: absolute;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    right: 0;
+    top: 100%;
+    width: 120px;
 }
 
 /* Individual dropdown items */
 .dropdownItem {
-  background-color: #dedede;
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  cursor: pointer;
-  border: none;
-  width: 100%;
-  /* color: #333; */
-  color: var(--text-color-light);
+    background-color: #dedede;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    /* color: #333; */
+    color: var(--text-color-light);
 }
 
 .dropdownItem:hover {
-  background-color: var(--hover-color-light);
+    background-color: var(--hover-color-light);
 }
 
 .dropdownItem svg {
-  margin-right: 8px;
+    margin-right: 8px;
 }
 
 .label {
-  color: inherit;
+    color: inherit;
 }

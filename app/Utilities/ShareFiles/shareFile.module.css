@@ -10,10 +10,10 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-  }
-  
-  /* Main modal styling */
-  .modal {
+}
+
+/* Main modal styling */
+.modal {
     --main-font-size: 18px;
     background-color: #e3e3e3;
     border-radius: 10px;
@@ -22,35 +22,35 @@
     max-width: 400px;
     padding: 20px 25px;
     position: relative;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-size: var(--main-font-size);
     color: var(--text-color-light);
-  }
+}
 
-  .modal h2 {
-    font-family: "Darker Grotesque";
+.modal h2 {
+    font-family: 'Darker Grotesque';
     font-size: 28px;
     font-weight: bold;
-    color: #1F3C53;
-  }
-  
-  /* Modal content organization */
-  .modalContent {
+    color: #1f3c53;
+}
+
+/* Modal content organization */
+.modalContent {
     display: flex;
     flex-direction: column;
     gap: 12px;
-  }
-  
-  /* Dropdown label and styling */
-  .modal label {
+}
+
+/* Dropdown label and styling */
+.modal label {
     font-size: 1.1em;
     color: var(--text-color-light);
     margin-bottom: 5px;
-  }
-  
-  .modal select {
+}
+
+.modal select {
     width: 100%;
-    font-family: "Darker Grotesque";
+    font-family: 'Darker Grotesque';
     font-size: 1em;
     height: auto;
     padding: 8px;
@@ -58,20 +58,20 @@
     border: 1px solid #cdd4df;
     background-color: #f7f9fc;
     color: #3d4d63;
-  }
-  
-  /* Checkbox and action toggle */
-  .modal input[type="checkbox"] {
+}
+
+/* Checkbox and action toggle */
+.modal input[type='checkbox'] {
     margin-right: 5px;
-  }
-  
-  .modal .checkboxLabel {
+}
+
+.modal .checkboxLabel {
     font-size: 0.9em;
     color: #627d9f;
-  }
+}
 
-  /* Close button in modal */
-  .modal .closeButton {
+/* Close button in modal */
+.modal .closeButton {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -81,13 +81,13 @@
     cursor: pointer;
     color: #999;
     z-index: 1;
-  }
-  
-  .modal .closeButton:hover {
+}
+
+.modal .closeButton:hover {
     color: #333;
-  }
-  
-  .modal .shareButton {
+}
+
+.modal .shareButton {
     background-color: var(--button-green);
     color: #ffffff;
     border: none;
@@ -95,9 +95,8 @@
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.3s;
-  }
-  
-  .modal .shareButton:hover {
+}
+
+.modal .shareButton:hover {
     background-color: var(--button-green-hover);
-  }
-  
+}

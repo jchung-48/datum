@@ -27,7 +27,9 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
     const [results, setResults] = useState<SummarySearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [isResultsVisible, setIsResultsVisible] = useState(false);
-    const [fileSelectedForSummary, setFileSelectedForSummary] = useState<string | null>(null);
+    const [fileSelectedForSummary, setFileSelectedForSummary] = useState<
+        string | null
+    >(null);
 
     const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -137,7 +139,7 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
 
         docsSnap.forEach((doc: QueryDocumentSnapshot<FileData>) => {
             const data = doc.data();
-            
+
             // Use fileName instead of name
             const name = data.fileName?.toLowerCase();
 
@@ -167,7 +169,7 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
     const handleFileSelect = (file: SummarySearchResult): void => {
         onFileSelect(file);
         setIsResultsVisible(false);
-        setQueryText(file.name);    
+        setQueryText(file.name);
     };
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -189,32 +191,35 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
 
     return (
         <div className={styles.mainContainer}>
-        <div className={styles.searchBar}>
-            <input
-                type="text"
-                placeholder="Search..."
-                value={queryText}
-                onChange={e => {
-                    setQueryText(e.target.value);
-                    debouncedSearch();
-                }}
-                className={styles.searchInput}
-            />
+            <div className={styles.searchBar}>
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={queryText}
+                    onChange={e => {
+                        setQueryText(e.target.value);
+                        debouncedSearch();
+                    }}
+                    className={styles.searchInput}
+                />
 
-            {isResultsVisible && results.length > 0 && (
-                <div ref={resultsRef} className={styles.searchResultsCard}>
-                    <ul>
-                        {results.map((item, index) => (
-                            <li key={index} className={styles.searchResultItem}
-                            onClick={() => handleFileSelect(item)}>
+                {isResultsVisible && results.length > 0 && (
+                    <div ref={resultsRef} className={styles.searchResultsCard}>
+                        <ul>
+                            {results.map((item, index) => (
+                                <li
+                                    key={index}
+                                    className={styles.searchResultItem}
+                                    onClick={() => handleFileSelect(item)}
+                                >
                                     {item.name}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
         </div>
-    </div>
-);
+    );
 };
 export default SearchBarAI;

@@ -124,10 +124,11 @@
 /* Throbber (Loading Spinner) */
 .throbber {
     height: 100%;
-    position: absolute; /* Position the throbber absolutely */
-    top: 50%;           /* Center vertically */
-    left: 50%;          /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust position to truly center */
+    position: absolute; 
+    top: 50%;           
+    left: 50%;          
+    transform: translate(-50%, -50%); 
+    color: "#617D9F";
 }
 
 /* Optional: Style Markdown Elements for Better Presentation */
@@ -205,9 +206,12 @@
 
 /* Chat History */
 .chatHistory {
-    max-height: 300px;
-    overflow-y: auto;
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
+
 /* Content Display Area */
 .contentDisplay {
     padding: 15px;
@@ -226,14 +230,27 @@
 }
 
 .chatMessage {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  word-wrap: break-word;
 }
 
-/* User and Bot Messages */
 .userMessage {
-    text-align: right;
+  align-self: flex-end;
+  background-color: #007bff;
+  color: white;
 }
 
 .botMessage {
-    text-align: left;
+  align-self: flex-start;
+  background-color: #f1f0f0;
+  color: black;
 }
+
+.botLoading {
+    display: inline-flex;
+    align-items: center;
+}
+

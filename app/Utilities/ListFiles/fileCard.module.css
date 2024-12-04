@@ -12,14 +12,14 @@
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s;
-    font-family: "Darker Grotesque";
-  }
+    font-family: 'Darker Grotesque';
+}
 
-  .fileItem:hover {
+.fileItem:hover {
     background-color: var(--hover-color-light);
-  }
+}
 
-  .fileItem p {
+.fileItem p {
     margin: 0;
     margin-top: 4px;
     max-width: 100px;
@@ -30,20 +30,20 @@
     vertical-align: text-bottom;
     font-size: var(--main-font-size);
     color: var(--text-color-light);
-  }
-  
-  .selected {
+}
+
+.selected {
     background-color: var(--selected-color) !important; /* Light blue */
     position: relative;
-  }
+}
 
-  /* Checkbox styling */
-  .fileCheckbox {
+/* Checkbox styling */
+.fileCheckbox {
     transform: scale(1.2);
     cursor: pointer;
-  }
+}
 
-  .fileThumbnail {
+.fileThumbnail {
     width: 100px;
     min-height: 100px;
     max-height: 120px;
@@ -51,23 +51,22 @@
     object-fit: cover;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-  }
+}
 
 /* Checkbox styling */
-  .fileCheckboxThumbnail {
+.fileCheckboxThumbnail {
     position: absolute;
     top: 8px;
     right: 8px;
     transform: scale(1.2);
     cursor: pointer;
-  }
-  
-  .fileItem .star {
+}
+
+.fileItem .star {
     position: absolute;
     color: #dab500;
     top: 5px;
     left: 5px;
     border: 1px;
-    border-color:rgba(0, 0, 0, 0.2);
-  }
-  
+    border-color: rgba(0, 0, 0, 0.2);
+}

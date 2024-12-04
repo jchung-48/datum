@@ -10,9 +10,9 @@
     height: 70px;
     padding-left: 2%;
     padding-right: 2%;
-  }
-  
-  .home {
+}
+
+.home {
     display: flex;
     align-items: center;
     font-family: 'Darker Grotesque', sans-serif;
@@ -20,30 +20,30 @@
     font-size: 45px;
     gap: 12px;
     color: #fff; /* Ensure text is visible against the background */
-  }
-  
-  .cloudIcon {
+}
+
+.cloudIcon {
     height: 35px;
     width: 35px;
     color: #fff; /* Icon color */
-  }
-  
-  .department {
+}
+
+.department {
     text-align: center;
     font-family: 'Darker Grotesque', sans-serif;
     font-weight: 800;
     font-size: 40px;
     color: var(--text-color-dark); /* Ensure this variable is defined */
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Adds shadow for depth */
-  }
-  
-  .profile {
+}
+
+.profile {
     justify-self: end;
-  }
-  
-  .profileIcon {
+}
+
+.profileIcon {
     height: 25px;
     width: 25px;
     color: #fff; /* Icon color */
     cursor: pointer; /* Indicate it's clickable */
-  }
+}
