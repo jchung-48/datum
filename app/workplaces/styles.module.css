@@ -1,0 +1,49 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height to center content */
+}
+
+.home {
+    position: absolute; 
+    top: 10px;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    font-family: "Darker Grotesque";
+    color: #1F3C53;
+    font-weight: 800;
+    font-size: 42px;
+}
+
+.home:hover {
+    color: #627D9F;
+}
+
+.cloud-icon {
+    margin-right: 12px;
+    height: 35px;
+    width: 35px;
+}
+/* styles.modules.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height to center content vertically */
+    text-align: center; /* Center text */
+}
+
+.title {
+    font-family: "Darker Grotesque";
+    justify-content: center;
+    align-items: center;
+    color: #1F3C53;
+    font-weight: 800;
+    font-size: 50px;
+    margin-bottom: 20px;
+}
