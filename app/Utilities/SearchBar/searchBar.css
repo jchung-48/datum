@@ -31,8 +31,6 @@
     font-family: 'Darker Grotesque SemiBold', sans-serif; /* Match modal font */
 }
 
-/* Remove the search button if it's no longer used */
-
 /* Search results card directly below the search bar */
 .search-results-card {
     position: absolute;

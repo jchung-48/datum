@@ -10,7 +10,6 @@ import {
 import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
 import './searchBar.css';
 import {FileData, SearchResult, SearchBarProps} from '../../types';
-import {FaSearch} from 'react-icons/fa';
 
 // Debounce function to limit search calls
 const debounce = (func: (...args: any[]) => void, delay: number) => {

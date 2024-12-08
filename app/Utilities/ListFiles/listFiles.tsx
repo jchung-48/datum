@@ -13,12 +13,8 @@ import styles from './listFiles.module.css';
 import { onAuthStateChanged } from 'firebase/auth';
 import FileCard from './fileCard';
 import ShareFileModal from '../ShareFiles/shareFile';
-import DropdownMenu from '../DropDownMenu/dropdownMenu';
 import { getEmployeeProfile } from '@/app/authentication';
-import { FaList, FaTh, FaGripLines, FaTrashAlt, FaSortAmountUp, FaSortAmountDown} from 'react-icons/fa';
-
-import { F } from '@genkit-ai/flow/lib/flow-DR52DKjZ';
-import { firestore } from 'firebase-admin';
+import { FaList, FaTh, FaTrashAlt, FaSortAmountUp, FaSortAmountDown} from 'react-icons/fa';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.worker.min.js';
@@ -34,11 +30,9 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     const [files, setFiles] = useState<FileData[]>([]);
     const [filteredFiles, setFilteredFiles] = useState<FileData[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-    const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [currentUserUid, setCurrentUserUid] = useState<string | null>(null);
     const [sortField, setSortField] = useState<string>('File Name');
-    const [sortedFiles, setSortedFiles] = useState<FileData[]>([]);
     const [sortDirection, setSortDirection] = useState<string>('/images/asc.png');
     const [isAscending, setIsAscending] = useState<boolean>(true);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -148,18 +142,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         if (sortField != field) {
             setIsAscending(true);
         }
-        // const imageIds = ['file-name-a-d-img', 'owner-a-d-img', 'time-a-d-img'];
-
-        // imageIds.forEach(id => {
-        //     const element = document.getElementById(id);
-        //     if (element) {
-        //         if (id.startsWith(selection)) {
-        //             element.removeAttribute('hidden');
-        //         } else {
-        //             element.setAttribute('hidden', '');
-        //         }
-        //     }
-        // });
 
         setSortField(field);
         sortFiles(field as keyof FileData);
@@ -167,7 +149,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
 
     const sortFiles = (field: keyof FileData) => {
         const sortedFiles = [...filteredFiles];
-        //const isAscending = sortDirection === '/images/asc.png';
 
         for (let i = 1; i < sortedFiles.length; i++) {
             let file = sortedFiles[i];
@@ -471,13 +452,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                     >
                         <FaTh />
                     </button>
-                    {/* <button
-                        className={`${styles.viewButton} ${display === 'horizontal' ? styles.activeView : ''}`}
-                        onClick={() => setDisplay('horizontal')}
-                        disabled={display === 'horizontal'}
-                    >
-                        <FaGripLines />
-                    </button> */}
                 </div>
 
                 <input
@@ -567,12 +541,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                             
                                         }
                                     </div>
-                                    {/* <img
-                                        id="file-name-a-d-img"
-                                        src={sortDirection}
-                                        className={styles.ascDesImg}
-                                        hidden={true}
-                                    ></img> */}
                                 </a>
                             </th>
                             <th>
@@ -683,7 +651,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                             currentFile = file.id;
                                         }}
                                     >
-                                        {/* <DropdownMenu iconColor="#333333" menuItems={menuItems} /> */}
                                         {currentUserUid === file.uploadedBy && (
                                             <button
                                                 className={styles.deleteButton}

@@ -37,7 +37,6 @@
     color: var(--text-color-dark);
 }
 
-/* Form input styling */
 .inputGroup {
     display: flex;
     flex-direction: column;
@@ -63,7 +62,6 @@
     color: #aaa;
 }
 
-/* Select dropdown styling */
 .selectGroup {
     display: flex;
     flex-direction: column;
@@ -148,7 +146,6 @@
     background-color: var(--button-blue-hover);
 }
 
-/* Action buttons */
 .actionButtons {
     display: flex;
     justify-content: space-between;
@@ -181,17 +178,4 @@
 
 .actionButtons button.delete:hover {
     background-color: var(--button-red-hover);
-}
-
-/* Loading or Error state */
-.loading {
-    text-align: center;
-    font-size: 1.5em;
-    color: #4caf50;
-}
-
-.error {
-    text-align: center;
-    font-size: 1.5em;
-    color: #f44336;
 }

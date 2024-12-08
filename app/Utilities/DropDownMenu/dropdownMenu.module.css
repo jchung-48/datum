@@ -41,7 +41,6 @@
     cursor: pointer;
     border: none;
     width: 100%;
-    /* color: #333; */
     color: var(--text-color-light);
 }
 

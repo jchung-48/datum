@@ -174,7 +174,7 @@ const MerchandisingDepartment = () => {
                                     className={styles.adminButton}
                                     onClick={() => {
                                         window.location.href =
-                                            '/editCompanyContacts/crudBuyer'; // Replace with the desired admin page URL
+                                            '/editCompanyContacts/crudBuyer'; 
                                     }}
                                 >
                                     Edit
@@ -217,7 +217,7 @@ const MerchandisingDepartment = () => {
                                     className={styles.adminButton}
                                     onClick={() => {
                                         window.location.href =
-                                            '/editCompanyContacts/crudManufacturer'; // Replace with the desired admin page URL
+                                            '/editCompanyContacts/crudManufacturer';
                                     }}
                                 >
                                     Edit
@@ -264,7 +264,6 @@ const MerchandisingDepartment = () => {
                             >
                                 <MdClose />
                             </button>
-                            {/* <h2>{modalTitle}</h2> */}
                             <FileList
                                 collectionPath={
                                     selectedContactFilesPath as [

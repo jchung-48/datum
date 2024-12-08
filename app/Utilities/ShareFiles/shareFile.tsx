@@ -168,18 +168,6 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
 
       if (onOperationComplete) {
         onOperationComplete();
-        // if (destCollection.departmentId === source.departmentId) {
-        //   const destStrings = [
-        //     'Company',
-        //     destCollection.companyId,
-        //     destCollection.buyerId ? 'Buyers' :
-        //     destCollection.manufacturerId ? 'Manufacturers' :
-        //     'Departments',
-        //     destCollection.departmentId || destCollection.buyerId || destCollection.manufacturerId,
-        //     destCollection.collectionName || 'files',
-        //   ] as [string, ...string[]];
-        //   onOperationComplete(destStrings);
-        // }
       }
       
       if (errored_files == 0) {

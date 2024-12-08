@@ -25,11 +25,7 @@ const companyId = 'mh3VZ5IrZjubXUCZL381';
 const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
     const [queryText, setQueryText] = useState('');
     const [results, setResults] = useState<SummarySearchResult[]>([]);
-    const [loading, setLoading] = useState(false);
     const [isResultsVisible, setIsResultsVisible] = useState(false);
-    const [fileSelectedForSummary, setFileSelectedForSummary] = useState<
-        string | null
-    >(null);
 
     const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +55,6 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
             return;
         }
 
-        setLoading(true);
         const searchResults: SummarySearchResult[] = [];
 
         try {
@@ -126,7 +121,6 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
         }
 
         setResults(searchResults);
-        setLoading(false);
     };
 
     // Helper function to fetch and filter documents
