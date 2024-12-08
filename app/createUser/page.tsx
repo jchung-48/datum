@@ -77,6 +77,7 @@ const Page = () => {
                 setSuccessMessage(`${data.message}`);
                 setErrorMessage('');
                 console.log(successMessage);
+                console.log("User created!");
             } else {
                 const errorData = await response.json();
                 setErrorMessage(errorData.message || 'Failed to create user');
