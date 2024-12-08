@@ -10,12 +10,8 @@ import {
 import {auth} from '../../lib/firebaseClient.js';
 import {onAuthStateChanged} from 'firebase/auth';
 import {useRouter} from 'next/navigation';
-import {updateDoc, doc} from 'firebase/firestore';
-import {db} from '../../lib/firebaseClient.js';
 import './profile.modules.css';
-import Link from 'next/link';
 import {logoutUser} from '../authentication';
-import {LuCloudLightning} from 'react-icons/lu';
 import deptStyles from '../departments/departments.module.css';
 import Header from '@/app/Utilities/Header/header';
 import {FaUserCircle} from 'react-icons/fa';

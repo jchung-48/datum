@@ -1,7 +1,6 @@
 // authentication.test.js
 import {
     getDepartments,
-    getCompanies,
     signInUser,
     sendVerificationCode,
     logoutUser,
