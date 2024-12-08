@@ -641,7 +641,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                                     handleDelete(file.id);
                                                 }}
                                             >
-                                                <span className="trashIcon">
+                                                <span className={styles.trashIcon}>
                                                     <FaTrashAlt />
                                                 </span>
                                             </button>
