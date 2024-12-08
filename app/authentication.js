@@ -6,8 +6,7 @@ import {
     RecaptchaVerifier,
 } from 'firebase/auth';
 import {doc, getDoc, collection, getDocs, updateDoc} from 'firebase/firestore';
-import {auth, db} from '@/lib/firebaseClient.js';
-// functions to get departments 
+import {auth, db} from '@/lib/firebaseClient.ts';
 export const getDepartments = async companyId => {
     try {
         const departmentsRef = collection(

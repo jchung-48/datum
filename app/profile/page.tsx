@@ -7,7 +7,7 @@ import {
     sendVerificationCode,
     verifyAndUpdatePhoneNumber,
 } from '../authentication';
-import {auth} from '../../lib/firebaseClient.js';
+import {auth} from '@/lib/firebaseClient';
 import {onAuthStateChanged} from 'firebase/auth';
 import {useRouter} from 'next/navigation';
 import './profile.modules.css';
