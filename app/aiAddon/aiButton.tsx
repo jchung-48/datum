@@ -7,7 +7,6 @@ import ReactMarkdown from 'react-markdown';
 import * as pdfjsLib from 'pdfjs-dist';
 import {SpinnerDiamond} from 'spinners-react';
 
-// Set the workerSrc for pdfjsLib
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
 
 const AiButton: React.FC<AiButtonProps> = ({paths}) => {
@@ -60,11 +59,11 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
   const handleChat = async (text?: string) => {
     const inputText = text?.trim() || inputValue.trim(); // Use `text` if provided, otherwise fallback to `inputValue`
 
-    if (!inputText) return; // Return if the input is empty
+    if (!inputText) return; 
 
     // Add user's message to chat history
     setChatHistory(prev => [...prev, {sender: 'user', message: inputText}]);
-    setInputValue(''); // Clear the input field
+    setInputValue('');
     setChatLoading(true);
 
     try {
@@ -162,7 +161,6 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
         if (summarizeTab?.classList.contains(styles.active)) {
           handleSummarizeClick();
         }
-        // Otherwise, check if the "chat" tab is active
         else if (chatTab?.classList.contains(styles.active)) {
           handleChat(text);
         } else {
@@ -175,8 +173,6 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
       window.addEventListener('keydown', handleKeyDown);
       window.addEventListener('keyup', handleKeyUp);
     }
-
-    // Cleanup
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
@@ -229,7 +225,6 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
             </button>
           </div>
 
-          {/* Content Display Area */}
           <div className={styles.contentDisplay}>
             {mode === 'summarize' ? (
               <>
@@ -265,7 +260,6 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
             )}
           </div>
 
-          {/* Input Area */}
           <div className={styles.inputArea}>
             {mode === 'summarize' ? (
               <>
@@ -284,7 +278,7 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
                   placeholder="Chat with the LLM"
                   value={inputValue}
                   onChange={handleInputChange}
-                  className={styles.chatInput} // Add this class in your CSS if needed
+                  className={styles.chatInput}
                 />
                 <button
                   className={styles.actionButton}

@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import {getDocs} from 'firebase/firestore';
 import FAQPage from './page';
 
-// Mock Firestore `getDocs` to simulate Firestore behavior
 jest.mock('firebase/firestore', () => ({
     collection: jest.fn(),
     query: jest.fn(),
@@ -40,7 +39,6 @@ describe('FAQPage', () => {
     });
 
     it('fetches and displays FAQ results when valid criteria is selected', async () => {
-        // Mocking Firestore response
         const mockFAQs = [
             {
                 id: '1',
@@ -60,7 +58,6 @@ describe('FAQPage', () => {
 
         render(<FAQPage />);
 
-        // Select criteria
         fireEvent.change(screen.getByLabelText(/ROLE/i), {
             target: {value: 'Buyer'},
         });
@@ -68,10 +65,8 @@ describe('FAQPage', () => {
             target: {value: 'Furniture'},
         });
 
-        // Trigger search
         fireEvent.click(screen.getByText('Search'));
 
-        // Wait for results to render
         await waitFor(() => {
             expect(
                 screen.getByText('What is the return policy?'),

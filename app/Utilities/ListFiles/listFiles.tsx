@@ -1,5 +1,3 @@
-// listFiles.tsx
-
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -40,8 +38,8 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     const [showRightButton, setShowRightButton] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
-    const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
-    const [display, setDisplay] = useState<'list' | 'grid' | 'horizontal'>(initialDisplay); // New state for view mode
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
+    const [display, setDisplay] = useState<'list' | 'grid' | 'horizontal'>(initialDisplay);
 
     const firestorePath: FirestorePath = {
         collectionType:
@@ -93,7 +91,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                             console.log("Admin Names:", adminNames);
 
                             const isEmployeeAdmin = adminNames.includes(employeeName);
-                            setIsAdmin(isEmployeeAdmin); // Update admin status
+                            setIsAdmin(isEmployeeAdmin);
                             console.log(
                                 isEmployeeAdmin
                                     ? "Employee is an admin."
@@ -230,6 +228,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                     thumbnail = await generatePDFThumbnail(downloadURL);
                 } catch (error) {
                     console.error('Error generating PDF thumbnail:', error);
+                    // Image in the database as backup thumbnail if generation fails
                     thumbnail =
                         'https://firebasestorage.googleapis.com/v0/b/datum-115a.appspot.com/o/pdf_thumbnail.png?alt=media&token=762f3694-9262-4c48-962d-9718245d80c4';
                 }
@@ -284,15 +283,12 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
             }
         };
 
-        // Check initial button visibility
         updateScrollButtons();
 
-        // Attach scroll event listener
         const ref = scrollRef.current;
         ref?.addEventListener('scroll', updateScrollButtons);
         window.addEventListener('resize', updateScrollButtons);
 
-        // Cleanup event listener
         return () => {
             ref?.removeEventListener('scroll', updateScrollButtons);
             window.removeEventListener('resize', updateScrollButtons);
@@ -370,19 +366,9 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         setIsShareModalOpen(true);
     };
 
-    var currentFile: string = '';
-    const menuItems = [
-        {
-            icon: <FaTrashAlt />,
-            label: 'Delete',
-            action: () => handleDelete(currentFile),
-        },
-    ];
-
     return (
         <div className={styles.fileList}>
             <div className={styles.topButtons}>
-                {/* Top Delete Button */}
                 <button
                     className={styles.deleteButtonTop}
                     onClick={async () => {
@@ -427,7 +413,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                 Array.from(selectedFiles)
                                     .map(fileId => files.find(file => file.id === fileId))
                                     .filter(Boolean) as FileData[]
-                            } // Pass the selected files as an array
+                            }
                             isOpen={isShareModalOpen}
                             onClose={() => setIsShareModalOpen(false)}
                             buttonRef={buttonRef}
@@ -436,7 +422,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                     </>
                 )}
 
-                {/* View Mode Toggle Buttons */}
                 <div className={styles.viewToggleButtons}>
                     <button
                         className={`${styles.viewButton} ${display === 'list' ? styles.activeView : ''}`}
@@ -465,7 +450,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
 
             {display === 'horizontal' ? (
                 <div className={styles.scrollContainer}>
-                    {/* Left Button */}
                     {showLeftButton && (
                         <button
                             className={`${styles.scrollButton} ${styles.left}`}
@@ -491,7 +475,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                         )}
                     </div>
 
-                    {/* Right Button */}
                     {showRightButton && (
                         <button
                             className={`${styles.scrollButton} ${styles.right}`}
@@ -648,7 +631,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                         className={`${styles.fileCell} ${styles.actions}`}
                                         onClick={e => {
                                             e.stopPropagation();
-                                            currentFile = file.id;
                                         }}
                                     >
                                         {currentUserUid === file.uploadedBy && (

@@ -12,8 +12,8 @@
 }
 
 .fileItems {
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Stack files vertically */
+    display: flex;
+    flex-direction: column;
 }
 
 .fileItem {

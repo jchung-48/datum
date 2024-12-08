@@ -1,4 +1,3 @@
-// authentication.test.js
 import {
     getDepartments,
     signInUser,
@@ -7,7 +6,7 @@ import {
     getEmployeeProfile,
 } from '../app/authentication';
 
-import {auth, db} from '@/lib/firebaseClient'; // Mocked Firebase imports
+import {auth, db} from '@/lib/firebaseClient';
 import {collection, doc, getDocs, getDoc} from 'firebase/firestore';
 import {
     signInWithEmailAndPassword,
@@ -15,7 +14,6 @@ import {
     PhoneAuthProvider,
 } from 'firebase/auth';
 
-// Mock Firebase methods
 jest.mock('@/lib/firebaseClient', () => ({
     auth: {
         currentUser: {uid: 'testUid'},

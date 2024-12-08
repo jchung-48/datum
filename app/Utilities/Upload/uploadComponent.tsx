@@ -1,4 +1,3 @@
-// UploadComponent.tsx
 import React, {useState, useRef, useEffect} from 'react';
 import {uploadFileToStorage, updateFirestore} from './uploadUtils';
 import styles from './uploadComponent.module.css';
@@ -19,21 +18,18 @@ const UploadComponent: React.FC<UploadComponentProps> = ({
     const [showCard, setShowCard] = useState(false);
     const cardRef = useRef<HTMLDivElement | null>(null);
 
-    // Handle file selection
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
         }
     };
 
-    // Handle collection change
     const handleCollectionChange = (
         e: React.ChangeEvent<HTMLSelectElement>,
     ) => {
         setSelectedCollection(e.target.value);
     };
 
-    // Handle upload
     const handleUpload = async () => {
         if (!file) {
             alert('Please select a file before uploading.');
@@ -58,7 +54,6 @@ const UploadComponent: React.FC<UploadComponentProps> = ({
             );
             setUploadStatus('File uploaded successfully!');
             setFile(null);
-            //setShowCard(false);
             if (onUploadSuccess) onUploadSuccess();
         } catch (error) {
             console.error('Error uploading file:', error);
@@ -66,7 +61,6 @@ const UploadComponent: React.FC<UploadComponentProps> = ({
         }
     };
 
-    // Close card on clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (

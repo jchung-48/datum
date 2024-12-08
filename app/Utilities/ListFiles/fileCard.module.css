@@ -1,6 +1,6 @@
 .fileItem {
     position: relative;
-    flex: 0 0 120px; /* Fixed width to maintain size */
+    flex: 0 0 120px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -33,11 +33,10 @@
 }
 
 .selected {
-    background-color: var(--selected-color) !important; /* Light blue */
+    background-color: var(--selected-color) !important;
     position: relative;
 }
 
-/* Checkbox styling */
 .fileCheckbox {
     transform: scale(1.2);
     cursor: pointer;
@@ -53,7 +52,6 @@
     cursor: pointer;
 }
 
-/* Checkbox styling */
 .fileCheckboxThumbnail {
     position: absolute;
     top: 8px;

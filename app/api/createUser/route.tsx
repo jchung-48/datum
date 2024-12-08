@@ -15,20 +15,18 @@ export async function POST(
             JSON.stringify({message: 'Only POST requests are allowed'}),
             {status: 405},
         );
-        // return res.status(405).json({ message: 'Only POST requests are allowed' });
     }
 
     const idToken = headers().get('authorization')?.split(' ')[1];
 
     if (!idToken) {
         return new Response(JSON.stringify({message: idToken}), {status: 401});
-        // return res.status(401).json({ message: 'Unauthorized. No token provided.' });
     }
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         const uid = decodedToken.uid;
-        const companyId = decodedToken.companyId; // "mh3VZ5IrZjubXUCZL381"; // get companyId from custom claim
+        const companyId = decodedToken.companyId;
 
         if (!companyId) {
             return new Response(
@@ -37,10 +35,9 @@ export async function POST(
                 }),
                 {status: 403},
             );
-            // return res.status(403).json({ message: 'Access denied. No company association found.' });
         }
         const comapnyRef = admin.firestore().doc(`/Company/${companyId}`);
-        const companyDoc = await comapnyRef.get(); // get company
+        const companyDoc = await comapnyRef.get();
 
         if (!companyDoc.exists) {
             return new Response(
@@ -65,7 +62,6 @@ export async function POST(
             );
         }
 
-        // create user
         const {email, displayName, phoneNumber, departmentId, role} =
             (await req.json()) as {
                 email: string;
@@ -92,7 +88,6 @@ export async function POST(
             .firestore()
             .doc(`/Company/${companyId}/Employees/${userRecord.uid}`);
 
-        // generate reset link
         const resetLink = await admin.auth().generatePasswordResetLink(email);
 
         await admin
@@ -110,8 +105,8 @@ export async function POST(
             });
 
         departments[0].update({
-            users: admin.firestore.FieldValue.arrayUnion(employee), // i legit forgot what this does
-        }); // nvm it adds the user to the  department
+            users: admin.firestore.FieldValue.arrayUnion(employee),
+        });
 
         await sendResetEmail(email, resetLink, true);
 

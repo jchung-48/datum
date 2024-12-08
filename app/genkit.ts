@@ -4,17 +4,14 @@ import * as z from 'zod';
 
 import './genkitConfig';
 
-// Import the Genkit core libraries and plugins.
-import {generate} from '@genkit-ai/ai';
 import {defineFlow, run} from '@genkit-ai/flow';
 import {index} from '@genkit-ai/ai';
-import {Document, retrieve} from '@genkit-ai/ai/retriever';
+import {Document} from '@genkit-ai/ai/retriever';
 
 import * as admin from 'firebase-admin';
 
 import {
     devLocalIndexerRef,
-    devLocalRetrieverRef,
 } from '@genkit-ai/dev-local-vectorstore';
 
 import pdf from 'pdf-parse';
@@ -22,7 +19,6 @@ import {chunk} from 'llm-chunk';
 
 export const knowledgeBaseIndexer = devLocalIndexerRef('knowledgeBase');
 
-// Create chunking config
 const chunkingConfig = {
     minLength: 1000,
     maxLength: 2000,
@@ -31,12 +27,10 @@ const chunkingConfig = {
     delimiters: '',
 } as any;
 
-// Initialize Firebase Admin SDK if not already initialized
 if (!admin.apps.length) {
     admin.initializeApp();
 }
 
-// Indexer flow
 export const indexKB = defineFlow(
     {
         name: 'indexKB',
@@ -44,35 +38,27 @@ export const indexKB = defineFlow(
         outputSchema: z.void(),
     },
     async () => {
-        // add all collection paths to files
-        // Fetch PDFs from Firestore
         const pdfs = await run('fetch-pdfs', fetchPdfsFromFirestore);
 
-        // Process each PDF
         for (const pdf of pdfs) {
             const {pdfName, filePath} = pdf;
 
-            // Download the PDF from Storage
             const pdfBuffer = await run('download-pdf', () =>
                 downloadPdfFromStorage(filePath),
             );
 
-            // Extract text from PDF
             const pdfTxt = await run('extract-text', () =>
                 extractTextFromPdfBuffer(pdfBuffer),
             );
 
-            // Chunk the text
             const chunks = await run('chunk-it', async () =>
                 chunk(pdfTxt, chunkingConfig),
             );
 
-            // Convert chunks to Documents
             const documents = chunks.map(text => {
                 return Document.fromText(text, {pdfName});
             });
 
-            // Add documents to the index
             await index({
                 indexer: knowledgeBaseIndexer,
                 documents,
@@ -81,19 +67,15 @@ export const indexKB = defineFlow(
     },
 );
 
-// Function to fetch PDFs from Firestore
-// NOTE: if there are corrupted PDFs indexer will get bad xRef. If other files like .jpg are in the collection, an error will occur
 async function fetchPdfsFromFirestore() {
     const db = admin.firestore();
 
-    // Explicitly define the type of the pdfs array
     const pdfs: Array<{
         pdfName: string;
         filePath: string;
         collectionPath: string;
     }> = [];
 
-    // list of all collection paths
     const collectionPaths = [
         '/Company/mh3VZ5IrZjubXUCZL381/Departments/NpaV1QtwGZ2MDNOGAlXa/files',
         '/Company/mh3VZ5IrZjubXUCZL381/Departments/NpaV1QtwGZ2MDNOGAlXa/incident',
@@ -139,13 +121,12 @@ async function downloadPdfFromStorage(filePath: string) {
 
     console.log('Attempting to download file from storage path:', filePath);
 
-    const bucket = admin.storage().bucket('datum-115a.appspot.com'); // Ensure this matches your actual bucket name
+    const bucket = admin.storage().bucket('datum-115a.appspot.com');
     const file = bucket.file(filePath);
     const [fileContents] = await file.download();
     return fileContents;
 }
 
-// Function to extract text from PDF buffer
 async function extractTextFromPdfBuffer(pdfBuffer: Buffer) {
     const data = await pdf(pdfBuffer);
     return data.text;

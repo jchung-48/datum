@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'Darker Grotesque';
-    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype'); /* Corrected format */
-    font-weight: 800; /* Assuming ExtraBold is around 800 */
+    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
+    font-weight: 800;
     font-style: normal;
 }
 
@@ -75,8 +75,8 @@
 }
 
 .fileItems {
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Stack files vertically */
+    display: flex;
+    flex-direction: column;
 }
 
 .fileItem {

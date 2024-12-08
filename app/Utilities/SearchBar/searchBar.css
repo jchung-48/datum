@@ -4,7 +4,6 @@
     font-style: normal;
 }
 
-/* Centering main container */
 .main-container {
     display: flex;
     align-items: center;
@@ -12,31 +11,28 @@
     text-align: center;
 }
 
-/* Search bar styling */
 .search-bar {
     position: relative;
-    width: 500px; /* Set a fixed width */
+    width: 500px;
 }
 
-/* Search input styling */
 .search-input {
-    width: 100%; /* Full width of the search bar */
+    width: 100%;
     padding: 6px;
     font-size: 14px;
     color: black;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Include padding and border in width */
-    font-family: 'Darker Grotesque SemiBold', sans-serif; /* Match modal font */
+    box-sizing: border-box;
+    font-family: 'Darker Grotesque SemiBold', sans-serif;
 }
 
-/* Search results card directly below the search bar */
 .search-results-card {
     position: absolute;
-    top: 100%; /* Position below the search bar */
+    top: 100%;
     left: 0;
-    width: 100%; /* Match the width of the search bar */
+    width: 100%;
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -47,11 +43,10 @@
     z-index: 10;
     max-height: 200px;
     overflow-y: auto;
-    font-family: 'Darker Grotesque SemiBold', sans-serif; /* Match modal font */
-    font-size: var(--default-font-size); /* Adjust font size for consistency */
+    font-family: 'Darker Grotesque SemiBold', sans-serif;
+    font-size: var(--default-font-size);
 }
 
-/* Styling for search result items */
 .search-result-item {
     padding: 8px 0;
     border-bottom: 1px solid #eee;

@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'Darker Grotesque';
-    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype'); /* Corrected format */
-    font-weight: 800; /* Assuming ExtraBold is around 800 */
+    src: url('../fonts/DarkerGrotesque-Black.ttf') format('truetype');
+    font-weight: 800;
     font-style: normal;
 }
 
@@ -25,9 +25,9 @@
 
 .header {
     display: grid;
-    grid-template-columns: 1fr auto 1fr; /* Create 3 columns: 1st and 3rd for spacing, middle for centering */
-    align-items: center; /* Vertically center the items in each grid cell */
-    width: 100%; /* Ensure the header spans the full width of the page */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
     align-items: center;
     background: linear-gradient(to right, #627d9f 10%, #1f3c53 100%);
     justify-content: space-between;
@@ -57,8 +57,8 @@
     font-size: 40px;
     color: var(
         --text-color-dark
-    ); /* Light color to contrast with the gradient */
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Adds shadow for depth */
+    );
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .profile {

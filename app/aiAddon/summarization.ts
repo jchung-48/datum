@@ -1,4 +1,3 @@
-// genkit/summarization.ts
 'use server';
 import * as z from 'zod';
 import {generate} from '@genkit-ai/ai';

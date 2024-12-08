@@ -1,7 +1,6 @@
 import {POST} from '@/app/api/createUser/route';
 import admin from '@/lib/firebaseAdmin';
 
-// Mock Firebase Admin SDK
 jest.mock('@/lib/firebaseAdmin', () => ({
     auth: jest.fn(() => ({
         verifyIdToken: jest.fn(),
@@ -22,12 +21,10 @@ jest.mock('@/lib/firebaseAdmin', () => ({
     })),
 }));
 
-// Mock headers
 jest.mock('next/headers', () => ({
     headers: jest.fn(),
 }));
 
-// Mock sendResetEmail
 jest.mock('@/app/api/backendTools', () => ({
     sendResetEmail: jest.fn(),
 }));

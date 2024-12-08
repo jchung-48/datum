@@ -1,6 +1,3 @@
-/* crudContacts.module.css */
-
-/* Container for the entire form */
 .pageContainer {
     padding: 20px;
     max-width: 800px;
@@ -12,7 +9,6 @@
     font-size: var(--default-font-size);
 }
 
-/* Title styling */
 .pageContainer h2 {
     font-family: 'Darker Grotesque';
     font-size: 35px;
@@ -81,7 +77,6 @@
     border-color: #4caf50;
 }
 
-/* Contact management section */
 
 .contactTable {
     width: 97.45%;
@@ -106,7 +101,7 @@
 
 .contactRow {
     background-color: var(--card-background-light);
-    overflow: hidden; /* Prevent content from spilling */
+    overflow: hidden;
     display: table-row;
     transition: background-color 0.2s;
     padding: 5px;

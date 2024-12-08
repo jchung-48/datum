@@ -183,7 +183,6 @@ const AddOrEditBuyer = () => {
         }
     };
 
-    // Handling edit button to populate the form with contact data
     useEffect(() => {
         if (editingContactIndex !== null && editingContactIndex >= 0) {
             const contactToEdit = buyerData.contacts[editingContactIndex];
@@ -195,7 +194,7 @@ const AddOrEditBuyer = () => {
     }, [editingContactIndex, buyerData.contacts]);
 
     type ContactRowProps = {
-        contact: Buyer['contacts'][0]; // Assuming contacts are part of the Buyer type
+        contact: Buyer['contacts'][0];
         index: number;
         onEdit: (index: number) => void;
         onDelete: (index: number) => void;
@@ -240,7 +239,6 @@ const AddOrEditBuyer = () => {
                 isProfile={false}
             />
             <div className={styles.pageContainer}>
-                {/* Company selection dropdown */}
                 <div className={styles.selectGroup}>
                     <label>Select Company</label>
                     <select
@@ -257,7 +255,6 @@ const AddOrEditBuyer = () => {
                     </select>
                 </div>
 
-                {/* Only show this section if a company is selected */}
                 {selectedCompanyId && (
                     <>
                         <div className={styles.selectGroup}>
@@ -278,7 +275,6 @@ const AddOrEditBuyer = () => {
                             </select>
                         </div>
 
-                        {/* Buyer Form Fields */}
                         {(isNewBuyer || selectedBuyerId) && (
                             <div className={styles.inputGroup}>
                                 <div>
@@ -338,7 +334,6 @@ const AddOrEditBuyer = () => {
                                     />
                                 </div>
 
-                                {/* Contact Management */}
                                 <h3>Contacts</h3>
                                 <table className={styles.contactTable}>
                                     <thead>
@@ -369,7 +364,6 @@ const AddOrEditBuyer = () => {
                                     </tbody>
                                 </table>
 
-                                {/* Contact Form Fields */}
                                 <div className={styles.inputGroup}>
                                     <div>
                                         <input
@@ -422,7 +416,6 @@ const AddOrEditBuyer = () => {
                                     </button>
                                 </div>
 
-                                {/* Submit Buttons */}
                                 <div className={styles.actionButtons}>
                                     <button
                                         className={styles.save}

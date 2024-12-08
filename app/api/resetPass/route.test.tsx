@@ -1,14 +1,12 @@
 import {POST} from '@/app/api/resetPass/route';
 import admin from '@/lib/firebaseAdmin';
 
-// Mock Firebase Admin SDK
 jest.mock('@/lib/firebaseAdmin', () => ({
     auth: jest.fn(() => ({
         generatePasswordResetLink: jest.fn(),
     })),
 }));
 
-// Mock sendResetEmail
 jest.mock('@/app/api/backendTools', () => ({
     sendResetEmail: jest.fn(),
 }));

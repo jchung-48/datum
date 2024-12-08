@@ -1,12 +1,8 @@
-// app/api/summarize/route.ts
-
 import {NextResponse} from 'next/server';
 import {z} from 'zod';
 
-// Import server-side functions
-import {callSummarizeFlow} from '../../aiAddon/summarization'; // Adjust the path as needed
+import {callSummarizeFlow} from '../../aiAddon/summarization';
 
-// Define the request schema using zod
 const SummarizeSchema = z.object({
     text: z.string(),
     metadata: z.string(),
@@ -26,7 +22,6 @@ export async function POST(req: Request) {
 
         const {text, metadata} = parsed.data;
 
-        // Call the server-side summarize flow
         const summary = await callSummarizeFlow(text, metadata);
 
         return NextResponse.json({summary});

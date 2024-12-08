@@ -1,5 +1,3 @@
-// uploadUtils.ts
-
 import {
     ref,
     uploadBytesResumable,
@@ -11,7 +9,6 @@ import {doc, setDoc, getDoc, deleteDoc, Timestamp} from 'firebase/firestore';
 import {storage, db, auth} from '@/lib/firebaseClient';
 import {FirestorePath} from '@/app/types';
 
-// Function to upload file to Firebase Storage and return the download URL
 export const uploadFileToStorage = async (
     file: File,
     storagePath: string,
@@ -19,7 +16,6 @@ export const uploadFileToStorage = async (
     if (!file) throw new Error('No file provided.');
     console.log('upload storage path', storagePath);
 
-    // Include metadata with uploadedBy
     const user = auth.currentUser;
     if (!user) {
         throw new Error('User not authenticated.');
@@ -27,10 +23,9 @@ export const uploadFileToStorage = async (
 
     const storageRef = ref(storage, storagePath);
 
-    // Check if a file with the same name exists
     const existingFile = await getDownloadURL(storageRef).catch(error => {
         if (error.code === 'storage/object-not-found') {
-            return null; // File doesn't exist
+            return null;
         }
         throw error;
     });
@@ -39,9 +34,9 @@ export const uploadFileToStorage = async (
         const confirmReplace = window.confirm(
             `A file named "${file.name}" already exists. Do you want to replace it?`,
         );
-        if (!confirmReplace) throw new Error('Upload cancelled by user'); // Cancel upload if not confirmed
+        if (!confirmReplace) throw new Error('Upload cancelled by user');
 
-        await deleteObject(storageRef); // Delete existing file
+        await deleteObject(storageRef);
     }
 
     const metadata = {
@@ -71,7 +66,6 @@ export const uploadFileToStorage = async (
     });
 };
 
-// Function to update Firestore based on the uploaded file
 export const updateFirestore = async (
     firestorePath: FirestorePath,
     downloadURL: string,
@@ -95,7 +89,6 @@ export const updateFirestore = async (
     const timestamp = Timestamp.now();
 
     if (collectionType === 'Departments' && departmentId) {
-        // Use custom collection name if provided, otherwise default to "files"
         const filesDocRef = doc(
             db,
             'Company',
@@ -159,17 +152,14 @@ export const updateFirestore = async (
     console.log(`File added to Firestore: ${fileName}`);
 };
 
-// Function to delete a file from Firebase Storage and Firestore
 export const handleFileDelete = async (
     fileFullPath: string,
     firestorePath: FirestorePath,
 ): Promise<void> => {
     try {
-        // Delete the file from Firebase Storage
         const fileRef = ref(storage, fileFullPath);
         await deleteObject(fileRef);
 
-        // Delete the file entry from Firestore
         const {
             collectionType,
             companyId,
@@ -224,7 +214,7 @@ export const handleFileDelete = async (
         console.log(`File deleted from Storage and Firestore: ${fileFullPath}`);
     } catch (error) {
         console.error('Error deleting file:', error);
-        throw error; // Re-throw the error to be handled by the calling function
+        throw error;
     }
 };
 
@@ -279,10 +269,9 @@ export const moveDocument = async (
     sourcePath: FirestorePath,
     destinationPath: FirestorePath,
     documentId: string,
-    copy = false, // default to moving the file
+    copy = false,
 ): Promise<void> => {
     try {
-        // Get the document from the source path
         const sourceDocRef = getFirestoreRef(
             sourcePath.collectionType,
             sourcePath.companyId,
@@ -303,7 +292,6 @@ export const moveDocument = async (
 
         const documentData = docSnapshot.data();
 
-        // Check if moving within the same department/buyer/manufacturer
         const isSameDirectory =
             sourcePath.companyId === destinationPath.companyId &&
             sourcePath.collectionType === destinationPath.collectionType &&
@@ -312,22 +300,19 @@ export const moveDocument = async (
             sourcePath.manufacturerId === destinationPath.manufacturerId;
 
         if (!isSameDirectory) {
-            // Moving to a different collection, so we handle storage as well
             const filePath = documentData.filePath;
             const fileRef = ref(storage, filePath);
             const fileURL = await getDownloadURL(fileRef);
 
-            // Copy file content to the destination
             const response = await fetch(fileURL);
             const fileBlob = await response.blob();
 
-            let departmentName = undefined; // Default to using ID if name not found
+            let departmentName = undefined;
 
             if (
                 destinationPath.collectionType === 'Departments' &&
                 destinationPath.departmentId
             ) {
-                // Fetch department name based on department ID
                 const departmentDocRef = doc(
                     db,
                     'Company',
@@ -352,12 +337,10 @@ export const moveDocument = async (
             const destinationFileRef = ref(storage, newStoragePath);
 
             try {
-                // Try to get the URL for the new file path to check if it exists
                 await getDownloadURL(destinationFileRef);
                 console.log("File already exists at destination.");
                 throw new Error('File already exists at destination.');
             } catch (error) {
-                // If the file doesn't exist (error is thrown), proceed with the upload
                 const firebaseError = error as { code: string };
 
                 if (firebaseError.code === 'storage/object-not-found') {
@@ -369,10 +352,8 @@ export const moveDocument = async (
 
             await uploadBytes(destinationFileRef, fileBlob);
 
-            // Update document data for new storage location
             documentData.filePath = newStoragePath;
 
-            // Optionally delete the original file in storage
             if (!copy) {
                 await deleteObject(fileRef);
             }
@@ -384,7 +365,6 @@ export const moveDocument = async (
             }
         }
 
-        // Set the document in the destination path
         const destinationDocRef = getFirestoreRef(
             destinationPath.collectionType,
             destinationPath.companyId,
@@ -396,7 +376,6 @@ export const moveDocument = async (
         );
         await setDoc(destinationDocRef, documentData);
 
-        // Delete the document from the source path if moving
         if (!copy) {
             await deleteDoc(sourceDocRef);
             console.log(`Document ${documentId} moved successfully.`);

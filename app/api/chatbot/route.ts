@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
 import {runFlow} from '@genkit-ai/flow';
-import {kbQAFlow} from '../../aiAddon/chat'; // Adjust the path as needed
+import {kbQAFlow} from '../../aiAddon/chat';
 
 export async function POST(req: Request) {
     try {

@@ -14,7 +14,6 @@ import Header from '@/app/Utilities/Header/header';
 import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 import {doc, getDoc, DocumentReference} from 'firebase/firestore';
 import {auth, db} from '@/lib/firebaseClient';
-import {usePathname} from 'next/navigation';
 
 const MerchandisingDepartment = () => {
     const styles = {...deptStyles, ...merchStyles};
@@ -29,7 +28,6 @@ const MerchandisingDepartment = () => {
         string[]
     >([]);
     const [isAdmin, setIsAdmin] = useState(false);
-    const pathname = usePathname();
 
     useEffect(() => {
         const loadBuyersAndManufacturers = async () => {
@@ -102,7 +100,7 @@ const MerchandisingDepartment = () => {
                         }),
                     );
 
-                    setIsAdmin(adminIds.includes(uid)); // Set admin status
+                    setIsAdmin(adminIds.includes(uid));
                 } else {
                     console.warn('Admins field is not an array.');
                     setIsAdmin(false);
@@ -117,13 +115,13 @@ const MerchandisingDepartment = () => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
-                checkAdminStatus(user.uid); // Check admin status when user is logged in
+                checkAdminStatus(user.uid);
             } else {
-                setIsAdmin(false); // If user is not logged in, reset to false
+                setIsAdmin(false);
             }
         });
 
-        return () => unsubscribe(); // Cleanup the listener on unmount
+        return () => unsubscribe();
     }, []);
 
     return (
@@ -165,7 +163,6 @@ const MerchandisingDepartment = () => {
                 </div>
 
                 <div className={styles.contactListsContainer}>
-                    {/* Buyers List */}
                     <div className={styles.contactList}>
                         <div className={styles.contactListHeader}>
                             <h2>Buyers</h2>
@@ -208,7 +205,6 @@ const MerchandisingDepartment = () => {
                         )}
                     </div>
 
-                    {/* Manufacturers List */}
                     <div className={styles.contactList}>
                         <div className={styles.contactListHeader}>
                             <h2>Manufacturers</h2>
@@ -254,7 +250,6 @@ const MerchandisingDepartment = () => {
                     </div>
                 </div>
 
-                {/* File List Modal */}
                 {showModal && (
                     <div className={styles.modal}>
                         <div className={styles.modalContent}>

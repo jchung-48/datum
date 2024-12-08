@@ -1,6 +1,5 @@
 /* styles.module.css */
 
-/* Circle Button */
 .circleButton {
     position: fixed;
     bottom: 20px;
@@ -31,7 +30,6 @@
     object-fit: cover;
 }
 
-/* Card */
 .card {
     display: flex;
     flex-direction: column;
@@ -51,7 +49,6 @@
     font-family: "Darker Grotesque SemiBold", sans-serif;
 }
 
-/* Close Button in the Card */
 .cardCloseButton {
     background: none;
     border: none;
@@ -65,7 +62,6 @@
     color: red;
 }
 
-/* Close Button Wrapper */
 .tabOptions {
     display: flex;
     justify-content: flex-end;
@@ -73,7 +69,6 @@
     height: 25px;
 }
 
-/* Tab Button Styles */
 .modeToggle {
     display: flex;
     justify-content: space-around;
@@ -104,7 +99,6 @@
     background-color: #e0e0e0;
 }
 
-/* Content Display Area */
 .contentDisplay {
     padding: 15px;
     background-color: #f9f9f9; /* Light background for better readability */
@@ -118,10 +112,9 @@
     flex-grow: 1;              /* Allow the content area to expand and take available space */
     margin-bottom: 10px;
     color: black;
-    position: relative;        /* Add relative positioning */
+    position: relative;        
 }
 
-/* Throbber (Loading Spinner) */
 .throbber {
     height: 100%;
     position: absolute; 
@@ -131,7 +124,6 @@
     color: "#617D9F";
 }
 
-/* Optional: Style Markdown Elements for Better Presentation */
 .contentDisplay h1,
 .contentDisplay h2,
 .contentDisplay h3 {
@@ -141,7 +133,7 @@
 
 .contentDisplay p {
     margin-bottom: 10px;
-    line-height: 1.6; /* Improve readability */
+    line-height: 1.6; 
 }
 
 .contentDisplay ul {
@@ -164,11 +156,10 @@
     justify-content: space-between; /* Adjust spacing */
     gap: 10px; /* Add space between input and button */
     width: 100%;
-    padding: 0; /* Ensure no extra padding */
+    padding: 0; 
     box-sizing: border-box;
 }
 
-/* Chat Input (inherits sharedInput styles) */
 .chatInput,
 .sharedInput {
     flex: 1; /* Let the input take remaining space */
@@ -182,7 +173,6 @@
     height: 38px;
 }
 
-/* Chat Action Button (adjust for alignment) */
 .actionButton {
     padding: 8px 12px; /* Match Summarize button padding */
     background-color: #627D9F;
@@ -204,7 +194,6 @@
     background-color: #4b617b;
 }
 
-/* Chat History */
 .chatHistory {
   max-height: 300px;
   overflow-y: auto;
@@ -212,7 +201,6 @@
   flex-direction: column;
 }
 
-/* Content Display Area */
 .contentDisplay {
     padding: 15px;
     background-color: #f9f9f9; /* Light background for better readability */
@@ -226,7 +214,7 @@
     flex-grow: 1;              /* Allow the content area to expand and take available space */
     margin-bottom: 10px;
     color: black;
-    position: relative;        /* Add relative positioning */
+    position: relative;        
 }
 
 .chatMessage {

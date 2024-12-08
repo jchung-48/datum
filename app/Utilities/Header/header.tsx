@@ -1,8 +1,6 @@
-// components/Header.tsx
-
 import React from 'react';
 import Link from 'next/link';
-import styles from './header.module.css'; // Ensure the correct path
+import styles from './header.module.css';
 import {LuCloudLightning} from 'react-icons/lu';
 import {FaUserCircle} from 'react-icons/fa';
 import {HeaderProps} from '../../types';
@@ -10,7 +8,6 @@ import {HeaderProps} from '../../types';
 const Header: React.FC<HeaderProps> = ({department, isProfile}) => {
     return (
         <div className={styles.header}>
-            {/* Home Link */}
             <Link href="/home">
                 <div className={styles.home}>
                     <LuCloudLightning className={styles.cloudIcon} />
@@ -18,12 +15,10 @@ const Header: React.FC<HeaderProps> = ({department, isProfile}) => {
                 </div>
             </Link>
 
-            {/* Department Display */}
             {department && (
                 <div className={styles.department}>{department}</div>
             )}
 
-            {/* Profile Icon */}
             {!isProfile && (
                 <div className={styles.profile}>
                     <Link href="/profile">

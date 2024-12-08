@@ -6,7 +6,6 @@ import Link from 'next/link';
 import {LuCloudLightning} from 'react-icons/lu';
 import styles from './styles.module.css';
 
-// Define the structure of FAQ data
 interface FAQ {
     id: string;
     question: string;
@@ -17,16 +16,13 @@ interface FAQ {
 }
 
 const FAQPage: React.FC = () => {
-    // State for dropdown selections with types
     const [role, setRole] = useState<string>('');
     const [productCategory, setProductCategory] = useState<string>('');
     const [faqCategory, setFaqCategory] = useState<string>('');
 
-    // State for search results and error messages with types
     const [faqResults, setFaqResults] = useState<FAQ[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
 
-    // Handler for search button
     const handleSearch = async () => {
         if (!role && !productCategory && !faqCategory) {
             setErrorMessage(
@@ -39,14 +35,12 @@ const FAQPage: React.FC = () => {
         setErrorMessage('');
         setFaqResults([]);
 
-        // Build Firestore query based on selected fields
         const faqCollectionRef = collection(
             db,
             '/Company/mh3VZ5IrZjubXUCZL381/faq',
         );
         let q = query(faqCollectionRef);
 
-        // Add query conditions based on selections
         if (role) q = query(q, where('role', '==', role));
         if (productCategory)
             q = query(q, where('product_category', '==', productCategory));
@@ -57,7 +51,7 @@ const FAQPage: React.FC = () => {
             const results: FAQ[] = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
-            })) as FAQ[]; // Type assertion to match FAQ type
+            })) as FAQ[];
             setFaqResults(results);
         } catch (error) {
             setErrorMessage('An error occurred while fetching data.');
@@ -65,10 +59,8 @@ const FAQPage: React.FC = () => {
     };
 
     useEffect(() => {
-        // Add the 'home-page' class to the body when the component mounts
         document.body.classList.add('home-page');
 
-        // Cleanup to remove the class when leaving the page
         return () => {
             document.body.classList.remove('home-page');
         };
@@ -88,7 +80,6 @@ const FAQPage: React.FC = () => {
                     Please select from the following dropdown menus:{' '}
                 </p>
 
-                {/* Dropdown for Role */}
                 <div>
                     <label className={styles.role}>
                         <div className={styles.roleTitle}>ROLE</div>
@@ -131,7 +122,6 @@ const FAQPage: React.FC = () => {
                     </label>
                 </div>
 
-                {/* Dropdown for FAQ Category */}
                 <div>
                     <label className={styles.role}>
                         <div className={styles.roleTitle}>FAQ CATEGORY</div>
@@ -166,10 +156,8 @@ const FAQPage: React.FC = () => {
                     </button>
                 </div>
 
-                {/* Error Message */}
                 {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
 
-                {/* Display Results */}
                 <div className={styles.response} style={{marginTop: '20px'}}>
                     {faqResults.length > 0 ? (
                         <ul>

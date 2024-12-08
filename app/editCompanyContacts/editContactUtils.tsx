@@ -1,11 +1,9 @@
-// editContactUtils.ts
 import {collection, getDocs} from 'firebase/firestore';
 import {db} from '@/lib/firebaseClient';
 import {Company, Contact, Manufacturer, Buyer} from '@/app/types';
 
 type EntityType = 'Manufacturer' | 'Buyer';
 
-// Fetch companies from Firestore
 export const fetchCompanies = async (): Promise<Company[]> => {
     const companiesCollectionRef = collection(db, 'Company');
     const companySnapshot = await getDocs(companiesCollectionRef);
@@ -15,7 +13,6 @@ export const fetchCompanies = async (): Promise<Company[]> => {
     }));
 };
 
-// Fetch entities (Buyers or Manufacturers) for a selected company
 export const fetchContacts = async (
     companyId: string,
     type: EntityType,
@@ -32,7 +29,6 @@ export const fetchContacts = async (
     })) as (Buyer | Manufacturer)[];
 };
 
-// Check for duplicate contacts
 export const checkForDuplicate = async (
     companyId: string,
     data: Buyer | Manufacturer,
@@ -68,7 +64,6 @@ export const checkForDuplicate = async (
         throw new Error(`A ${type} with the same phone number already exists.`);
 };
 
-// Handle adding or editing a contact within a list
 export const handleAddOrEditContact = (
     contacts: Contact[],
     contactData: Contact,
@@ -82,7 +77,6 @@ export const handleAddOrEditContact = (
     return [...contacts, contactData];
 };
 
-// Handle deleting a contact from a list
 export const handleDeleteContact = (
     contacts: Contact[],
     index: number,

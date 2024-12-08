@@ -51,7 +51,7 @@ const Page = () => {
       } catch (error) {
         console.error("Error fetching companies:", error);
       } finally {
-        setLoading(false); // Set loading to false after the data is fetched
+        setLoading(false);
       }
     };
     fetchCompanies();
@@ -64,7 +64,7 @@ const Page = () => {
   };
 
   if (loading) {
-    return <div>Loading companies...</div>; // Loading indicator (can be styled or replaced with a spinner)
+    return <div>Loading companies...</div>;
   }
 
   return (

@@ -7,11 +7,10 @@ import {
     CollectionReference,
     QueryDocumentSnapshot,
 } from 'firebase/firestore';
-import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
+import {db} from '@/lib/firebaseClient';
 import './searchBar.css';
 import {FileData, SearchResult, SearchBarProps} from '../../types';
 
-// Debounce function to limit search calls
 const debounce = (func: (...args: any[]) => void, delay: number) => {
     let timer: NodeJS.Timeout;
     return (...args: any[]) => {
@@ -93,7 +92,6 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
                         );
                     }
                 } else {
-                    // Subpaths are provided
                     const collectionPathSegments = [
                         'Company',
                         companyId,
@@ -126,7 +124,6 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
         setLoading(false);
     };
 
-    // Helper function to fetch and filter documents
     const fetchAndFilterDocs = async (
         collectionRef: CollectionReference<FileData>,
         searchResults: SearchResult[],
@@ -137,24 +134,21 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
         docsSnap.forEach((doc: QueryDocumentSnapshot<FileData>) => {
             const data = doc.data();
 
-            // Use fileName instead of name
             const name = data.fileName?.toLowerCase();
 
-            // Ensure name is defined before trying to use it
             if (!name) return;
 
             const matches = queryTextSplit.every(word => name.includes(word));
 
             if (matches) {
                 searchResults.push({
-                    name: data.fileName, // Use fileName for displaying
-                    downloadURL: data.download, // Use download field for URL
+                    name: data.fileName,
+                    downloadURL: data.download,
                 });
             }
         });
     };
 
-    // Debounced version of handleSearch with a 500ms delay
     const debouncedSearch = useCallback(debounce(handleSearch, 500), [
         queryText,
         paths,

@@ -1,4 +1,3 @@
-// authentication.js
 import {
     signInWithEmailAndPassword,
     signOut,
@@ -7,9 +6,8 @@ import {
     RecaptchaVerifier,
 } from 'firebase/auth';
 import {doc, getDoc, collection, getDocs, updateDoc} from 'firebase/firestore';
-import {auth, db} from '@/lib/firebaseClient.js'; // Import initialized Firebase instances
-
-// Fetch departments from Firestore
+import {auth, db} from '@/lib/firebaseClient.js';
+// functions to get departments 
 export const getDepartments = async companyId => {
     try {
         const departmentsRef = collection(
@@ -19,24 +17,21 @@ export const getDepartments = async companyId => {
         const departmentsSnapshot = await getDocs(departmentsRef);
 
         const departments = departmentsSnapshot.docs.map(doc => ({
-            id: doc.id, // Get the document ID
-            name: doc.data().name, // Get the "name" field from the document
-        })); // Extract department names
+            id: doc.id,
+            name: doc.data().name,
+        }));
 
-        return departments; // List of department names
+        return departments;
     } catch (error) {
         console.error('Error fetching departments:', error);
-        throw error; // Throw the error for further handling
+        throw error;
     }
 };
-
+// function on all departments the user is allowed to be in
 export const getUserDepartments = async userData => {
     try {
-        // const userRef = doc(db, `Company/${companyId}/Employees`, userId);
-        // const userSnap = await getDoc(userRef);
-        // const userData = userSnap.data();
-        const departmentRefs = userData.departments; // get list of departments from references
-        const firstDepartmentRef = departmentRefs[0]; // get first department
+        const departmentRefs = userData.departments;
+        const firstDepartmentRef = departmentRefs[0];
         const departmentSnap = await getDoc(firstDepartmentRef);
         const departmentData = departmentSnap.data();
         console.log(departmentData);
@@ -46,26 +41,24 @@ export const getUserDepartments = async userData => {
         throw error;
     }
 };
-
-// Fetch companies from Firestore
+// funciton to get all companies 
 export const getCompanies = async () => {
     try {
         const companiesRef = collection(db, 'Company/');
         const companiesSnapshot = await getDocs(companiesRef);
 
         const companies = companiesSnapshot.docs.map(doc => ({
-            id: doc.id, // Get the document ID
-            name: doc.data().name, // Get the "name" field from the document
+            id: doc.id,
+            name: doc.data().name,
         }));
 
-        return companies; // List of company names
+        return companies;
     } catch (error) {
         console.error('Error fetching companies:', error);
-        throw error; // Throw the error for further handling
+        throw error;
     }
 };
-
-// Sign in the user and confirm the company name
+// sign in a user
 export const signInUser = async (email, password, companyId) => {
     try {
         const userCredential = await signInWithEmailAndPassword(
@@ -75,7 +68,6 @@ export const signInUser = async (email, password, companyId) => {
         );
         const user = userCredential.user;
 
-        // Retrieve user document from Firestore
         const userDocRef = doc(db, `Company/${companyId}/Employees`, user.uid);
         const userDoc = await getDoc(userDocRef);
 
@@ -83,19 +75,16 @@ export const signInUser = async (email, password, companyId) => {
             throw new Error('No user found for the given company.');
         }
 
-        // Check if the company name matches (not sure why necessary)
         const userData = userDoc.data();
         console.log('Sign in successful');
-        return userData; // Return user data for further use
+        return userData;
     } catch (error) {
         console.error('Error signing in:', error);
-        throw error; // Throw the error to be handled in the UI
+        throw error;
     }
 };
-
+// send verification code
 export const sendVerificationCode = async phoneNumber => {
-    // Pete
-    // auth.settings.appVerificationDisabledForTesting = true;
     if (!phoneNumber) {
         console.error('Please enter a phone number.');
         return;
@@ -115,12 +104,11 @@ export const sendVerificationCode = async phoneNumber => {
         return '';
     }
 };
-
+// phone verification 
 export const verifyAndUpdatePhoneNumber = async (
     verificationCode,
     verificationId,
 ) => {
-    // Pete
     if (!verificationCode || !verificationId) {
         console.error('set OTP!');
         return;
@@ -145,9 +133,8 @@ export const verifyAndUpdatePhoneNumber = async (
         console.error('Error verifying OTP:', error);
     }
 };
-
+// reset the password
 export const resetPassword = async email => {
-    // Pete
     try {
         const response = await fetch('/api/resetPass', {
             method: 'POST',
@@ -170,9 +157,8 @@ export const resetPassword = async email => {
         console.error('Error reseting password');
     }
 };
-
+// change the display name
 export const changeDisplayName = async newDisplayName => {
-    // Pete
     const user = auth.currentUser;
     try {
         user.updateProfile({
@@ -194,7 +180,7 @@ export const changeDisplayName = async newDisplayName => {
         console.error('Error changing name: ', error);
     }
 };
-
+// logout user
 export const logoutUser = async () => {
     try {
         await signOut(auth);
@@ -203,7 +189,7 @@ export const logoutUser = async () => {
         console.error('Error signing out: ', error);
     }
 };
-
+// function to get the employee information
 export const getEmployeeProfile = async uid => {
     try {
         const employeeRef = doc(
@@ -239,18 +225,18 @@ export const getEmployeeProfile = async uid => {
 /// fast get departments
 export const getUserDepartmentsNew = async userData => {
     try {
-        const departmentRefs = userData.departments; // List of department references
+        const departmentRefs = userData.departments;
         const departmentNames = [];
 
         for (const ref of departmentRefs) {
             const departmentSnap = await getDoc(ref);
             if (departmentSnap.exists()) {
                 const departmentData = departmentSnap.data();
-                departmentNames.push(departmentData.name); // Assuming department documents have a 'name' field
+                departmentNames.push(departmentData.name);
             }
         }
         console.log(departmentNames);
-        return departmentNames; // List of department names
+        return departmentNames;
     } catch (error) {
         console.error('Error fetching departments for user:', error);
         throw error;

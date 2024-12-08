@@ -6,7 +6,6 @@ import {auth, db} from '@/lib/firebaseClient';
 import {useRouter} from 'next/navigation';
 import {doc, getDoc} from 'firebase/firestore';
 
-// Mock Firebase and Next.js dependencies
 jest.mock('@/lib/firebaseClient', () => ({
     auth: {
         onAuthStateChanged: jest.fn(),
@@ -30,7 +29,6 @@ describe('Home Page', () => {
     });
 
     test('redirects authenticated user to department URL', async () => {
-        // Mock Firebase auth to return a user
         const mockUser = {
             getIdTokenResult: jest
                 .fn()
@@ -40,7 +38,6 @@ describe('Home Page', () => {
             callback(mockUser),
         );
 
-        // Mock Firestore document calls
         const mockDepartmentRef = {id: 'dep123'};
         const mockEmployeeSnap = {
             exists: () => true,
@@ -48,8 +45,8 @@ describe('Home Page', () => {
         };
         const mockDepSnap = {exists: () => true, get: () => 'department-url'};
         (getDoc as jest.Mock)
-            .mockResolvedValueOnce(mockEmployeeSnap) // First call for Employee document
-            .mockResolvedValueOnce(mockDepSnap); // Second call for Department document
+            .mockResolvedValueOnce(mockEmployeeSnap)
+            .mockResolvedValueOnce(mockDepSnap);
 
         render(<Home />);
         await waitFor(() =>
@@ -67,8 +64,7 @@ describe('Home Page', () => {
             callback(mockUser),
         );
 
-        // Mock Firestore document calls
-        const mockEmployeeSnap = {exists: () => true, get: () => [{}]}; // No department URL found
+        const mockEmployeeSnap = {exists: () => true, get: () => [{}]};
         (getDoc as jest.Mock).mockResolvedValueOnce(mockEmployeeSnap);
 
         render(<Home />);
@@ -79,7 +75,7 @@ describe('Home Page', () => {
     test('redirects unauthenticated user to /workplaces', async () => {
         (auth.onAuthStateChanged as jest.Mock).mockImplementation(callback =>
             callback(null),
-        ); // No user (unauthenticated)
+        );
 
         render(<Home />);
         await waitFor(() =>

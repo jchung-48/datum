@@ -19,15 +19,14 @@
     height: 35px;
     width: 35px;
 }
-/* styles.modules.css */
 
 .container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full height to center content vertically */
-    text-align: center; /* Center text */
+    height: 100vh;
+    text-align: center;
 }
 
 .title {

@@ -7,11 +7,10 @@ import {
     CollectionReference,
     QueryDocumentSnapshot,
 } from 'firebase/firestore';
-import {db} from '@/lib/firebaseClient'; // Adjust import path if necessary
+import {db} from '@/lib/firebaseClient';
 import styles from './searchBarAI.module.css';
 import {FileData, SummarySearchResult, SearchBarAIProps} from '../../types';
 
-// Debounce function to limit search calls
 const debounce = (func: (...args: any[]) => void, delay: number) => {
     let timer: NodeJS.Timeout;
     return (...args: any[]) => {
@@ -91,7 +90,6 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
                         );
                     }
                 } else {
-                    // Subpaths are provided
                     const collectionPathSegments = [
                         'Company',
                         companyId,
@@ -123,7 +121,6 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
         setResults(searchResults);
     };
 
-    // Helper function to fetch and filter documents
     const fetchAndFilterDocs = async (
         collectionRef: CollectionReference<FileData>,
         searchResults: SummarySearchResult[],
@@ -134,18 +131,16 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
         docsSnap.forEach((doc: QueryDocumentSnapshot<FileData>) => {
             const data = doc.data();
 
-            // Use fileName instead of name
             const name = data.fileName?.toLowerCase();
 
-            // Ensure name is defined before trying to use it
             if (!name) return;
 
             const matches = queryTextSplit.every(word => name.includes(word));
 
             if (matches) {
                 searchResults.push({
-                    name: data.fileName, // Use fileName for displaying
-                    downloadURL: data.download, // Use download field for URL
+                    name: data.fileName,
+                    downloadURL: data.download,
                     author: data.userDisplayName,
                     uploadDate: data.uploadTimeStamp.toString(),
                     tags: data.tags,
@@ -154,7 +149,6 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
         });
     };
 
-    // Debounced version of handleSearch with a 500ms delay
     const debouncedSearch = useCallback(debounce(handleSearch, 500), [
         queryText,
         paths,

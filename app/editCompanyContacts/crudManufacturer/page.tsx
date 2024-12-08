@@ -295,7 +295,6 @@ const AddOrEditManufacturer = () => {
                     </div>
                 )}
 
-                {/* Manufacturer Form Fields */}
                 {(isNewManufacturer || selectedManufacturerId) && (
                     <>
                         <div className={styles.inputGroup}>
@@ -357,7 +356,6 @@ const AddOrEditManufacturer = () => {
                             </div>
                         </div>
 
-                        {/* Contact Management */}
                         <h3>Contacts</h3>
                         <table className={styles.contactTable}>
                             <thead>
@@ -384,7 +382,6 @@ const AddOrEditManufacturer = () => {
                             </tbody>
                         </table>
 
-                        {/* Contact Form Fields */}
                         <div className={styles.inputGroup}>
                             <div>
                                 <input
@@ -437,7 +434,6 @@ const AddOrEditManufacturer = () => {
                             </button>
                         </div>
 
-                        {/* Submit Buttons */}
                         <div className={styles.actionButtons}>
                             <button
                                 className={styles.save}

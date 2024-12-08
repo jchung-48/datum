@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import {FileList} from '@/app/Utilities/ListFiles/listFiles';
 import {FileListProps} from '@/app/types';
 
-// Mock Firebase functions
 jest.mock('firebase/firestore', () => ({
     collection: jest.fn(),
     getDocs: jest.fn(),
@@ -34,7 +33,7 @@ describe('FileList Component', () => {
     });
 
     it('renders error message when loading fails', async () => {
-        jest.spyOn(console, 'error').mockImplementation(() => {}); // Suppress console error output
+        jest.spyOn(console, 'error').mockImplementation(() => {});
         render(<FileList {...mockProps} />);
         expect(
             await screen.findByText('Failed to load mock department files.'),
