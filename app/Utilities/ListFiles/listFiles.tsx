@@ -33,9 +33,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     const [sortField, setSortField] = useState<string>('File Name');
     const [sortDirection, setSortDirection] = useState<string>('/images/asc.png');
     const [isAscending, setIsAscending] = useState<boolean>(true);
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const [showLeftButton, setShowLeftButton] = useState(false);
-    const [showRightButton, setShowRightButton] = useState(false);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -272,39 +269,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         return canvas.toDataURL();
     };
 
-    useEffect(() => {
-        const updateScrollButtons = () => {
-            if (scrollRef.current) {
-                const { scrollLeft, scrollWidth, clientWidth } =
-                    scrollRef.current;
-
-                setShowLeftButton(scrollLeft > 0);
-                setShowRightButton(scrollLeft + clientWidth < scrollWidth);
-            }
-        };
-
-        updateScrollButtons();
-
-        const ref = scrollRef.current;
-        ref?.addEventListener('scroll', updateScrollButtons);
-        window.addEventListener('resize', updateScrollButtons);
-
-        return () => {
-            ref?.removeEventListener('scroll', updateScrollButtons);
-            window.removeEventListener('resize', updateScrollButtons);
-        };
-    }, [filteredFiles]);
-
-    const handleScroll = (direction: 'left' | 'right') => {
-        if (scrollRef.current) {
-            const scrollAmount = direction === 'left' ? -200 : 200;
-            scrollRef.current.scrollBy({
-                left: scrollAmount,
-                behavior: 'smooth',
-            });
-        }
-    };
-
     const handleFileSelect = (fileId: string) => {
         const newSelectedFiles = new Set(selectedFiles);
         if (newSelectedFiles.has(fileId)) {
@@ -448,43 +412,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                 />
             </div>
 
-            {display === 'horizontal' ? (
-                <div className={styles.scrollContainer}>
-                    {showLeftButton && (
-                        <button
-                            className={`${styles.scrollButton} ${styles.left}`}
-                            onClick={() => handleScroll('left')}
-                        >
-                            &larr;
-                        </button>
-                    )}
-
-                    <div className={styles.fileItemsHorizontal} ref={scrollRef}>
-                        {filteredFiles.length === 0 ? (
-                            <p>No files available.</p>
-                        ) : (
-                            filteredFiles.map(file => (
-                                <FileCard
-                                    key={file.id}
-                                    file={file}
-                                    isSelected={selectedFiles.has(file.id)}
-                                    currentUserUid={currentUserUid}
-                                    onSelect={handleFileSelect}
-                                />
-                            ))
-                        )}
-                    </div>
-
-                    {showRightButton && (
-                        <button
-                            className={`${styles.scrollButton} ${styles.right}`}
-                            onClick={() => handleScroll('right')}
-                        >
-                            &rarr;
-                        </button>
-                    )}
-                </div>
-            ) : display === 'grid' ? (
+            {display === 'grid' ? (
                 <div className={styles.fileGrid}>
                     {filteredFiles.length === 0 ? (
                         <p>No files available.</p>

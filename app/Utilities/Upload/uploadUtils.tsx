@@ -158,7 +158,6 @@ export const handleFileDelete = async (
 ): Promise<void> => {
     try {
         const fileRef = ref(storage, fileFullPath);
-        await deleteObject(fileRef);
 
         const {
             collectionType,
@@ -210,6 +209,8 @@ export const handleFileDelete = async (
         } else {
             throw new Error('Invalid Firestore path provided.');
         }
+
+        await deleteObject(fileRef);
 
         console.log(`File deleted from Storage and Firestore: ${fileFullPath}`);
     } catch (error) {
