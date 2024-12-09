@@ -61,7 +61,7 @@ describe('createUser Page', () => {
         );
 
         const departmentOptions = screen.getAllByRole('option');
-        expect(departmentOptions).toHaveLength(3); // Including the "Select a Department" placeholder
+        expect(departmentOptions).toHaveLength(3);
         expect(departmentOptions[1]).toHaveTextContent('HR');
         expect(departmentOptions[2]).toHaveTextContent('Engineering');
     });
