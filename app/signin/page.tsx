@@ -80,14 +80,6 @@ const Page = () => {
         }, 3000);
     };
 
-    const handlePassReset = async () => {
-        if (email) {
-            resetPassword(email);
-        } else {
-            alert('Please enter an email in order to reset your password!');
-        }
-    };
-
     return (
         <div className={styles.pageContainer}>
             <div className={styles.topLeftCircle}></div>

@@ -60,7 +60,7 @@ body {
     overflow-x: hidden;
 }
 
-body {
+body { /* backgrounds */
     color: var(--foreground);
     background-color: var(--background);
     background-image: linear-gradient(to top, #1f3b5385, rgba(0, 0, 0, 0) 50%),

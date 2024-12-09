@@ -1,4 +1,4 @@
-    .circleButton {
+.circleButton {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -99,15 +99,15 @@
 
 .contentDisplay {
     padding: 15px;
-    background-color: #f9f9f9; /* Light background for better readability */
-    border: 1px solid #ddd;    /* Subtle border to distinguish the area */
-    border-radius: 4px;        /* Rounded corners */
-    margin-top: 10px;          /* Space above the content */
-    max-height: 300px;         /* Adjust as needed for your design */
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;   
+    border-radius: 4px;       
+    margin-top: 10px;         
+    max-height: 300px;        
     max-width: 380px;
-    overflow-y: auto;          /* Enable vertical scrolling if content overflows */
-    box-sizing: border-box;    /* Ensure padding and borders are included in the total width and height */
-    flex-grow: 1;              /* Allow the content area to expand and take available space */
+    overflow-y: auto;         
+    box-sizing: border-box;   
+    flex-grow: 1;             
     margin-bottom: 10px;
     color: black;
     position: relative;        
@@ -150,29 +150,29 @@
 
 .inputArea {
     display: flex;
-    align-items: center; /* Align items in the center */
-    justify-content: space-between; /* Adjust spacing */
-    gap: 10px; /* Add space between input and button */
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     width: 100%;
     padding: 0; 
     box-sizing: border-box;
 }
 
-.chatInput,
-.sharedInput {
-    flex: 1; /* Let the input take remaining space */
-    padding: 6px; /* Match padding with Summarize input */
+.chatInput {
+    flex: 1;
+    padding: 6px;
     font-size: 14px;
     color: black;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Include padding and border in width */
+    box-sizing: border-box;
     height: 38px;
+    font-family: "Darker Grotesque SemiBold", sans-serif;
 }
 
 .actionButton {
-    padding: 8px 12px; /* Match Summarize button padding */
+    padding: 8px 12px;
     background-color: #627D9F;
     color: #ffffff;
     border: none;
@@ -181,9 +181,9 @@
     font-size: 14px;
     transition: background-color 0.3s;
     width: auto;
-    height: 38px; /* Ensure it matches the input height */
-    box-sizing: border-box; /* Include border and padding in width */
-    display: flex; /* Center content */
+    height: 38px;
+    box-sizing: border-box;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -201,15 +201,15 @@
 
 .contentDisplay {
     padding: 15px;
-    background-color: #f9f9f9; /* Light background for better readability */
-    border: 1px solid #ddd;    /* Subtle border to distinguish the area */
-    border-radius: 4px;        /* Rounded corners */
-    margin-top: 10px;          /* Space above the content */
-    max-height: 300px;         /* Adjust as needed for your design */
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;  
+    border-radius: 4px;      
+    margin-top: 10px;       
+    max-height: 300px;       
     max-width: 380px;
-    overflow-y: auto;          /* Enable vertical scrolling if content overflows */
-    box-sizing: border-box;    /* Ensure padding and borders are included in the total width and height */
-    flex-grow: 1;              /* Allow the content area to expand and take available space */
+    overflow-y: auto;        
+    box-sizing: border-box;  
+    flex-grow: 1;            
     margin-bottom: 10px;
     color: black;
     position: relative;        
