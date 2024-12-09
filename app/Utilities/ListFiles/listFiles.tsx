@@ -633,7 +633,7 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                             e.stopPropagation();
                                         }}
                                     >
-                                        {currentUserUid === file.uploadedBy && (
+                                        {(currentUserUid === file.uploadedBy || isAdmin)&& (
                                             <button
                                                 className={styles.deleteButton}
                                                 onClick={e => {
