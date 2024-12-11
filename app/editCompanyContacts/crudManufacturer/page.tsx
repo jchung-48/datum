@@ -66,6 +66,14 @@ const AddOrEditManufacturer = () => {
         }
     }, [selectedCompanyId]);
 
+    /**
+     * handleSelectManufacturer
+     *
+     * @param {string} manufacturerId - The ID of the manufacturer to select or 'new' for a new manufacturer.
+     * @returns {void} - Does not return a value, but updates selected manufacturer.
+     * 
+     * Handles selecting a manufacturer or initializing data for a new manufacturer.
+     */
     const handleSelectManufacturer = (manufacturerId: string) => {
         if (manufacturerId === 'new') {
             setManufacturerData({
@@ -90,6 +98,14 @@ const AddOrEditManufacturer = () => {
         }
     };
 
+    /**
+     * handleEditContact
+     *
+     * @param {number} index - The index of the contact to edit.
+     * @returns {void} This function does not return anything.
+     * 
+     * Handles editing a contact's details from the manufacturer data.
+     */
     const handleEditContact = (index: number) => {
         const contact = manufacturerData.contacts[index];
         setContactName(contact.name);
@@ -99,6 +115,13 @@ const AddOrEditManufacturer = () => {
         setEditingContactIndex(index);
     };
 
+    /**
+     * handleContactAddOrEdit
+     *
+     * @returns {void} - Does not return a value, updates current contact.
+     * 
+     * Calls handleAddOrEditContact with manufacturer specified, and then resets the form.
+     */
     const handleContactAddOrEdit = () => {
         const updatedContacts = handleAddOrEditContact(
             manufacturerData.contacts,
@@ -119,6 +142,13 @@ const AddOrEditManufacturer = () => {
         setContactRole('');
     };
 
+    /**
+     * handleContactDelete
+     *
+     * @returns {void} - Does not return a value, deletes current contact.
+     * 
+     * Calls handleDeleteContact with manufacturer specified, and then resets the form.
+     */
     const handleContactDelete = (index: number) => {
         const updatedContacts = handleDeleteContact(
             manufacturerData.contacts,
@@ -127,6 +157,14 @@ const AddOrEditManufacturer = () => {
         setManufacturerData({...manufacturerData, contacts: updatedContacts});
     };
 
+    /**
+     * handleSubmit
+     * 
+     * @returns - Does not return a value, updates contact list.
+     * 
+     * Handler for submission of the add/edit form. Runs checks for duplicate information
+     * before updating the contact entry list.
+     */
     const handleSubmit = async () => {
         if (!selectedCompanyId) {
             alert('Please select a company');
@@ -179,6 +217,13 @@ const AddOrEditManufacturer = () => {
         }
     };
 
+    /**
+     * handleDeleteManufacturer
+     *
+     * @returns {void} Does not return a value, deletes current manufacturer.
+     * 
+     * Deletes the selected manufacturer from Firestore and resets the manufacturer data.
+     */
     const handleDeleteManufacturer = async () => {
         if (!selectedManufacturerId) return;
         try {

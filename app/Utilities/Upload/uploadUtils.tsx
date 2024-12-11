@@ -9,6 +9,16 @@ import {doc, setDoc, getDoc, deleteDoc, Timestamp} from 'firebase/firestore';
 import {storage, db, auth} from '@/lib/firebaseClient';
 import {FirestorePath} from '@/app/types';
 
+/**
+ * uploadFileToStorage
+ * 
+ * @param {File} file - The file to be uploaded to storage.
+ * @param {string} storagePath - The path in the storage where the file will be uploaded.
+ * @returns {Promise<string>} - A promise resolving to the download URL of the uploaded file.
+ * 
+ * Uploads a file to Firebase Storage, handling cases where the file already exists and prompting 
+ * the user to confirm replacement.
+ */
 export const uploadFileToStorage = async (
     file: File,
     storagePath: string,
@@ -66,6 +76,18 @@ export const uploadFileToStorage = async (
     });
 };
 
+/**
+ * updateFirestore
+ * 
+ * @param {FirestorePath} firestorePath - The path where the file will be stored in Firestore.
+ * @param {string} downloadURL - The URL of the uploaded file.
+ * @param {string} fileName - The name of the file to be stored in Firestore.
+ * @param {string} storagePath - The path of the file in Firebase Storage.
+ * @returns {Promise<void>} - A promise that resolves once the file has been added to Firestore.
+ * 
+ * Updates Firestore with file metadata based on the provided Firestore path. Handles different
+ * collection types such as 'Departments', 'Buyers', and 'Manufacturers'.
+ */
 export const updateFirestore = async (
     firestorePath: FirestorePath,
     downloadURL: string,
@@ -152,6 +174,68 @@ export const updateFirestore = async (
     console.log(`File added to Firestore: ${fileName}`);
 };
 
+/**
+ * getFirestoreRef
+ * 
+ * @param {FirestorePath} firestorePath - The Firestore path containing the collection and document details.
+ * @param {string} documentId - The ID of the document to retrieve a reference for.
+ * @returns {DocumentReference} - A Firestore document reference for the specified collection and document.
+ * 
+ * Returns a Firestore document reference based on the provided Firestore path and document ID. 
+ * Supports 'Departments', 'Buyers', and 'Manufacturers' collection types with dynamic collection 
+ * names.
+ */
+const getFirestoreRef = (
+    firestorePath: FirestorePath,
+    documentId: string,
+) => {
+    if (firestorePath.collectionType === 'Departments' && firestorePath.departmentId) {
+        if (!firestorePath.collectionName) firestorePath.collectionName = 'files';
+        return doc(
+            db,
+            'Company',
+            firestorePath.companyId,
+            'Departments',
+            firestorePath.departmentId,
+            firestorePath.collectionName,
+            documentId,
+        );
+    } else if (firestorePath.collectionType === 'Buyers' && firestorePath.buyerId) {
+        if (!firestorePath.collectionName) firestorePath.collectionName = 'Quotes';
+        return doc(
+            db,
+            'Company',
+            firestorePath.companyId,
+            'Buyers',
+            firestorePath.buyerId,
+            'Quotes',
+            documentId,
+        );
+    } else if (firestorePath.collectionType === 'Manufacturers' && firestorePath.manufacturerId) {
+        if (!firestorePath.collectionName) firestorePath.collectionName = 'Products';
+        return doc(
+            db,
+            'Company',
+            firestorePath.companyId,
+            'Manufacturers',
+            firestorePath.manufacturerId,
+            'Products',
+            documentId,
+        );
+    } else {
+        throw new Error('Invalid Firestore path provided.');
+    }
+};
+
+/**
+ * handleFileDelete
+ * 
+ * @param {string} fileFullPath - The full path of the file in Firebase Storage to be deleted.
+ * @param {FirestorePath} firestorePath - The Firestore path containing the collection and document details for deletion.
+ * @returns {Promise<void>} - A promise that resolves once the file has been deleted from both Firestore and Storage.
+ * 
+ * Deletes a file from Firebase Storage and Firestore based on the provided file path and Firestore path.
+ */
 export const handleFileDelete = async (
     fileFullPath: string,
     firestorePath: FirestorePath,
@@ -159,57 +243,14 @@ export const handleFileDelete = async (
     try {
         const fileRef = ref(storage, fileFullPath);
 
-        const {
-            collectionType,
-            companyId,
-            departmentId,
-            collectionName,
-            buyerId,
-            manufacturerId,
-        } = firestorePath;
-
         const fileName = fileFullPath.split('/').pop()!;
 
-        if (collectionType === 'Departments' && departmentId) {
-            const collectionNameForRef = collectionName
-                ? collectionName
-                : 'files';
-            const fileDocRef = doc(
-                db,
-                'Company',
-                companyId,
-                'Departments',
-                departmentId,
-                collectionNameForRef,
-                fileName,
-            );
-            await deleteDoc(fileDocRef);
-        } else if (collectionType === 'Buyers' && buyerId) {
-            const fileDocRef = doc(
-                db,
-                'Company',
-                companyId,
-                'Buyers',
-                buyerId,
-                'Quotes',
-                fileName,
-            );
-            await deleteDoc(fileDocRef);
-        } else if (collectionType === 'Manufacturers' && manufacturerId) {
-            const fileDocRef = doc(
-                db,
-                'Company',
-                companyId,
-                'Manufacturers',
-                manufacturerId,
-                'Products',
-                fileName,
-            );
-            await deleteDoc(fileDocRef);
-        } else {
-            throw new Error('Invalid Firestore path provided.');
-        }
+        const fileDocRef = getFirestoreRef(
+            firestorePath,
+            fileName,
+        );
 
+        await deleteDoc(fileDocRef);
         await deleteObject(fileRef);
 
         console.log(`File deleted from Storage and Firestore: ${fileFullPath}`);
@@ -219,53 +260,18 @@ export const handleFileDelete = async (
     }
 };
 
-const getFirestoreRef = (
-    collectionType: 'Departments' | 'Buyers' | 'Manufacturers',
-    companyId: string,
-    documentId: string,
-    departmentId?: string,
-    buyerId?: string,
-    manufacturerId?: string,
-    collectionName?: string,
-) => {
-    if (collectionType === 'Departments' && departmentId) {
-        if (!collectionName) collectionName = 'files';
-        return doc(
-            db,
-            'Company',
-            companyId,
-            'Departments',
-            departmentId,
-            collectionName,
-            documentId,
-        );
-    } else if (collectionType === 'Buyers' && buyerId) {
-        if (!collectionName) collectionName = 'Quotes';
-        return doc(
-            db,
-            'Company',
-            companyId,
-            'Buyers',
-            buyerId,
-            collectionName,
-            documentId,
-        );
-    } else if (collectionType === 'Manufacturers' && manufacturerId) {
-        if (!collectionName) collectionName = 'Products';
-        return doc(
-            db,
-            'Company',
-            companyId,
-            'Manufacturers',
-            manufacturerId,
-            collectionName,
-            documentId,
-        );
-    } else {
-        throw new Error('Invalid Firestore path provided.');
-    }
-};
-
+/**
+ * moveDocument
+ * 
+ * @param sourcePath - The source Firestore path for the document.
+ * @param destinationPath - The destination Firestore path for the document.
+ * @param documentId - The ID of the document to move or copy.
+ * @param copy - A flag indicating whether to copy the document (defaults to false).
+ * 
+ * @returns {Promise<void>} - A promise that resolves when the document has been moved or copied.
+ * 
+ * Moves or copies a document from one Firestore location to another, including the associated file in storage.
+ */
 export const moveDocument = async (
     sourcePath: FirestorePath,
     destinationPath: FirestorePath,
@@ -274,13 +280,8 @@ export const moveDocument = async (
 ): Promise<void> => {
     try {
         const sourceDocRef = getFirestoreRef(
-            sourcePath.collectionType,
-            sourcePath.companyId,
+            sourcePath,
             documentId,
-            sourcePath.departmentId,
-            sourcePath.buyerId,
-            sourcePath.manufacturerId,
-            sourcePath.collectionName,
         );
         console.log(sourceDocRef);
         const docSnapshot = await getDoc(sourceDocRef);
@@ -367,13 +368,8 @@ export const moveDocument = async (
         }
 
         const destinationDocRef = getFirestoreRef(
-            destinationPath.collectionType,
-            destinationPath.companyId,
+            destinationPath,
             documentId,
-            destinationPath.departmentId,
-            destinationPath.buyerId,
-            destinationPath.manufacturerId,
-            destinationPath.collectionName,
         );
         await setDoc(destinationDocRef, documentData);
 
