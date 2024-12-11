@@ -48,6 +48,20 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
         }
     };
 
+
+    /**
+     * handleSearch
+     * 
+     * @param {void} None
+     * @returns {Promise<void>} - Returns a promise that resolves when the search operation is complete.
+     * 
+     * Handles the search operation by querying the database based on the provided query text.
+     * It splits the query text into individual words, iterates through the specified paths,
+     * and fetches and filters documents from the database collections that match the query.
+     * Updates the search results and loading state accordingly.
+     * 
+     * @throws {Error} - Throws an error if there is an issue retrieving search results.
+     */
     const handleSearch = async () => {
         if (!queryText) {
             setResults([]);
@@ -124,6 +138,7 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
         setLoading(false);
     };
 
+    
     const fetchAndFilterDocs = async (
         collectionRef: CollectionReference<FileData>,
         searchResults: SearchResult[],

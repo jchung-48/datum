@@ -36,6 +36,19 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
         setInputValue(e.target.value);
     };
 
+    const handleFileSelect = (file: SummarySearchResult) => {
+        setFileSelectedForSummary(file);
+        setSummaryContent(null);
+    };
+
+    /**
+     * extractTextFromPdf
+     * 
+     * @param {ArrayBuffer} arrayBuffer - PDF file data as ArrayBuffer
+     * @returns {Promise<string>} - Extracted text content from the PDF
+     * 
+     * Extracts text content from a PDF file using PDF.js
+     */
     const extractTextFromPdf = async (
         arrayBuffer: ArrayBuffer,
     ): Promise<string> => {
@@ -50,11 +63,14 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
         return textContent;
     };
 
-    const handleFileSelect = (file: SummarySearchResult) => {
-        setFileSelectedForSummary(file);
-        setSummaryContent(null);
-    };
-
+    /**
+     * handleChat
+     * 
+     * @param {string} [text] - Optional text input for chat
+     * @returns {Promise<void>}
+     * 
+     * Processes chat input and fetches AI response
+     */
     const handleChat = async (text?: string) => {
         const inputText = text?.trim() || inputValue.trim();
 
@@ -97,6 +113,14 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
         }
     };
 
+    /**
+     * handleSummarizeClick
+     * 
+     * @param {void} None
+     * @returns {Promise<void>}
+     * 
+     * Processes the selected PDF file and generates a summary using the AI service
+     */
     const handleSummarizeClick = async () => {
         if (!fileSelectedForSummary) {
             alert('Please select a file to summarize.');

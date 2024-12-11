@@ -47,6 +47,19 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
         }
     };
 
+    /**
+     * handleSearch
+     * 
+     * @param {void} None
+     * @returns {Promise<void>} - Returns a promise that resolves when the search operation is complete.
+     * 
+     * Handles the search operation by querying the database based on the provided query text.
+     * It splits the query text into individual words, iterates through the specified paths,
+     * and fetches and filters documents from the database collections that match the query.
+     * Updates the search results and loading state accordingly.
+     * 
+     * @throws {Error} - Throws an error if there is an issue retrieving search results.
+     */
     const handleSearch = async () => {
         if (!queryText) {
             setResults([]);
@@ -121,6 +134,17 @@ const SearchBarAI: React.FC<SearchBarAIProps> = ({paths, onFileSelect}) => {
         setResults(searchResults);
     };
 
+    /**
+     * fetchAndFilterDocs
+     * 
+     * @param {CollectionReference<FileData>} collectionRef - Reference to the Firestore collection containing the documents.
+     * @param {SearchResult[]} searchResults - Array to store the search results.
+     * @param {string[]} queryTextSplit - Array of words to search for in the document names.
+     * @returns {Promise<void>} - A promise that resolves when the documents have been fetched and filtered.
+     * 
+     * Fetches documents from the specified Firestore collection, filters them based on the query text,
+     * and adds matching documents to the search results array.
+     */
     const fetchAndFilterDocs = async (
         collectionRef: CollectionReference<FileData>,
         searchResults: SummarySearchResult[],
