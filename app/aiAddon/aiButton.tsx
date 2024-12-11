@@ -55,12 +55,13 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
         setFileSelectedForSummary(file);
         setSummaryContent(null);
     };
-
+    
+    // Handle chat request using API route and calling flow to generate response
     const handleChat = async (text?: string) => {
         const inputText = text?.trim() || inputValue.trim();
 
         if (!inputText) return;
-
+        // Add user messages to chat history
         setChatHistory(prev => [...prev, {sender: 'user', message: inputText}]);
         setInputValue('');
         setChatLoading(true);
@@ -73,7 +74,7 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
             });
 
             const data = await response.json();
-
+            // Add reposnse to chat history
             setChatHistory(prev => {
                 const newHistory = [
                     ...prev,
@@ -177,7 +178,8 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
             window.removeEventListener('keyup', handleKeyUp);
         };
     }, [isCardVisible]);
-
+    
+    // Scrolling effect
     useEffect(() => {
         if (chatHistoryRef.current) {
             chatHistoryRef.current.scrollTop =

@@ -4,14 +4,17 @@ import { defineFlow } from "@genkit-ai/flow";
 import * as z from 'zod';
 import '../genkitConfig';
 
+// Initialize retrieval from vector stores that contain text embeddings
 export const kbRetriever = devLocalRetrieverRef('knowledgeBase');
+
+// Flow retrieves relevant documents and generates a response given user query and prompt
 export const kbQAFlow = defineFlow(
     { name: 'kbQAFlow', inputSchema: z.string(), outputSchema: z.string()},
     async (input: string) => {
       const docs = await retrieve({
         retriever: kbRetriever,
         query: input,
-        options: { k:3 },
+        options: { k:3 }, // # of documents to retrieve
       });
   
       const llmResponse = await generate({
@@ -33,7 +36,7 @@ If information is not specified, use relevant context to generate a response.
 Question: ${input}
   `,
         context: docs,
-        config: {temperature: 0.5},
+        config: {temperature: 0.5}, // Control randomness of response
       });
   
       const output = llmResponse.text();
