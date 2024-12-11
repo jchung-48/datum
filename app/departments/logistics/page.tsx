@@ -12,16 +12,19 @@ import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 const LogisticsDepartment: React.FC = () => {
     const styles = {...deptStyles};
 
+    // hardcoded ids of firebase collections
     const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
     const DEPARTMENTID = 'KZm56fUOuTobsTRCfknJ';
 
+    // tracks changes to file lists to trigger re-rendering
     const [fileListUpdated, setFileListUpdated] = useState(false);
 
-
+    // toggles state to refresh file lists when files are added/removed
     const updateLists = () => {
         setFileListUpdated(prev => !prev)
     }
 
+    // path for customs files in firebase
     const customsFilesPath = [
         'Company',
         COMPANYID,
@@ -30,6 +33,7 @@ const LogisticsDepartment: React.FC = () => {
         'customsFiles',
     ] as [string, ...string[]];
 
+    // path for financial files in firebase
     const financialFilesPath = [
         'Company',
         COMPANYID,
@@ -38,6 +42,7 @@ const LogisticsDepartment: React.FC = () => {
         'financialFiles',
     ] as [string, ...string[]];
 
+    // path for transportation files in firebase
     const transportationFilesPath = [
         'Company',
         COMPANYID,
@@ -48,9 +53,11 @@ const LogisticsDepartment: React.FC = () => {
 
     return (
         <div className={styles.page}>
+            {/*renders the department header*/}
             <Header department="Logistics" isProfile={false} />
             <div className={styles.body}>
                 <div className={styles.topComponentContainer}>
+                    {/*uploads files to designated collection and updates*/}
                     <UploadComponent
                         companyId={COMPANYID}
                         departmentId={DEPARTMENTID}
@@ -63,11 +70,13 @@ const LogisticsDepartment: React.FC = () => {
                         onUploadSuccess={updateLists}
                     />
                     <div className={styles.search}>
+                        {/*provides a search bar for files*/}
                         <SearchBar paths={['KZm56fUOuTobsTRCfknJ']} />
                     </div>
                 </div>
-
+                
                 <div className={styles.files}>
+                    {/*displays transportation, customs, and financial files*/}
                     <FileTitle title="Transportation Files" />
                     <FileList
                         collectionPath={transportationFilesPath}
@@ -94,6 +103,7 @@ const LogisticsDepartment: React.FC = () => {
                     />
                 </div>
 
+                {/*integrates AI tool*/}
                 <div className={styles.aiFeatures}>
                     <AIButton paths={['KZm56fUOuTobsTRCfknJ']} />
                 </div>
