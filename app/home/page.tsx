@@ -16,7 +16,14 @@ export default function Home() {
     const [userDepartments, setUserDepartments] = useState<string[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
 
-    // maping for each department
+    /**
+ * departmentMapping
+ * 
+ * @type {Object} - Maps department keys to their corresponding unique IDs.
+ * 
+ * Provides a mapping between department names and their unique identifiers
+ * for use in access control and feature toggling.
+ */
     const departmentMapping = {
         qa: 'Eq2IDInbEQB5nI5Ar6Vj',
         hr: 'NpaV1QtwGZ2MDNOGAlXa',
@@ -130,6 +137,15 @@ export default function Home() {
         };
     }, []);
 
+    /**
+ * isDepartmentEnabled
+ * 
+ * @param {keyof typeof departmentMapping} departmentKey - The key representing the department.
+ * @returns {boolean} - Returns true if the department is enabled for the user, otherwise false.
+ * 
+ * Checks whether a specific department is enabled for the user by verifying if 
+ * the department's unique ID exists in the user's assigned departments.
+ */
     const isDepartmentEnabled = (
         departmentKey: keyof typeof departmentMapping,
     ): boolean => {
