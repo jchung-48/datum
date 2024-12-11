@@ -7,6 +7,8 @@ import {
 } from 'firebase/auth';
 import {doc, getDoc, collection, getDocs, updateDoc} from 'firebase/firestore';
 import {auth, db} from '@/lib/firebaseClient.ts';
+
+// get all deparments from the department feild of a company
 export const getDepartments = async companyId => {
     try {
         const departmentsRef = collection(
@@ -26,7 +28,7 @@ export const getDepartments = async companyId => {
         throw error;
     }
 };
-// function on all departments the user is allowed to be in
+// get all the departments from the departments field of a user. these are the users allowed departments
 export const getUserDepartments = async userData => {
     try {
         const departmentRefs = userData.departments;
@@ -40,7 +42,7 @@ export const getUserDepartments = async userData => {
         throw error;
     }
 };
-// funciton to get all companies 
+// funciton to get all companies. just Datum in our case 
 export const getCompanies = async () => {
     try {
         const companiesRef = collection(db, 'Company/');
@@ -57,7 +59,7 @@ export const getCompanies = async () => {
         throw error;
     }
 };
-// sign in a user
+// sign in a user with firebase auth
 export const signInUser = async (email, password, companyId) => {
     try {
         const userCredential = await signInWithEmailAndPassword(
