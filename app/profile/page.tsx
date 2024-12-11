@@ -28,6 +28,8 @@ export default function ProfilePage() {
     const [errorMessage, setErrorMessage] = useState('');
     const [isSignedIn, setIsSignedIn] = useState(false);
     const styles = {...deptStyles};
+
+    //EmployeeData type
     type EmployeeData = {
         name: string;
         companyName: string;
@@ -38,6 +40,7 @@ export default function ProfilePage() {
         departments?: string[];
     };
 
+    // watch is signedin or not
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async user => {
             setIsSignedIn(Boolean(user));
@@ -50,17 +53,20 @@ export default function ProfilePage() {
         router.push('/workplaces');
     };
 
+    // clear error message after time
     useEffect(() => {
         if (errorMessage) {
             const timer = setTimeout(() => {
-                setErrorMessage(''); // Clear error message after 3 seconds
+                setErrorMessage(''); 
             }, 5000);
 
-            return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
+            return () => clearTimeout(timer); 
         }
         return undefined;
     }, [errorMessage]);
 
+
+    // get profile data and departments when authentication state changes
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async user => {
             if (user) {
