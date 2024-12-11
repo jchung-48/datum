@@ -40,7 +40,14 @@ export default function ProfilePage() {
         departments?: string[];
     };
 
-    // watch is signedin or not
+    /**
+ * useEffect for Authentication State Listener
+ * 
+ * This effect sets up an authentication state listener using Firebase's `onAuthStateChanged` method. 
+ * It monitors the authentication state of the current user and updates the `isSignedIn` state 
+ * based on whether a user is signed in or not. The listener is unsubscribed when the component 
+ * unmounts to avoid memory leaks.
+ */
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async user => {
             setIsSignedIn(Boolean(user));
@@ -48,6 +55,16 @@ export default function ProfilePage() {
         return () => unsubscribe();
     }, []);
 
+    /**
+ * handleSignOut
+ * 
+ * @param {void} None
+ * @returns {Promise<void>} - A promise that resolves once the user is signed out and redirected.
+ * 
+ * Signs the user out by calling the `logoutUser` function and then redirects them to the 
+ * '/workplaces' route using the router. Ensures the user session is terminated and navigation 
+ * occurs seamlessly.
+ */
     const handleSignOut = async () => {
         await logoutUser();
         router.push('/workplaces');
@@ -66,7 +83,15 @@ export default function ProfilePage() {
     }, [errorMessage]);
 
 
-    // get profile data and departments when authentication state changes
+    /**
+ * useEffect for Employee Data Fetching
+ * 
+ * This effect sets up an authentication state listener using Firebase's `onAuthStateChanged` method. 
+ * When a user is authenticated, it attempts to fetch the user's profile and department data. 
+ * If successful, the data is stored in state variables (`employeeData` and `departments`). 
+ * If the user is not authenticated or an error occurs during data fetching, appropriate error 
+ * handling is performed. The listener is unsubscribed when the component unmounts to avoid memory leaks.
+ */
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async user => {
             if (user) {
@@ -105,6 +130,16 @@ export default function ProfilePage() {
         return <p>No employee data available.</p>;
     }
 
+    /**
+ * handleVerificationCode
+ * 
+ * @param {void} None
+ * @returns {Promise<void>} - A promise that resolves when the verification ID is successfully set.
+ * 
+ * Sends a verification code to the provided phone number by calling the `sendVerificationCode` function. 
+ * If the verification ID is successfully received, it updates the state variable `verificationId` with 
+ * the received ID for further use in the authentication process.
+ */
     const handleVerificationCode = async () => {
         const verId = await sendVerificationCode(phoneNumber);
         if (verId) {
