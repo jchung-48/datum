@@ -1,10 +1,10 @@
 # Datum
 
 ### Overview
-Datum is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It leverages modern technologies and AI to deliver a centralized, scalable knowledge base for supply-chain companies.
+Datum is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app). It leverages modern technologies and AI to deliver a centralized, scalable knowledge base for global sourcing/supply-chain companies.
 
 ### Who Are We?
-We are Team Datum, a group of developers who created this application after noticing issues within supply-chain companies. We aim to provide a centralized application that optimizes supply-chain operations, reducing the time to share/retrieve important documents. Our AI-powered application summarizes documents and includes a ChatBot feature.
+We are Team Datum, a group of developers who created this application after noticing issues within global sourcing and supply-chain intermediary companies. We aim to provide a centralized application that optimizes company operations, reducing the time to share/retrieve important documents. Our AI-powered application summarizes documents and includes a ChatBot feature.
 
 ### Getting Started
 
