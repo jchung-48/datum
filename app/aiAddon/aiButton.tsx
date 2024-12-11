@@ -6,6 +6,7 @@ import {AiButtonProps, SummarySearchResult} from '../types';
 import ReactMarkdown from 'react-markdown';
 import * as pdfjsLib from 'pdfjs-dist';
 import {SpinnerDiamond} from 'spinners-react';
+import { MdClose } from 'react-icons/md';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
 
@@ -203,7 +204,7 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
                             className={styles.cardCloseButton}
                             onClick={toggleCard}
                         >
-                            ×
+                            <MdClose />
                         </button>
                     </div>
                     <div className={styles.modeToggle}>

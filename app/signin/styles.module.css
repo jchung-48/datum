@@ -1,21 +1,3 @@
-@font-face {
-    font-family: 'Darker Grotesque';
-    src: url('../fonts/DarkerGrotesque-ExtraBold.ttf') format('truetype');
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Darker Grotesque Light';
-    src: url('../fonts/DarkerGrotesque-Light.ttf') format('truetype');
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Darker Grotesque Med';
-    src: url('../fonts/DarkerGrotesque-Medium.ttf') format('truetype');
-    font-style: normal;
-}
-
 .pageContainer {
     background-color: #1f3c53;
     min-height: 100vh;

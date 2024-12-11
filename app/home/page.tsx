@@ -117,11 +117,6 @@ export default function Home() {
         };
     }, []);
 
-    const handleSignOut = async () => {
-        await logoutUser();
-        router.push('/workplaces');
-    };
-
     const isDepartmentEnabled = (
         departmentKey: keyof typeof departmentMapping,
     ): boolean => {

@@ -24,7 +24,6 @@ const companyId = 'mh3VZ5IrZjubXUCZL381';
 const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
     const [queryText, setQueryText] = useState('');
     const [results, setResults] = useState<SearchResult[]>([]);
-    const [loading, setLoading] = useState(false);
     const [isResultsVisible, setIsResultsVisible] = useState(false);
 
     const resultsRef = useRef<HTMLDivElement>(null);
@@ -55,7 +54,6 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
             return;
         }
 
-        setLoading(true);
         const searchResults: SearchResult[] = [];
 
         try {
@@ -121,7 +119,6 @@ const SearchBar: React.FC<SearchBarProps> = ({paths}) => {
         }
 
         setResults(searchResults);
-        setLoading(false);
     };
 
     const fetchAndFilterDocs = async (
