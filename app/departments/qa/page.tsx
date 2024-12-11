@@ -13,16 +13,21 @@ import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 
 const qaDepartment = () => {
     const styles = {...deptStyles, ...qaStyles};
+    
+    // hardcoded ids of firebase collections
     const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
     const DEPARTMENTID = 'Eq2IDInbEQB5nI5Ar6Vj';
     const MANUDEPTID = 'ti7yNByDOzarVXoujOog';
 
+    // tracks changes to file lists to trigger re-rendering
     const [fileListUpdated, setFileListUpdated] = useState(false);
 
+    // toggles state to refresh file lists when files are added/removed
     const updateLists = () => {
         setFileListUpdated(prev => !prev)
     }
 
+    // path for department files in firebase
     const deptFilesPath = [
         'Company',
         COMPANYID,
@@ -31,6 +36,7 @@ const qaDepartment = () => {
         'files',
     ] as [string, ...string[]];
 
+    // path for inbox files in firebase
     const inboxFilesPath = [
         'Company',
         COMPANYID,
@@ -41,9 +47,11 @@ const qaDepartment = () => {
 
     return (
         <div className={styles.page}>
+            {/*renders the department header*/}
             <Header department="Quality Assurance" isProfile={false} />
             <div className={styles.body}>
                 <div className={styles.topComponentContainer}>
+                    {/*uploads files to designated collection and updates*/}
                     <UploadComponent
                         companyId={COMPANYID}
                         departmentId={DEPARTMENTID}
@@ -51,6 +59,7 @@ const qaDepartment = () => {
                         collections={['files']}
                         onUploadSuccess={updateLists}
                     />
+                    {/*provides a search bar for files*/}
                     <SearchBar
                         paths={[
                             'Eq2IDInbEQB5nI5Ar6Vj',
@@ -61,6 +70,7 @@ const qaDepartment = () => {
 
                 <div className={styles.files}>
                     <div className={styles.fileSection}>
+                        {/*displays department, inbox files*/}
                         <FileTitle title="Department Files" />
                         <div className={styles.fileBox}>
                             <FileList
@@ -85,6 +95,7 @@ const qaDepartment = () => {
                         </div>
                     </div>
                 </div>
+                {/*integrates AI tool*/}
                 <AIButton
                     paths={[
                         'Eq2IDInbEQB5nI5Ar6Vj',
