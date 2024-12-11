@@ -17,8 +17,12 @@ import {auth, db} from '@/lib/firebaseClient';
 
 const MerchandisingDepartment = () => {
     const styles = {...deptStyles, ...merchStyles};
+
+    // hardcoded ids of firebase collections
     const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
     const DEPARTMENTID = 'ti7yNByDOzarVXoujOog';
+
+    // state hooks for storing data and UI states
     const [buyers, setBuyers] = useState<Buyer[]>([]);
     const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
     const [fileListUpdated, setFileListUpdated] = useState(false);
@@ -29,6 +33,7 @@ const MerchandisingDepartment = () => {
     >([]);
     const [isAdmin, setIsAdmin] = useState(false);
 
+    // fetching buyers and manufacturers on component mount
     useEffect(() => {
         /**
          * loadBuyersAndManufacturers
@@ -52,7 +57,7 @@ const MerchandisingDepartment = () => {
         loadBuyersAndManufacturers();
     }, []);
 
-    // Paths for the different collections within the department
+    // firebase paths to collections
     const deptFilesPath = [
         'Company',
         COMPANYID,
@@ -69,21 +74,12 @@ const MerchandisingDepartment = () => {
         'records',
     ] as [string, ...string[]];
 
-    // call this to update all file lists
+    // toggles the refresh trigger for file lists
     const updateLists = () => {
         setFileListUpdated(prev => !prev);
     }
 
-    /**
-     * handleCardClick
-     * 
-     * @param type - The type of contact ('Buyer' or 'Manufacturer')
-     * @param id - The unique identifier of the contact
-     * @param name - The name of the contact
-     * @return - Does not return a value. Opens the modal for the selected contact.
-     * 
-     * Sets the path for the contact's files and opens a modal with the contact's details.
-     */
+    // handles click events for contact cards, setting modal state
     const handleCardClick = (
         type: 'Buyer' | 'Manufacturer',
         id: string,
@@ -100,14 +96,7 @@ const MerchandisingDepartment = () => {
         setShowModal(true);
     };
 
-    /**
-     * checkAdminStatus
-     * 
-     * @param uid - The unique identifier of the user
-     * @returns - Does not return a value, sets the state of isAdmin.
-     * 
-     * Checks if the user is an admin by verifying their ID against the list of admins in Firestore.
-     */
+    // checks if the current user is an admin for the company
     const checkAdminStatus = async (uid: string) => {
         try {
             const companyDocRef = doc(db, 'Company', COMPANYID);
@@ -137,6 +126,7 @@ const MerchandisingDepartment = () => {
         }
     };
 
+    // listens for authentication state changes to check admin status
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
@@ -151,10 +141,11 @@ const MerchandisingDepartment = () => {
 
     return (
         <div className="Page">
+            {/*renders the department header*/}
             <Header department="Merchandising" isProfile={false} />
-
             <div className={styles.body}>
                 <div className={styles.topComponentContainer}>
+                    {/*uploads files to designated collection and updates*/}
                     <UploadComponent
                         companyId={COMPANYID}
                         departmentId={DEPARTMENTID}
@@ -163,11 +154,13 @@ const MerchandisingDepartment = () => {
                         onUploadSuccess={updateLists}
                     />
                     <div className={styles.search}>
+                        {/*provides a search bar for files*/}
                         <SearchBar paths={['ti7yNByDOzarVXoujOog']} />
                     </div>
                 </div>
 
                 <div className={styles.files}>
+                    {/*displays transportation, customs, and financial files*/}
                     <FileTitle title="Department Files" />
                     <FileList
                         collectionPath={deptFilesPath}
@@ -297,6 +290,7 @@ const MerchandisingDepartment = () => {
                         </div>
                     </div>
                 )}
+                {/*integrates AI tool*/}
                 <AIButton paths={['ti7yNByDOzarVXoujOog']} />
             </div>
         </div>
