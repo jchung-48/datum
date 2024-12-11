@@ -11,16 +11,20 @@ import FileTitle from '@/app/Utilities/FileTitle/fileTitle';
 
 const hrDepartment: React.FC = () => {
     const styles = {...deptStyles};
+
+    // hardcoded ids of firebase collections
     const COMPANYID = 'mh3VZ5IrZjubXUCZL381';
     const DEPARTMENTID = 'NpaV1QtwGZ2MDNOGAlXa';
 
+    // tracks changes to file lists to trigger re-rendering
     const [fileListUpdated, setFileListUpdated] = useState(false);
 
-
+    // toggles state to refresh file lists when files are added/removed
     const updateLists = () => {
         setFileListUpdated(prev => !prev)
     }
 
+    // path for department files in firebase
     const deptFilesPath = [
         'Company',
         COMPANYID,
@@ -29,6 +33,7 @@ const hrDepartment: React.FC = () => {
         'files',
     ] as [string, ...string[]];
 
+    // path for incident files in firebase
     const incidentFilesPath = [
         'Company',
         COMPANYID,
@@ -39,9 +44,12 @@ const hrDepartment: React.FC = () => {
 
     return (
         <div className={styles.page}>
+            {/*renders the department header*/}
             <Header department="Human Resources" isProfile={false} />
             <div className={styles.body}>
+                {/*displays human resources, department, and incident files*/}
                 <div className={styles.topComponentContainer}>
+                    {/*uploads files to designated collection and updates*/}
                     <UploadComponent
                         companyId={COMPANYID}
                         departmentId={DEPARTMENTID}
@@ -50,6 +58,7 @@ const hrDepartment: React.FC = () => {
                         onUploadSuccess={updateLists}
                     />
                     <div className={styles.search}>
+                        {/*provides a search bar for files*/}
                         <SearchBar paths={['NpaV1QtwGZ2MDNOGAlXa']} />
                     </div>
                 </div>
@@ -71,6 +80,7 @@ const hrDepartment: React.FC = () => {
                         onListUpdate={updateLists}
                     />
                 </div>
+                {/*integrates AI tool*/}
                 <div className={styles.aiFeatures}>
                     <AIButton paths={['NpaV1QtwGZ2MDNOGAlXa']} />
                 </div>
