@@ -17,7 +17,15 @@ const Page = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Handle authentication state change, redirect to either employee's department page or the workplaces page if signed out
+   /**
+ * useEffect for Department Redirection Based on Authentication State
+ * 
+ * This effect sets up an authentication state listener using Firebase's `onAuthStateChanged` method. 
+ * When a user is authenticated, it retrieves the user's company ID and navigates them to their 
+ * department's page based on the department's URL. 
+ * If the user is not authenticated and the `workplaceId` is invalid, it redirects the user to 
+ * the `/workplaces` page for error handling.
+ */
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async user => {
             if (user) {
@@ -60,7 +68,22 @@ const Page = () => {
         return undefined;
     }, [errorMessage]);
 
-    // sign in process
+    /**
+ * handleSignIn
+ * 
+ * @param {void} None
+ * @returns {Promise<void>} - A promise that resolves when the sign-in process completes.
+ * 
+ * Handles the user sign-in process by calling the `signInUser` function with the provided email, 
+ * password, and workplace ID. Upon successful sign-in, it fetches the user's department data 
+ * and navigates the user to their department's URL. If an error occurs, it sets a specific 
+ * error message based on the error type and clears it after a delay.
+ * 
+ * Error Handling:
+ * - "Company name does not match.": Displays a corresponding error message.
+ * - "No user found for the given company.": Displays a corresponding error message.
+ * - Other errors: Displays a generic error message with the error details.
+ */
     const handleSignIn = async () => {
         try {
             const userData = await signInUser(email, password, workplaceId);
