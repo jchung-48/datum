@@ -71,8 +71,8 @@ const Page = () => {
     /**
  * handleSignIn
  * 
- * @param {void} None
- * @returns {Promise<void>} - A promise that resolves when the sign-in process completes.
+ * Inputs: {void} None
+ * Returns: {Promise<void>} - A promise that resolves when the sign-in process completes.
  * 
  * Handles the user sign-in process by calling the `signInUser` function with the provided email, 
  * password, and workplace ID. Upon successful sign-in, it fetches the user's department data 

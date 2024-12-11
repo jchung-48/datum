@@ -11,8 +11,8 @@ import {auth, db} from '@/lib/firebaseClient.ts';
 /**
  * getDepartments
  * 
- * @param {string} companyId - The ID of the company whose departments are to be fetched.
- * @returns {Promise<Array<{ id: string, name: string }>>} - A promise that resolves to an array of department objects, 
+ * Inputs: {string} companyId - The ID of the company whose departments are to be fetched.
+ * Return: {Promise<Array<{ id: string, name: string }>>} - A promise that resolves to an array of department objects, 
  * each containing an `id` and `name`.
  * 
  * Retrieves the list of departments for a specific company by fetching documents 
@@ -43,8 +43,8 @@ export const getDepartments = async companyId => {
 /**
  * getUserDepartments
  * 
- * @param {Object} userData - The user data containing references to departments.
- * @returns {Promise<Object>} - A promise that resolves to the data of the first department.
+ * Inputs: {Object} userData - The user data containing references to departments.
+ * Returns: {Promise<Object>} - A promise that resolves to the data of the first department.
  * 
  * Fetches and returns the data of the first department associated with the user 
  * by retrieving the document reference stored in the user's data. 
@@ -67,8 +67,8 @@ export const getUserDepartments = async userData => {
 /**
  * getCompanies
  * 
- * @param {void} None
- * @returns {Promise<Array<Object>>} - A promise that resolves to an array of companies,
+ * Inputs: {void} None
+ * Returns: {Promise<Array<Object>>} - A promise that resolves to an array of companies,
  * each containing its ID and name.
  * 
  * Retrieves and returns a list of all companies from the database by fetching 
@@ -94,10 +94,11 @@ export const getCompanies = async () => {
 /**
  * signInUser
  * 
- * @param {string} email - The email address of the user attempting to sign in.
- * @param {string} password - The password for the user's account.
- * @param {string} companyId - The ID of the company the user belongs to.
- * @returns {Promise<Object>} - A promise that resolves to the user's data if the sign-in is successful.
+ * Inputs:
+ * {string} email - The email address of the user attempting to sign in.
+ * {string} password - The password for the user's account.
+ * {string} companyId - The ID of the company the user belongs to.
+ * Returns: {Promise<Object>} - A promise that resolves to the user's data if the sign-in is successful.
  * 
  * Authenticates a user with their email and password, retrieves their data 
  * from the corresponding company and employee records in the database, and returns it. 
@@ -134,7 +135,7 @@ export const signInUser = async (email, password, companyId) => {
  * getEmployeeProfile
  * 
  * @param {string} uid - The unique ID of the employee whose profile is being retrieved.
- * @returns {Promise<Object>} - A promise that resolves to an object containing the employee's profile data.
+ * Returns: A promise that resolves to an object containing the employee's profile data.
  * 
  * Fetches and returns the profile details of an employee from the database. 
  * The data is retrieved from the specified 'Employees' collection within the 'Company' 
