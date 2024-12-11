@@ -17,9 +17,11 @@ const Page = () => {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
+    // Handle authentication state change, redirect to either employee's department page or the workplaces page if signed out
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async user => {
             if (user) {
+                // Fetch company ID and navigate the user to their department's page
                 const companyId = (await user.getIdTokenResult()).claims
                     .companyId as string;
                 const employeeRef = doc(
@@ -46,17 +48,19 @@ const Page = () => {
         return () => unsubscribe();
     }, [workplaceId, router]);
 
+    // Clear error message after 3 seconds
     useEffect(() => {
         if (errorMessage) {
             const timer = setTimeout(() => {
-                setErrorMessage(''); // Clear error message after 3 seconds
+                setErrorMessage(''); 
             }, 3000);
 
-            return () => clearTimeout(timer); // Cleanup timeout if component unmounts or error changes
+            return () => clearTimeout(timer); 
         }
         return undefined;
     }, [errorMessage]);
 
+    // sign in process
     const handleSignIn = async () => {
         try {
             const userData = await signInUser(email, password, workplaceId);
