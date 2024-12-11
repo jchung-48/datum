@@ -24,7 +24,16 @@ export default function Home() {
         merchandising: 'ti7yNByDOzarVXoujOog',
     };
 
-    // fetch the company fields of admin employees
+    /**
+ * fetchAdmins
+ * 
+ * @param {void} None
+ * @returns {Function | null} - Returns a function to unsubscribe from the authentication state
+ * observer or null in case of an error.
+ * 
+ * Observes authentication state, retrieves the signed-in user's profile, checks admin status
+ * in the company document, and updates the admin state accordingly.
+ */
     useEffect(() => {
         const fetchAdmins = async () => {
             try {
