@@ -8,7 +8,17 @@ import {
 import {doc, getDoc, collection, getDocs, updateDoc} from 'firebase/firestore';
 import {auth, db} from '@/lib/firebaseClient.ts';
 
-// get all deparments from the department feild of a company
+/**
+ * getDepartments
+ * 
+ * @param {string} companyId - The ID of the company whose departments are to be fetched.
+ * @returns {Promise<Array<{ id: string, name: string }>>} - A promise that resolves to an array of department objects, 
+ * each containing an `id` and `name`.
+ * 
+ * Retrieves the list of departments for a specific company by fetching documents 
+ * from the "Departments" subcollection within the company's Firestore document.
+ * Throws an error if the fetching process fails.
+ */
 export const getDepartments = async companyId => {
     try {
         const departmentsRef = collection(
@@ -28,7 +38,18 @@ export const getDepartments = async companyId => {
         throw error;
     }
 };
-// get all the departments from the departments field of a user. these are the users allowed departments
+
+
+/**
+ * getUserDepartments
+ * 
+ * @param {Object} userData - The user data containing references to departments.
+ * @returns {Promise<Object>} - A promise that resolves to the data of the first department.
+ * 
+ * Fetches and returns the data of the first department associated with the user 
+ * by retrieving the document reference stored in the user's data. 
+ * Logs the department data and throws an error if the operation fails.
+ */
 export const getUserDepartments = async userData => {
     try {
         const departmentRefs = userData.departments;
@@ -42,7 +63,17 @@ export const getUserDepartments = async userData => {
         throw error;
     }
 };
-// funciton to get all companies. just Datum in our case 
+
+/**
+ * getCompanies
+ * 
+ * @param {void} None
+ * @returns {Promise<Array<Object>>} - A promise that resolves to an array of companies,
+ * each containing its ID and name.
+ * 
+ * Retrieves and returns a list of all companies from the database by fetching 
+ * documents from the 'Company' collection. Throws an error if the operation fails.
+ */
 export const getCompanies = async () => {
     try {
         const companiesRef = collection(db, 'Company/');
@@ -59,7 +90,20 @@ export const getCompanies = async () => {
         throw error;
     }
 };
-// sign in a user with firebase auth
+
+/**
+ * signInUser
+ * 
+ * @param {string} email - The email address of the user attempting to sign in.
+ * @param {string} password - The password for the user's account.
+ * @param {string} companyId - The ID of the company the user belongs to.
+ * @returns {Promise<Object>} - A promise that resolves to the user's data if the sign-in is successful.
+ * 
+ * Authenticates a user with their email and password, retrieves their data 
+ * from the corresponding company and employee records in the database, and returns it. 
+ * Throws an error if the user cannot be authenticated or if no corresponding 
+ * user document is found in the specified company's 'Employees' collection.
+ */
 export const signInUser = async (email, password, companyId) => {
     try {
         const userCredential = await signInWithEmailAndPassword(
@@ -85,7 +129,19 @@ export const signInUser = async (email, password, companyId) => {
     }
 };
 
-// function to get the employee information
+
+/**
+ * getEmployeeProfile
+ * 
+ * @param {string} uid - The unique ID of the employee whose profile is being retrieved.
+ * @returns {Promise<Object>} - A promise that resolves to an object containing the employee's profile data.
+ * 
+ * Fetches and returns the profile details of an employee from the database. 
+ * The data is retrieved from the specified 'Employees' collection within the 'Company' 
+ * collection. If the employee document does not exist, throws an error. 
+ * The returned profile includes the employee's name, company name, email, phone number, 
+ * role, account creation date, and departments.
+ */
 export const getEmployeeProfile = async uid => {
     try {
         const employeeRef = doc(
@@ -118,7 +174,19 @@ export const getEmployeeProfile = async uid => {
     }
 };
 
-/// fast get departments
+/**
+ * getUserDepartmentsNew
+ * 
+ * @param {Object} userData - The user data containing references to the user's departments.
+ * @param {Array<Object>} userData.departments - An array of Firestore document references 
+ * corresponding to the user's departments.
+ * @returns {Promise<Array<string>>} - A promise that resolves to an array of department names.
+ * 
+ * Fetches and returns the names of the departments associated with a user. 
+ * The function iterates over the department references provided in the user's data, 
+ * retrieves each department document, and extracts the name. 
+ * If a document does not exist or an error occurs, it throws an error.
+ */
 export const getUserDepartmentsNew = async userData => {
     try {
         const departmentRefs = userData.departments;
