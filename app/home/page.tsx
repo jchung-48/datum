@@ -16,6 +16,7 @@ export default function Home() {
     const [userDepartments, setUserDepartments] = useState<string[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
 
+    // maping for each department
     const departmentMapping = {
         qa: 'Eq2IDInbEQB5nI5Ar6Vj',
         hr: 'NpaV1QtwGZ2MDNOGAlXa',
@@ -23,6 +24,7 @@ export default function Home() {
         merchandising: 'ti7yNByDOzarVXoujOog',
     };
 
+    // fetch the company fields of admin employees
     useEffect(() => {
         const fetchAdmins = async () => {
             try {
@@ -31,6 +33,7 @@ export default function Home() {
                         const employeeProfile = await getEmployeeProfile(
                             user.uid,
                         );
+                        // get the employee profile
                         const employeeName = employeeProfile?.name;
                         console.log('Signed-in employee name:', employeeName);
 
@@ -57,6 +60,7 @@ export default function Home() {
 
                             console.log('Admin Names:', adminNames);
 
+                            // check if the current employee is an admin by checkinf if there name appear in admin list
                             const isEmployeeAdmin =
                                 adminNames.includes(employeeName);
                             setIsAdmin(isEmployeeAdmin); // Update admin status
