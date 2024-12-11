@@ -43,6 +43,16 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
     }>({top: 0, left: 0});
 
     useEffect(() => {
+        /**
+         * updateModalPosition
+         * 
+         * @param {void} None
+         * @returns {void} - Does not return a value. Updates the modal position based on the button 
+         * position and its parent elements' scroll offsets.
+         * 
+         * Calculates the position of the modal relative to the button and updates the state with the 
+         * new modal position, accounting for scrolling within parent elements.
+         */
         const updateModalPosition = () => {
             if (isOpen && buttonRef.current) {
                 let buttonRect = buttonRef.current.getBoundingClientRect();
@@ -81,6 +91,16 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
 
     useEffect(() => {
         if (isOpen) {
+            /**
+             * fetchData
+             * 
+             * @param {void} None
+             * @returns {void} - Does not return a value. Fetches data for departments, buyers, and manufacturers 
+             * and updates the corresponding state variables.
+             * 
+             * Fetches lists of departments, buyers, and manufacturers for a given company and updates the 
+             * relevant state variables with the fetched data.
+             */
             const fetchData = async () => {
                 const departmentsList = await fetchDepartments(
                     source.companyId,
@@ -101,6 +121,16 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
         }
     }, [isOpen, source.companyId]);
 
+    /**
+     * fetchDepartments
+     * 
+     * @param {string} companyId - The ID of the company for which to fetch the departments.
+     * @returns {Promise<{id: string, name: string}[]>} - A promise that resolves to an array of department objects, 
+     * each containing an 'id' and 'name' property.
+     * 
+     * Fetches the list of departments for a given company from Firestore and returns an array of 
+     * department objects.
+     */
     const fetchDepartments = async (companyId: string) => {
         const departmentsSnapshot = await getDocs(
             collection(db, 'Company', companyId, 'Departments'),
@@ -124,6 +154,16 @@ const ShareFileModal: React.FC<ShareFileModalProps> = ({
         }
     }, [selectedCollectionType, destinationId]);
 
+    /**
+     * handleMoveOrCopy
+     * 
+     * @param {void} None
+     * @returns {void} - Does not return a value. Moves or copies selected files to the specified 
+     * destination collection and provides feedback on the operation's success or failure.
+     * 
+     * Validates the selection of destination and collection, performs the move or copy operation 
+     * for each file, and alerts the user upon completion. Handles errors for any failed files.
+     */
     const handleMoveOrCopy = async () => {
         if (
             !selectedCollectionType ||

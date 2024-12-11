@@ -16,6 +16,7 @@ export default function Home() {
     const [userDepartments, setUserDepartments] = useState<string[]>([]);
     const [isAdmin, setIsAdmin] = useState<boolean>(false); // New state for admin status
 
+    // maping for each department
     const departmentMapping = {
         qa: 'Eq2IDInbEQB5nI5Ar6Vj',
         hr: 'NpaV1QtwGZ2MDNOGAlXa',
@@ -23,6 +24,16 @@ export default function Home() {
         merchandising: 'ti7yNByDOzarVXoujOog',
     };
 
+    /**
+ * fetchAdmins
+ * 
+ * @param {void} None
+ * @returns {Function | null} - Returns a function to unsubscribe from the authentication state
+ * observer or null in case of an error.
+ * 
+ * Observes authentication state, retrieves the signed-in user's profile, checks admin status
+ * in the company document, and updates the admin state accordingly.
+ */
     useEffect(() => {
         const fetchAdmins = async () => {
             try {
@@ -31,6 +42,7 @@ export default function Home() {
                         const employeeProfile = await getEmployeeProfile(
                             user.uid,
                         );
+                        // get the employee profile
                         const employeeName = employeeProfile?.name;
                         console.log('Signed-in employee name:', employeeName);
 
@@ -57,6 +69,7 @@ export default function Home() {
 
                             console.log('Admin Names:', adminNames);
 
+                            // check if the current employee is an admin by checkinf if there name appear in admin list
                             const isEmployeeAdmin =
                                 adminNames.includes(employeeName);
                             setIsAdmin(isEmployeeAdmin); // Update admin status
@@ -116,11 +129,6 @@ export default function Home() {
             unsubscribe();
         };
     }, []);
-
-    const handleSignOut = async () => {
-        await logoutUser();
-        router.push('/workplaces');
-    };
 
     const isDepartmentEnabled = (
         departmentKey: keyof typeof departmentMapping,

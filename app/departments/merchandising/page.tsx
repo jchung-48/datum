@@ -30,13 +30,18 @@ const MerchandisingDepartment = () => {
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
+        /**
+         * loadBuyersAndManufacturers
+         * 
+         * @param None
+         * @returns Promise<void>
+         * 
+         * Fetches a list of buyers and manufacturers, and updates the state with the results.
+         */
         const loadBuyersAndManufacturers = async () => {
             try {
                 const buyersList = await fetchContacts(COMPANYID, 'Buyer');
-                const manufacturersList = await fetchContacts(
-                    COMPANYID,
-                    'Manufacturer',
-                );
+                const manufacturersList = await fetchContacts(COMPANYID, 'Manufacturer',);
                 setBuyers(buyersList as Buyer[]);
                 setManufacturers(manufacturersList as Manufacturer[]);
             } catch (error) {
@@ -47,6 +52,7 @@ const MerchandisingDepartment = () => {
         loadBuyersAndManufacturers();
     }, []);
 
+    // Paths for the different collections within the department
     const deptFilesPath = [
         'Company',
         COMPANYID,
@@ -63,10 +69,21 @@ const MerchandisingDepartment = () => {
         'records',
     ] as [string, ...string[]];
 
+    // call this to update all file lists
     const updateLists = () => {
         setFileListUpdated(prev => !prev);
     }
 
+    /**
+     * handleCardClick
+     * 
+     * @param type - The type of contact ('Buyer' or 'Manufacturer')
+     * @param id - The unique identifier of the contact
+     * @param name - The name of the contact
+     * @return - Does not return a value. Opens the modal for the selected contact.
+     * 
+     * Sets the path for the contact's files and opens a modal with the contact's details.
+     */
     const handleCardClick = (
         type: 'Buyer' | 'Manufacturer',
         id: string,
@@ -83,6 +100,14 @@ const MerchandisingDepartment = () => {
         setShowModal(true);
     };
 
+    /**
+     * checkAdminStatus
+     * 
+     * @param uid - The unique identifier of the user
+     * @returns - Does not return a value, sets the state of isAdmin.
+     * 
+     * Checks if the user is an admin by verifying their ID against the list of admins in Firestore.
+     */
     const checkAdminStatus = async (uid: string) => {
         try {
             const companyDocRef = doc(db, 'Company', COMPANYID);

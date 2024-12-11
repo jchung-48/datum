@@ -65,6 +65,14 @@ const AddOrEditBuyer = () => {
         }
     }, [selectedCompanyId]);
 
+    /**
+     * handleSelectBuyer
+     *
+     * @param {string} buyerId - The ID of the buyer to select or 'new' for a new buyer.
+     * @returns {void} - Does not return a value, but updates selected buyer.
+     * 
+     * Handles selecting a buyer or initializing data for a new buyer.
+     */
     const handleSelectBuyer = (buyerId: string) => {
         if (buyerId === 'new') {
             setBuyerData({
@@ -86,6 +94,13 @@ const AddOrEditBuyer = () => {
         }
     };
 
+    /**
+     * handleContactAddOrEdit
+     *
+     * @returns {void} - Does not return a value, updates current contact.
+     * 
+     * Calls handleAddOrEditContact with buyer specified, and then resets the form.
+     */
     const handleContactAddOrEdit = () => {
         const updatedContacts = handleAddOrEditContact(
             buyerData.contacts,
@@ -106,11 +121,26 @@ const AddOrEditBuyer = () => {
         setContactRole('');
     };
 
+    /**
+     * handleContactDelete
+     *
+     * @returns {void} - Does not return a value, deletes current contact.
+     * 
+     * Calls handleDeleteContact with buyer specified, and then resets the form.
+     */
     const handleContactDelete = (index: number) => {
         const updatedContacts = handleDeleteContact(buyerData.contacts, index);
         setBuyerData({...buyerData, contacts: updatedContacts});
     };
 
+    /**
+     * handleSubmit
+     * 
+     * @returns - Does not return a value, updates contact list.
+     * 
+     * Handler for submission of the add/edit form. Runs checks for duplicate information
+     * before updating the contact entry list.
+     */
     const handleSubmit = async () => {
         if (!selectedCompanyId) {
             alert('Please select a company');
@@ -159,6 +189,13 @@ const AddOrEditBuyer = () => {
         }
     };
 
+    /**
+     * handleDeleteBuyer
+     *
+     * @returns {void} Does not return a value, deletes current buyer.
+     * 
+     * Deletes the selected buyer from Firestore and resets the buyer data.
+     */
     const handleDeleteBuyer = async () => {
         if (!selectedBuyerId) return;
         try {

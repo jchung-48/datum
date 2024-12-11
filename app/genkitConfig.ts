@@ -10,6 +10,8 @@ if (!ollamaServerAddress) {
     throw new Error('Missing Ollama server address');
 }
 
+
+// Configure Genkit with LLM (Llama 3.2) and Embedder (Vertex AI)
 configureGenkit({
     plugins: [
         ollama({
@@ -20,7 +22,7 @@ configureGenkit({
         devLocalVectorstore([
             {
                 indexName: 'knowledgeBase',
-                embedder: textEmbeddingGecko,
+                embedder: textEmbeddingGecko, // Creates a numeric vector that encodes the semantic meaning of the original content
             },
         ]),
     ],

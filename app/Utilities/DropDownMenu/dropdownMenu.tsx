@@ -10,6 +10,8 @@ type MenuItem = {
 
 type DropdownMenuProps = {
     menuItems: MenuItem[];
+    // Takes the color as input, since the inheritance structure makes it so it can't
+    // infer from the parent page. 
     iconColor?: string;
 };
 
@@ -25,6 +27,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     };
 
     useEffect(() => {
+        // closes the dropdown when a click happens outside it
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 dropdownRef.current &&

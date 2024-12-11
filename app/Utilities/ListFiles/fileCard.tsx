@@ -16,7 +16,6 @@ const FileCard: React.FC<FileCardProps> = ({
     isSelected,
     currentUserUid,
     onSelect,
-    onDelete,
 }) => {
     return (
         <div

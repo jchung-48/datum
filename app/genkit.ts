@@ -10,6 +10,7 @@ import {Document} from '@genkit-ai/ai/retriever';
 
 import * as admin from 'firebase-admin';
 
+// Define indexer reference to vector store, which contains text embeddings
 import {
     devLocalIndexerRef,
 } from '@genkit-ai/dev-local-vectorstore';
@@ -17,8 +18,10 @@ import {
 import pdf from 'pdf-parse';
 import {chunk} from 'llm-chunk';
 
+// Define indexer
 export const knowledgeBaseIndexer = devLocalIndexerRef('knowledgeBase');
 
+// Create chunking config to break up larger documents for embedding/processing
 const chunkingConfig = {
     minLength: 1000,
     maxLength: 2000,
@@ -27,10 +30,12 @@ const chunkingConfig = {
     delimiters: '',
 } as any;
 
+// Permissions
 if (!admin.apps.length) {
     admin.initializeApp();
 }
 
+// Indexer flow helps keeps track of documents for retrieval
 export const indexKB = defineFlow(
     {
         name: 'indexKB',
@@ -67,6 +72,7 @@ export const indexKB = defineFlow(
     },
 );
 
+// Fetch PDFs from all paths with PDFs
 async function fetchPdfsFromFirestore() {
     const db = admin.firestore();
 
@@ -76,6 +82,7 @@ async function fetchPdfsFromFirestore() {
         collectionPath: string;
     }> = [];
 
+    // Design shortcut: hardcoded paths
     const collectionPaths = [
         '/Company/mh3VZ5IrZjubXUCZL381/Departments/NpaV1QtwGZ2MDNOGAlXa/files',
         '/Company/mh3VZ5IrZjubXUCZL381/Departments/NpaV1QtwGZ2MDNOGAlXa/incident',
@@ -114,6 +121,7 @@ async function fetchPdfsFromFirestore() {
     return pdfs;
 }
 
+// Download PDFs from Firebase Storage
 async function downloadPdfFromStorage(filePath: string) {
     if (!filePath) {
         throw new Error('Storage path is undefined or empty.');
@@ -127,6 +135,7 @@ async function downloadPdfFromStorage(filePath: string) {
     return fileContents;
 }
 
+// Extract text to a buffer for processing
 async function extractTextFromPdfBuffer(pdfBuffer: Buffer) {
     const data = await pdf(pdfBuffer);
     return data.text;

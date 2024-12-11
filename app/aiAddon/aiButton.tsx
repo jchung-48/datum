@@ -6,6 +6,7 @@ import {AiButtonProps, SummarySearchResult} from '../types';
 import ReactMarkdown from 'react-markdown';
 import * as pdfjsLib from 'pdfjs-dist';
 import {SpinnerDiamond} from 'spinners-react';
+import { MdClose } from 'react-icons/md';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
 
@@ -75,7 +76,7 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
         const inputText = text?.trim() || inputValue.trim();
 
         if (!inputText) return;
-
+        // Add user messages to chat history
         setChatHistory(prev => [...prev, {sender: 'user', message: inputText}]);
         setInputValue('');
         setChatLoading(true);
@@ -88,7 +89,7 @@ const AiButton: React.FC<AiButtonProps> = ({paths}) => {
             });
 
             const data = await response.json();
-
+            // Add reposnse to chat history
             setChatHistory(prev => {
                 const newHistory = [
                     ...prev,
@@ -200,7 +201,8 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
             window.removeEventListener('keyup', handleKeyUp);
         };
     }, [isCardVisible]);
-
+    
+    // Scrolling effect
     useEffect(() => {
         if (chatHistoryRef.current) {
             chatHistoryRef.current.scrollTop =
@@ -227,7 +229,7 @@ Upload Date: ${fileSelectedForSummary.uploadDate}`,
                             className={styles.cardCloseButton}
                             onClick={toggleCard}
                         >
-                            ×
+                            <MdClose />
                         </button>
                     </div>
                     <div className={styles.modeToggle}>

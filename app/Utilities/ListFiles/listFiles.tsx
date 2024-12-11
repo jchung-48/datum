@@ -34,9 +34,9 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     const [sortDirection, setSortDirection] = useState<string>('/images/asc.png');
     const [isAscending, setIsAscending] = useState<boolean>(true);
     const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-    const buttonRef = useRef<HTMLButtonElement>(null);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const [display, setDisplay] = useState<'list' | 'grid' | 'horizontal'>(initialDisplay);
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     const firestorePath: FirestorePath = {
         collectionType:
@@ -63,6 +63,16 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
     }, []);
 
     useEffect(() => {
+        /**
+         * fetchAdmins
+         * 
+         * @param {void} None
+         * @returns {Function | null} - Returns a function to unsubscribe from the authentication state
+         * observer or null in case of an error.
+         * 
+         * Description: Checks if the currently authenticated user is an admin in a specific company,
+         * retrieves the user's profile and admin data, and updates the admin status.
+         */
         const fetchAdmins = async () => {
             try {
                 const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -108,6 +118,16 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         fetchAdmins();
     }, []);
 
+    /**
+     * fetchFiles
+     * 
+     * @param {void} None
+     * @returns {void} - Does not return a value. Fetches files from Firestore and updates the state
+     * variables with the fetched and filtered files.
+     * 
+     * Description: Fetches a collection of files from Firestore, processes the data, and updates the
+     * state with the fetched files and their filtered view.
+     */
     const fetchFiles = async () => {
         try {
             const filesCollectionRef = collection(db, ...collectionPath);
@@ -133,7 +153,16 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         setFilteredFiles(filtered);
     }, [searchQuery, files]);
 
-    const handleSortFieldClick = (selection: string, field: string) => {
+    /**
+     * handleSortFieldClick
+     * 
+     * @param {string} field - The field by which to sort the files.
+     * @returns {void} - Does not return a value. Updates the sort field and triggers the file sorting.
+     * 
+     * Handles the click event for selecting a sort field, updates the sort field state, and triggers 
+     * sorting of files based on the selected field.
+     */
+    const handleSortFieldClick = (field: string) => {
         if (sortField != field) {
             setIsAscending(true);
         }
@@ -142,7 +171,17 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         sortFiles(field as keyof FileData);
     };
 
-    const sortFiles = (field: keyof FileData) => {
+    /**
+     * sortFiles
+     * 
+     * @param {keyof FileData} field - The field by which to sort the files (e.g., 'uploadTimeStamp', 'userDisplayName').
+     * @returns {void} - Does not return a value. Sorts the filtered files array based on the specified field and updates
+     * the state with the sorted files.
+     * 
+     * Sorts the filtered files array based on the specified field, considering ascending or descending order,
+     * and updates the state with the sorted files and sort direction.
+     */
+    const sortFiles = (field: keyof FileData): void => {
         const sortedFiles = [...filteredFiles];
 
         for (let i = 1; i < sortedFiles.length; i++) {
@@ -203,6 +242,15 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         setSortDirection(isAscending ? '/images/asc.png' : '/images/des.png');
     };
 
+    /**
+     * processFiles
+     * 
+     * @param {any} querySnapshot - A Firestore query snapshot containing file document data.
+     * @returns {Promise<FileData[]>} - A promise resolving to an array of processed file data objects.
+     * 
+     * Processes a Firestore query snapshot to extract file details, generates thumbnails for
+     * files where applicable, retrieves download URLs, and returns an array of structured file data.
+     */
     const processFiles = async (querySnapshot: any): Promise<FileData[]> => {
         const filesPromises = querySnapshot.docs.map(async (doc: any) => {
             const fileData = doc.data();
@@ -249,6 +297,15 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         return await Promise.all(filesPromises);
     };
 
+    /**
+     * generatePDFThumbnail
+     * 
+     * @param {string} pdfUrl - The URL of the PDF file.
+     * @returns {Promise<string>} - A promise resolving to a data URL representing the generated thumbnail image.
+     * 
+     * Description: Generates a thumbnail image of the first page of a PDF document by rendering it on a canvas and
+     * returning its data URL.
+     */
     const generatePDFThumbnail = async (pdfUrl: string): Promise<string> => {
         const pdf = await pdfjsLib.getDocument({ url: pdfUrl }).promise;
         const page = await pdf.getPage(1);
@@ -269,6 +326,15 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         return canvas.toDataURL();
     };
 
+    /**
+     * handleFileSelect
+     * 
+     * @param {string} fileId - The ID of the file to select or deselect.
+     * @returns {void} - Does not return a value. Updates the selected files state based on the file
+     * selection.
+     * 
+     * Toggles the selection of a file by its ID and updates the state with the new set of selected files.
+     */
     const handleFileSelect = (fileId: string) => {
         const newSelectedFiles = new Set(selectedFiles);
         if (newSelectedFiles.has(fileId)) {
@@ -279,6 +345,17 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         setSelectedFiles(newSelectedFiles);
     };
 
+    /**
+     * handleDelete
+     * 
+     * @param {string} [fileId] - (Optional) The ID of a specific file to delete. If not provided,
+     * deletes all selected files.
+     * 
+     * @returns {void} - Does not return a value. Performs file deletion and updates state accordingly.
+     * 
+     * Deletes specified or selected files that the current user has permission to delete.
+     * Prompts for confirmation before deletion and updates the application state after completing the operation.
+     */
     const handleDelete = async (fileId?: string) => {
         const deletableFiles = fileId ? [fileId] :
             Array.from(selectedFiles).filter(id =>
@@ -286,8 +363,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                     file => file.id === id && (file.uploadedBy === currentUserUid || isAdmin),
                 ),
             );
-
-        
 
         if (deletableFiles.length > 0) {
             const confirmDelete = window.confirm(
@@ -322,6 +397,10 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
         }
     };
 
+    /**
+     * 
+     * @returns
+     */
     const openShareModal = () => {
         if (selectedFiles.size === 0) {
             alert('No files selected for sharing.');
@@ -437,7 +516,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     className={`${styles.sortableHeader} ${sortDirection ? styles.showImg : ''}`}
                                     onClick={() =>
                                         handleSortFieldClick(
-                                            'file-name',
                                             'fileName',
                                         )
                                     }
@@ -459,7 +537,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     className={`${styles.sortableHeader} ${sortDirection ? styles.showImg : ''}`}
                                     onClick={() =>
                                         handleSortFieldClick(
-                                            'owner',
                                             'userDisplayName',
                                         )
                                     }
@@ -480,7 +557,6 @@ export const FileList: React.FC<FileListProps & { horizontal?: boolean }> = ({
                                     className={`${styles.sortableHeader} ${sortDirection ? styles.showImg : ''}`}
                                     onClick={() =>
                                         handleSortFieldClick(
-                                            'time',
                                             'uploadTimeStamp',
                                         )
                                     }
